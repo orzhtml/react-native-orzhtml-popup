@@ -1,6 +1,4 @@
-import { PixelRatio } from 'react-native'
-
-import { scaleSizeFool } from './SetSize'
+import { PixelRatio, ViewStyle } from 'react-native'
 
 export type OverlayPointerEvents = 'none' | 'box-only' | 'auto' | undefined;
 
@@ -8,19 +6,26 @@ export type ToastPosition = 'center' | 'top' | 'bottom' | undefined;
 
 export type durationType = 'short' | 'long' | number
 
-export type popoverArrow = 'none' |
-  'topLeft' |
-  'top' |
-  'topRight' |
-  'rightTop' |
-  'right' |
-  'rightBottom' |
-  'bottomRight' |
-  'bottom' |
-  'bottomLeft' |
-  'leftBottom' |
-  'left' |
-  'leftTop';
+export type popoverArrow = 'none' | 'topLeft' | 'top' | 'topRight' |
+  'rightTop' | 'right' | 'rightBottom' |
+  'bottomRight' | 'bottom' | 'bottomLeft' |
+  'leftBottom' | 'left' | 'leftTop';
+
+export const arrowLayouts = {
+  none: {},
+  topLeft: { transform: [{ rotate: '45deg' }] },
+  top: { transform: [{ rotate: '45deg' }] },
+  topRight: { transform: [{ rotate: '45deg' }] },
+  rightTop: { transform: [{ rotate: '135deg' }] },
+  right: { transform: [{ rotate: '135deg' }] },
+  rightBottom: { transform: [{ rotate: '135deg' }] },
+  bottomRight: { transform: [{ rotate: '225deg' }] },
+  bottom: { transform: [{ rotate: '225deg' }] },
+  bottomLeft: { transform: [{ rotate: '225deg' }] },
+  leftBottom: { transform: [{ rotate: '315deg' }] },
+  left: { transform: [{ rotate: '315deg' }] },
+  leftTop: { transform: [{ rotate: '315deg' }] },
+}
 
 export const pixelSize = (function () {
   let pixelRatio = PixelRatio.get()
@@ -29,64 +34,37 @@ export const pixelSize = (function () {
   else return 1
 })()
 
-export const initViewProps = {
-  modal: false,
-  animated: true,
-  overlayPointerEvents: 'auto',
-  isBackPress: true,
-  overlayOpacity: 0.55,
+export const filterPopoverStyle = (fs: ViewStyle, includeRadius: boolean) => {
+  let {
+    borderRadius, borderBottomLeftRadius,
+    borderBottomRightRadius, borderTopLeftRadius,
+    borderTopRightRadius,
+    ...others
+  } = fs
+  let style = includeRadius ? {
+    borderRadius,
+    borderBottomLeftRadius,
+    borderBottomRightRadius,
+    borderTopLeftRadius,
+    borderTopRightRadius,
+    ...others,
+  } : { ...others }
+  return filterContentStyle(style)
 }
 
-export const initZoomProps = {
-  type: 'zoomIn', // zoomOut，fade，none
-}
-
-export const initToastProps = {
-  position: 'center',
-}
-
-export const initPullProps = {
-  side: 'bottom',
-}
-
-export const initActionSheetProps = {
-  label: 'label',
-  labelVal: 'value',
-  containerStyle: {
-    backgroundColor: 'transparent',
-  },
-}
-
-export const initPullPickerProps = {
-  label: 'label',
-  labelVal: 'value',
-  wheelHeight: scaleSizeFool(200),
-}
-
-export const initDatePickerProps = {
-  max: 2050,
-  min: 2010,
-  showYear: true,
-  showMonth: true,
-  showDay: true,
-}
-
-export const initWheelProps = {
-  pointerEvents: 'box-only',
-  defaultIndex: 0,
+export const filterContentStyle = (fs: ViewStyle) => {
+  for (let key in fs) {
+    if (fs[key] === undefined) {
+      delete fs[key]
+    }
+  }
+  return fs
 }
 
 export const btnColor = {
   default: '#1ACB79',
   cancel: '#3E3E3E',
   warning: '#FF5363',
-}
-
-export function defaultProps (props: any, initProps: any) {
-  return {
-    ...initProps,
-    ...props,
-  }
 }
 
 export function disappearCompleted (onCloseCallback?: () => any, onDisappearCompleted?: () => any) {

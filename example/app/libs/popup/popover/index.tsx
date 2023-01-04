@@ -1,10 +1,9 @@
 import React, { FC, forwardRef, useState } from 'react'
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import { LayoutChangeEvent, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 
-import { pixelSize, popoverArrow } from '../common/Common'
+import { arrowLayouts, filterContentStyle, filterPopoverStyle, pixelSize, popoverArrow } from '../common/Common'
 
 interface IProps {
-    [p: string]: any;
     arrow: popoverArrow;
     style?: StyleProp<ViewStyle>;
     children?: React.ReactNode;
@@ -13,6 +12,7 @@ interface IProps {
     popoverStyle?: StyleProp<ViewStyle>;
     headerStyle?: StyleProp<ViewStyle>;
     arrowStyle?: StyleProp<ViewStyle>;
+    onLayout?: (event: LayoutChangeEvent) => void;
 }
 
 interface PopoverProps extends IProps {
@@ -22,33 +22,6 @@ interface PopoverProps extends IProps {
 const Popover: FC<PopoverProps> = (props) => {
   const [width, setWidth] = useState(0)
   const [height, setHeight] = useState(0)
-
-  const filterPopoverStyle = (fs: ViewStyle, includeRadius: boolean) => {
-    let {
-      borderRadius, borderBottomLeftRadius,
-      borderBottomRightRadius, borderTopLeftRadius,
-      borderTopRightRadius,
-      ...others
-    } = fs
-    let style = includeRadius ? {
-      borderRadius,
-      borderBottomLeftRadius,
-      borderBottomRightRadius,
-      borderTopLeftRadius,
-      borderTopRightRadius,
-      ...others,
-    } : { ...others }
-    return filterContentStyle(style)
-  }
-
-  const filterContentStyle = (fs: ViewStyle) => {
-    for (let key in fs) {
-      if (fs[key] === undefined) {
-        delete fs[key]
-      }
-    }
-    return fs
-  }
 
   const buildStyle = () => {
     let { style, arrow, paddingCorner, headerStyle, arrowStyle, contentStyle, popoverStyle } = props
@@ -85,21 +58,6 @@ const Popover: FC<PopoverProps> = (props) => {
       leftBottom: { top: 0, bottom: 0, left: 0, width: headerSize, paddingLeft: headerPadding, alignItems: 'flex-start', justifyContent: 'flex-end', paddingBottom: headerPaddingCorner },
       left: { top: 0, bottom: 0, left: 0, width: headerSize, paddingLeft: headerPadding, alignItems: 'flex-start', justifyContent: 'center' },
       leftTop: { top: 0, bottom: 0, left: 0, width: headerSize, paddingLeft: headerPadding, alignItems: 'flex-start', justifyContent: 'flex-start', paddingTop: headerPaddingCorner },
-    }
-    let arrowLayouts = {
-      none: {},
-      topLeft: { transform: [{ rotate: '45deg' }] },
-      top: { transform: [{ rotate: '45deg' }] },
-      topRight: { transform: [{ rotate: '45deg' }] },
-      rightTop: { transform: [{ rotate: '135deg' }] },
-      right: { transform: [{ rotate: '135deg' }] },
-      rightBottom: { transform: [{ rotate: '135deg' }] },
-      bottomRight: { transform: [{ rotate: '225deg' }] },
-      bottom: { transform: [{ rotate: '225deg' }] },
-      bottomLeft: { transform: [{ rotate: '225deg' }] },
-      leftBottom: { transform: [{ rotate: '315deg' }] },
-      left: { transform: [{ rotate: '315deg' }] },
-      leftTop: { transform: [{ rotate: '315deg' }] },
     }
     let popoverLayouts = {
       none: {},
@@ -159,7 +117,7 @@ const Popover: FC<PopoverProps> = (props) => {
     }
   }
 
-  const onLayout = (e: { nativeEvent: { layout: any } }) => {
+  const onLayout = (e: LayoutChangeEvent) => {
     let _layout = e.nativeEvent.layout
     if (_layout.width !== width || _layout.height !== height) {
       setWidth(width)
