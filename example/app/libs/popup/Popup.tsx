@@ -58,7 +58,8 @@ function Popup () {
               right: 0,
               bottom: 0,
             }}
-            pointerEvents="box-none">
+            pointerEvents="box-none"
+          >
             {item.element}
           </View>
         )

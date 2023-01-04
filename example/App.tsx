@@ -10,11 +10,14 @@
 
 import React from 'react'
 import {
+  Button,
   SafeAreaView,
   StatusBar,
   Text,
   View,
 } from 'react-native'
+
+import { Popup, Overlay } from './app/libs/popup'
 
 const App = () => {
   return (
@@ -22,7 +25,14 @@ const App = () => {
       <StatusBar barStyle={'dark-content'} />
       <View style={{ flex: 1, paddingTop: 100 }}>
         <Text>lzkjlk</Text>
+        <Button
+          title="点击"
+          onPress={() => {
+            Overlay.show(<Overlay.View />)
+          }}
+        />
       </View>
+      <Popup />
     </SafeAreaView>
   )
 }

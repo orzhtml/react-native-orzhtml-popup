@@ -1,15 +1,17 @@
 import React from 'react'
 
 import Popup from './Popup'
-// import PView from './PView'
+import PView from './PView'
 // import PopView from './PopView'
 // import PullView from './PullView'
 
-const Overlay = () => {
-  function show (view: React.FunctionComponentElement<{
-      onDisappearCompleted: () => void;
-      onCloseCompleted: () => void;
-    }>) {
+class Overlay {
+  static View = PView
+
+  static show (view: React.FunctionComponentElement<{
+    onDisappearCompleted: () => void;
+    onCloseCompleted: () => void;
+  }>) {
     let key: React.Key = 0
     const onCloseCompleted = view.props.onCloseCompleted
     // 弹窗关闭后调用 onCloseCompleted
@@ -24,17 +26,9 @@ const Overlay = () => {
     return key
   }
 
-  function hide (key: React.Key) {
+  static hide (key: React.Key) {
     Popup.remove(key)
-  }
-
-  return {
-    show,
-    hide,
-    // View: PView,
-    // PopView: PopView,
-    // PullView: PullView,
   }
 }
 
-export default new (Overlay as any)()
+export default Overlay
