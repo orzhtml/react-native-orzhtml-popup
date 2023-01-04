@@ -1,4 +1,4 @@
-import { useDynamicValue } from 'react-native-dynamic'
+import { useColorSchemeContext } from 'react-native-dynamic'
 
 interface IDynamicValue<T> {
     light: T
@@ -6,7 +6,7 @@ interface IDynamicValue<T> {
 }
 
 export function useDynamic<T> (light: T | IDynamicValue<T>, dark?: T): T {
-  const mode = useDynamicValue()
+  const mode = useColorSchemeContext()
   if (arguments.length > 1) {
     return mode === 'dark' ? dark! : (light as T)
   } else {

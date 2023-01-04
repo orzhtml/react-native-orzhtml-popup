@@ -87,7 +87,6 @@ const PView: FC<PVProps> = (props) => {
     onPanResponderGrant: (e, gestureState) => touchStateID.current = gestureState.stateID,
     onPanResponderRelease: (e, gestureState) => touchStateID.current === gestureState.stateID ? closeRequest() : null,
   })
-  console.log('overlayPointerEvents:', props.overlayPointerEvents)
 
   return (
     <View
@@ -136,7 +135,12 @@ function appear ({ animated, opacityAnim, opacityAnimTo, onAppearCompleted }: {
   }
 }
 
-function disappear ({ animated, opacityAnim, onCloseCallback, onDisappearCompleted }: any) {
+function disappear ({ animated, opacityAnim, onCloseCallback, onDisappearCompleted }: {
+  animated: boolean;
+  opacityAnim: Animated.Value;
+  onCloseCallback?: () => void,
+  onDisappearCompleted?: () => void
+}) {
   if (animated) {
     Animated.parallel(fadeStop(opacityAnim)).start(e => disappearCompleted(onCloseCallback, onDisappearCompleted))
   } else {
@@ -161,8 +165,6 @@ export default forwardRef(({
   overlayPointerEvents = 'auto',
   ...other
 }: Partial<IProps>, ref) => {
-  console.log('other:', other)
-
   const initProps = {
     modal: false,
     animated: true,
@@ -172,8 +174,6 @@ export default forwardRef(({
     useDark: false,
     ...other,
   }
-
-  console.log('initProps:', initProps)
 
   return (
     <Component {...initProps} refInstance={ref} />

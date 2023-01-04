@@ -60,7 +60,7 @@ function defaultProps (props: any, initProps: any) {
   }
 }
 
-function disappearCompleted (onCloseCallback: () => any, onDisappearCompleted: () => any) {
+function disappearCompleted (onCloseCallback?: () => any, onDisappearCompleted?: () => any) {
   onCloseCallback && onCloseCallback()
   onDisappearCompleted && onDisappearCompleted()
 }
