@@ -24,11 +24,11 @@ interface IProps {
     icon?: string | number | React.ReactNode;
 }
 
-interface ToastVProps extends IProps {
+interface ToastProps extends IProps {
     refInstance: React.ForwardedRef<any>;
 }
 
-const ToastView: FC<ToastVProps> = (props) => {
+const Toast: FC<ToastProps> = (props) => {
   const buildStyle = () => {
     let { position } = props
     let _style_: ViewStyle = {
@@ -132,7 +132,7 @@ const ToastView: FC<ToastVProps> = (props) => {
   )
 }
 
-const Component = ToastView
+const Component = Toast
 // 注意：这里不要在Component上使用ref;换个属性名字比如refInstance；不然会导致覆盖
 export default forwardRef(({
   overlayPointerEvents = 'auto',

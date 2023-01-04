@@ -1,3 +1,5 @@
+import { PixelRatio } from 'react-native'
+
 import { scaleSizeFool } from './SetSize'
 
 export type OverlayPointerEvents = 'none' | 'box-only' | 'auto' | undefined;
@@ -5,6 +7,27 @@ export type OverlayPointerEvents = 'none' | 'box-only' | 'auto' | undefined;
 export type ToastPosition = 'center' | 'top' | 'bottom' | undefined;
 
 export type durationType = 'short' | 'long' | number
+
+export type popoverArrow = 'none' |
+  'topLeft' |
+  'top' |
+  'topRight' |
+  'rightTop' |
+  'right' |
+  'rightBottom' |
+  'bottomRight' |
+  'bottom' |
+  'bottomLeft' |
+  'leftBottom' |
+  'left' |
+  'leftTop';
+
+export const pixelSize = (function () {
+  let pixelRatio = PixelRatio.get()
+  if (pixelRatio >= 3) return 0.3333333333333333
+  else if (pixelRatio >= 2) return 0.5
+  else return 1
+})()
 
 export const initViewProps = {
   modal: false,

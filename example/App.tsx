@@ -28,7 +28,10 @@ const App = () => {
         <Button
           title="点击"
           onPress={() => {
-            Toast.message('小明')
+            // Toast.message('小明')
+            Toast.show({
+              text: '小李',
+            })
           }}
         />
       </View>

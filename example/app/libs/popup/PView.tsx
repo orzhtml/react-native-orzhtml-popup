@@ -20,11 +20,11 @@ interface IProps {
   onAppearCompleted?: () => void;
 }
 
-interface PVProps extends IProps {
+interface PViewProps extends IProps {
   refInstance: React.ForwardedRef<any>;
 }
 
-const PView: FC<PVProps> = (props) => {
+const PView: FC<PViewProps> = (props) => {
   const currentMode = useColorScheme()
   const styles = props.useDark && currentMode ? dynamicStyles[currentMode] : dynamicStyles.light
   const touchStateID = useRef<null | number>(null)
