@@ -1,11 +1,9 @@
 import React, { useEffect, useRef, useCallback, forwardRef, useImperativeHandle, FC } from 'react'
 import { StyleSheet, Animated, View, PanResponder, Platform, StatusBar, useColorScheme, StyleProp, ViewStyle, BackHandler } from 'react-native'
 
-import { disappearCompleted } from './common/Common'
+import { disappearCompleted, OverlayPointerEvents } from './common/Common'
 import { fadeStart, fadeStop } from './common/Animated'
 import dynamicStyles from './style'
-
-type OverlayPointerEvents = | 'none' | 'box-only' | 'auto' | undefined;
 
 interface IProps {
   modal: boolean;
@@ -14,12 +12,12 @@ interface IProps {
   isBackPress: boolean;
   useDark: boolean;
   overlayOpacity: number;
+  children?: React.ReactNode;
   style?: StyleProp<ViewStyle>;
   barStyles?: StyleProp<ViewStyle>;
   onDisappearCompleted?: () => void;
   onCloseRequest?: () => void;
   onAppearCompleted?: () => void;
-  children?: React.ReactNode;
 }
 
 interface PVProps extends IProps {

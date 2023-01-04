@@ -17,7 +17,7 @@ import {
   View,
 } from 'react-native'
 
-import { Popup, Overlay } from './app/libs/popup'
+import { Popup, Overlay, Toast } from './app/libs/popup'
 
 const App = () => {
   return (
@@ -28,7 +28,7 @@ const App = () => {
         <Button
           title="点击"
           onPress={() => {
-            Overlay.show(<Overlay.View />)
+            Toast.message('小明')
           }}
         />
       </View>

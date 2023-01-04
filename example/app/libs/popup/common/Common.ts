@@ -1,6 +1,12 @@
 import { scaleSizeFool } from './SetSize'
 
-const initViewProps = {
+export type OverlayPointerEvents = 'none' | 'box-only' | 'auto' | undefined;
+
+export type ToastPosition = 'center' | 'top' | 'bottom' | undefined;
+
+export type durationType = 'short' | 'long' | number
+
+export const initViewProps = {
   modal: false,
   animated: true,
   overlayPointerEvents: 'auto',
@@ -8,19 +14,19 @@ const initViewProps = {
   overlayOpacity: 0.55,
 }
 
-const initZoomProps = {
+export const initZoomProps = {
   type: 'zoomIn', // zoomOut，fade，none
 }
 
-const initToastProps = {
+export const initToastProps = {
   position: 'center',
 }
 
-const initPullProps = {
+export const initPullProps = {
   side: 'bottom',
 }
 
-const initActionSheetProps = {
+export const initActionSheetProps = {
   label: 'label',
   labelVal: 'value',
   containerStyle: {
@@ -28,13 +34,13 @@ const initActionSheetProps = {
   },
 }
 
-const initPullPickerProps = {
+export const initPullPickerProps = {
   label: 'label',
   labelVal: 'value',
   wheelHeight: scaleSizeFool(200),
 }
 
-const initDatePickerProps = {
+export const initDatePickerProps = {
   max: 2050,
   min: 2010,
   showYear: true,
@@ -42,67 +48,48 @@ const initDatePickerProps = {
   showDay: true,
 }
 
-const initWheelProps = {
+export const initWheelProps = {
   pointerEvents: 'box-only',
   defaultIndex: 0,
 }
 
-const btnColor = {
+export const btnColor = {
   default: '#1ACB79',
   cancel: '#3E3E3E',
   warning: '#FF5363',
 }
 
-function defaultProps (props: any, initProps: any) {
+export function defaultProps (props: any, initProps: any) {
   return {
     ...initProps,
     ...props,
   }
 }
 
-function disappearCompleted (onCloseCallback?: () => any, onDisappearCompleted?: () => any) {
+export function disappearCompleted (onCloseCallback?: () => any, onDisappearCompleted?: () => any) {
   onCloseCallback && onCloseCallback()
   onDisappearCompleted && onDisappearCompleted()
 }
 
 // 是否是数组
-function isArray (arg: any) {
+export function isArray (arg: any) {
   return Object.prototype.toString.call(arg) === '[object Array]'
 }
 
 // 是否是对象
-function isObject (arg: any) {
+export function isObject (arg: any) {
   return Object.prototype.toString.call(arg) === '[object Object]'
 }
 
 // 是否是字符串
-function isString (arg: any) {
+export function isString (arg: any) {
   return Object.prototype.toString.call(arg) === '[object String]'
 }
 
-function isEmpty (str: string | null | undefined) {
+export function isEmpty (str: string | null | undefined) {
   return str === null || str === '' || str === undefined
 }
 
-function isLeapYear (year: number) {
+export function isLeapYear (year: number) {
   return (year % 4 === 0) && (year % 100 !== 0 || year % 400 === 0)
-}
-
-export {
-  initViewProps,
-  initZoomProps,
-  initToastProps,
-  initPullProps,
-  initActionSheetProps,
-  initPullPickerProps,
-  initDatePickerProps,
-  initWheelProps,
-  defaultProps,
-  btnColor,
-  disappearCompleted,
-  isArray,
-  isObject,
-  isString,
-  isEmpty,
-  isLeapYear,
 }
