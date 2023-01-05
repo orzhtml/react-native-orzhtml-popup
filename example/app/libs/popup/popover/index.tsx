@@ -1,5 +1,6 @@
 import React, { FC, forwardRef, useState } from 'react'
 import { LayoutChangeEvent, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import { useSingleState } from 'react-native-orzhtml-usecom'
 
 import { arrowLayouts, filterPopoverStyle, pixelSize, popoverArrow } from '../common/Common'
 
@@ -20,8 +21,10 @@ interface PopoverProps extends IProps {
 }
 
 const Popover: FC<PopoverProps> = (props) => {
-  const [width, setWidth] = useState(0)
-  const [height, setHeight] = useState(0)
+  const [state, setState] = useSingleState({
+    width: 0,
+    height: 0,
+  })
 
   const buildStyle = () => {
     let { style, arrow, paddingCorner, headerStyle, arrowStyle, contentStyle, popoverStyle } = props
@@ -79,19 +82,19 @@ const Popover: FC<PopoverProps> = (props) => {
     switch (arrow) {
       case 'topLeft':
       case 'topRight':
-        if (headerPaddingCorner + contentPadding > width / 2) useArrow = 'top'
+        if (headerPaddingCorner + contentPadding > state.width / 2) useArrow = 'top'
         break
       case 'rightTop':
       case 'rightBottom':
-        if (headerPaddingCorner + contentPadding > height / 2) useArrow = 'right'
+        if (headerPaddingCorner + contentPadding > state.height / 2) useArrow = 'right'
         break
       case 'bottomRight':
       case 'bottomLeft':
-        if (headerPaddingCorner + contentPadding > width / 2) useArrow = 'bottom'
+        if (headerPaddingCorner + contentPadding > state.width / 2) useArrow = 'bottom'
         break
       case 'leftBottom':
       case 'leftTop':
-        if (headerPaddingCorner + contentPadding > height / 2) useArrow = 'left'
+        if (headerPaddingCorner + contentPadding > state.height / 2) useArrow = 'left'
         break
     }
 
@@ -119,16 +122,19 @@ const Popover: FC<PopoverProps> = (props) => {
 
   const onLayout = (e: LayoutChangeEvent) => {
     let _layout = e.nativeEvent.layout
-    if (_layout.width !== width || _layout.height !== height) {
-      setWidth(width)
-      setHeight(height)
+
+    if (_layout.width !== state.width || _layout.height !== state.height) {
+      setState({
+        width: _layout.width,
+        height: _layout.height,
+      })
     }
     props.onLayout && props.onLayout(e)
   }
 
   let { style, children, arrow, paddingCorner, ...others } = props
   let { popoverStyle, contentStyle, headerStyle, arrowStyle } = buildStyle()
-  console.log('popoverStyle:', popoverStyle)
+  console.log('statestate:', state)
 
   return (
     <View style={popoverStyle} onLayout={onLayout} {...others}>

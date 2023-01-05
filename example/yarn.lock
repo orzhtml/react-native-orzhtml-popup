@@ -5828,6 +5828,11 @@ react-native-gradle-plugin@^0.70.3:
   resolved "https://registry.yarnpkg.com/react-native-gradle-plugin/-/react-native-gradle-plugin-0.70.3.tgz#cbcf0619cbfbddaa9128701aa2d7b4145f9c4fc8"
   integrity sha512-oOanj84fJEXUg9FoEAQomA8ISG+DVIrTZ3qF7m69VQUJyOGYyDZmPqKcjvRku4KXlEH6hWO9i4ACLzNBh8gC0A==
 
+react-native-orzhtml-usecom@^1.0.16:
+  version "1.0.16"
+  resolved "https://registry.yarnpkg.com/react-native-orzhtml-usecom/-/react-native-orzhtml-usecom-1.0.16.tgz#94022ce03e1dcabe74cc4ebeb7544822cccfd758"
+  integrity sha512-0hi3shfx1GnZC1AnhXI5PfXIlQHICgrFklyK/3pK/NQRWPZCGsrRlh+GXktGUgpdAIZhETMklCYvsM7b5RHXKA==
+
 react-native@0.70.6:
   version "0.70.6"
   resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.70.6.tgz#d692f8b51baffc28e1a8bc5190cdb779de937aa8"
