@@ -5838,6 +5838,11 @@ react-native-orzhtml-usecom@^1.0.16:
   resolved "https://registry.yarnpkg.com/react-native-orzhtml-usecom/-/react-native-orzhtml-usecom-1.0.16.tgz#94022ce03e1dcabe74cc4ebeb7544822cccfd758"
   integrity sha512-0hi3shfx1GnZC1AnhXI5PfXIlQHICgrFklyK/3pK/NQRWPZCGsrRlh+GXktGUgpdAIZhETMklCYvsM7b5RHXKA==
 
+react-native-safe-area-context@^4.4.1:
+  version "4.4.1"
+  resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-4.4.1.tgz#239c60b8a9a80eac70a38a822b04c0f1d15ffc01"
+  integrity sha512-N9XTjiuD73ZpVlejHrUWIFZc+6Z14co1K/p1IFMkImU7+avD69F3y+lhkqA2hN/+vljdZrBSiOwXPkuo43nFQA==
+
 react-native@0.70.6:
   version "0.70.6"
   resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.70.6.tgz#d692f8b51baffc28e1a8bc5190cdb779de937aa8"
