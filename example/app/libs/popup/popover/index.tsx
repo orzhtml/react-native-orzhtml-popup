@@ -1,7 +1,7 @@
 import React, { FC, forwardRef, useState } from 'react'
 import { LayoutChangeEvent, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 
-import { arrowLayouts, filterContentStyle, filterPopoverStyle, pixelSize, popoverArrow } from '../common/Common'
+import { arrowLayouts, filterPopoverStyle, pixelSize, popoverArrow } from '../common/Common'
 
 interface IProps {
     arrow: popoverArrow;
@@ -26,14 +26,13 @@ const Popover: FC<PopoverProps> = (props) => {
   const buildStyle = () => {
     let { style, arrow, paddingCorner, headerStyle, arrowStyle, contentStyle, popoverStyle } = props
 
-    let _style: ViewStyle = {
+    let fs: ViewStyle = {
       backgroundColor: '#fff',
       borderColor: 'rgba(0, 0, 0, 0.15)',
       borderRadius: 4,
       borderWidth: pixelSize,
     }
 
-    let fs = StyleSheet.flatten([_style, style])
     let { backgroundColor, borderColor, borderWidth } = fs
 
     let arrowSize = 7 // Square side length
@@ -97,10 +96,11 @@ const Popover: FC<PopoverProps> = (props) => {
     }
 
     return {
-      popoverStyle: [filterPopoverStyle(fs, useArrow === 'none'), {
+      popoverStyle: [{
         backgroundColor: useArrow === 'none' ? '#fff' : 'rgba(0, 0, 0, 0)', // Transparent background will cause a warning at debug mode
-      }, popoverLayouts[useArrow], popoverStyle],
-      contentStyle: [filterContentStyle(fs), contentStyle],
+        position: 'relative',
+      }, popoverLayouts[useArrow], filterPopoverStyle(StyleSheet.flatten(style), useArrow === 'none')],
+      contentStyle: [fs, contentStyle],
       headerStyle: [{
         position: 'absolute',
         overflow: 'hidden',
@@ -128,6 +128,7 @@ const Popover: FC<PopoverProps> = (props) => {
 
   let { style, children, arrow, paddingCorner, ...others } = props
   let { popoverStyle, contentStyle, headerStyle, arrowStyle } = buildStyle()
+  console.log('popoverStyle:', popoverStyle)
 
   return (
     <View style={popoverStyle} onLayout={onLayout} {...others}>
