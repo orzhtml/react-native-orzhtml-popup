@@ -22,7 +22,7 @@ interface LoadingProps extends IProps {
     refInstance: React.ForwardedRef<any>;
 }
 
-const Loading: FC<LoadingProps> = (props) => {
+const LoadingView: FC<LoadingProps> = (props) => {
   const popRef = useRef(null)
   const [title, setTitle] = useState(props.title || null)
   const currentMode = useColorScheme()
@@ -80,7 +80,7 @@ const Loading: FC<LoadingProps> = (props) => {
   )
 }
 
-const Component = Loading
+const Component = LoadingView
 // 注意：这里不要在Component上使用ref;换个属性名字比如refInstance；不然会导致覆盖
 export default forwardRef((props: Partial<IProps>, ref) => {
   const initProps = {

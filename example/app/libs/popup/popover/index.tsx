@@ -20,7 +20,7 @@ interface PopoverProps extends IProps {
     refInstance: React.ForwardedRef<any>;
 }
 
-const Popover: FC<PopoverProps> = (props) => {
+const PopoverView: FC<PopoverProps> = (props) => {
   const [state, setState] = useSingleState({
     width: 0,
     height: 0,
@@ -134,7 +134,6 @@ const Popover: FC<PopoverProps> = (props) => {
 
   let { style, children, arrow, paddingCorner, ...others } = props
   let { popoverStyle, contentStyle, headerStyle, arrowStyle } = buildStyle()
-  console.log('statestate:', state)
 
   return (
     <View style={popoverStyle} onLayout={onLayout} {...others}>
@@ -150,7 +149,7 @@ const Popover: FC<PopoverProps> = (props) => {
   )
 }
 
-const Component = Popover
+const Component = PopoverView
 // 注意：这里不要在Component上使用ref;换个属性名字比如refInstance；不然会导致覆盖
 export default forwardRef(({
   arrow = 'none',

@@ -17,7 +17,7 @@ import {
   View,
 } from 'react-native'
 
-import { Popup, Overlay, Toast, Popover, Loading } from './app/libs/popup'
+import { Popup, Overlay, Toast, Popover, Loading, Alert } from './app/libs/popup'
 
 const App = () => {
   return (
@@ -53,13 +53,41 @@ const App = () => {
                 // Toast.show({
                 //   text: '小李',
                 // })
-                Loading.show()
-                setTimeout(() => {
-                  Loading.loadingRef.updateTitle('加载中...')
-                }, 1000)
-                setTimeout(() => {
-                  Loading.hide()
-                }, 3000)
+                // Loading.show()
+                // setTimeout(() => {
+                //   Loading.loadingRef.updateTitle('加载中...')
+                // }, 1000)
+                // setTimeout(() => {
+                //   Loading.hide()
+                // }, 3000)
+                // Alert('提示', '提示内容内容', [{
+                //   text: '取消',
+                //   style: 'cancel',
+                //   onPress: () => {
+                //     console.log('取消')
+                //   },
+                // }, {
+                //   text: '确定',
+                //   style: 'warning',
+                //   onPress: () => {
+                //     console.log('确定')
+                //   },
+                // }])
+                // Alert('提示', [{
+                //   text: '取消',
+                //   style: 'cancel',
+                //   onPress: () => {
+                //     console.log('取消')
+                //   },
+                // }, {
+                //   text: '确定',
+                //   style: 'warning',
+                //   onPress: () => {
+                //     console.log('确定')
+                //   },
+                // }], {
+                //   modal: false,
+                // })
               }}
             />
           </View>

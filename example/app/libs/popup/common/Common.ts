@@ -1,4 +1,4 @@
-import { PixelRatio, ViewStyle } from 'react-native'
+import { PixelRatio, StyleProp, TextStyle, ViewStyle } from 'react-native'
 
 export type OverlayPointerEvents = 'none' | 'box-only' | 'auto' | undefined;
 
@@ -10,6 +10,13 @@ export type popoverArrow = 'none' | 'topLeft' | 'top' | 'topRight' |
   'rightTop' | 'right' | 'rightBottom' |
   'bottomRight' | 'bottom' | 'bottomLeft' |
   'leftBottom' | 'left' | 'leftTop';
+
+export type AlertButtonType = {
+  banClosed?: boolean;
+  onPress?: (() => void) | undefined;
+  style?: 'default' | 'cancel' | 'warning';
+  text: string
+}
 
 export const arrowLayouts = {
   none: {},
@@ -73,7 +80,7 @@ export const btnColor = {
   warning: '#FF5363',
 }
 
-export function disappearCompleted (onCloseCallback?: () => any, onDisappearCompleted?: () => any) {
+export function disappearCompleted (onCloseCallback?: () => void, onDisappearCompleted?: () => void) {
   onCloseCallback && onCloseCallback()
   onDisappearCompleted && onDisappearCompleted()
 }

@@ -53,7 +53,13 @@ const PView: FC<PViewProps> = (props) => {
   }, [hide, props])
 
   useImperativeHandle(props.refInstance, () => ({
-    close: () => { },
+    close: (animated = props.animated, onCloseCallback?: () => void) => {
+      if (typeof animated === 'function') {
+        onCloseCallback = animated
+        animated = props.animated
+      }
+      hide(animated, onCloseCallback)
+    },
   }))
   // 处理安卓返回按钮的功能
   useEffect(() => {
