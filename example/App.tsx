@@ -17,7 +17,7 @@ import {
   View,
 } from 'react-native'
 
-import { Popup, Overlay, Toast, Popover } from './app/libs/popup'
+import { Popup, Overlay, Toast, Popover, Loading } from './app/libs/popup'
 
 const App = () => {
   return (
@@ -50,9 +50,16 @@ const App = () => {
               title="点击"
               onPress={() => {
                 // Toast.message('小明')
-                Toast.show({
-                  text: '小李',
-                })
+                // Toast.show({
+                //   text: '小李',
+                // })
+                Loading.show()
+                setTimeout(() => {
+                  Loading.loadingRef.updateTitle('加载中...')
+                }, 1000)
+                setTimeout(() => {
+                  Loading.hide()
+                }, 3000)
               }}
             />
           </View>

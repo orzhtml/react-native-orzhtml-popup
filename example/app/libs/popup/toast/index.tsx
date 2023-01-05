@@ -3,7 +3,7 @@ import { StyleProp, ViewStyle } from 'react-native'
 import { durationType, OverlayPointerEvents, ToastPosition } from '../common/Common'
 
 import Overlay from '../Overlay'
-import ToastView from './ToastView'
+import ToastView from './Toast'
 
 class Toast {
   static defaultDuration: durationType = 'short'
