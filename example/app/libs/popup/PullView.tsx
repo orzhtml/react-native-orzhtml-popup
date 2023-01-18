@@ -38,7 +38,6 @@ const PullView: FC<PullViewProps> = (props) => {
   const hide = ({ onCloseCallback }: {
         onCloseCallback?: () => void
     }) => {
-    // console.log('PullView hide')
     if (closed.current) return true
     closed.current = true
     disappear({
@@ -62,7 +61,6 @@ const PullView: FC<PullViewProps> = (props) => {
     viewLayout.current = event.nativeEvent.layout
 
     if (!showed) {
-      // console.log('PullView onLayout')
       setShowed(true)
       appear({
         onAppearCompleted: props.onAppearCompleted,

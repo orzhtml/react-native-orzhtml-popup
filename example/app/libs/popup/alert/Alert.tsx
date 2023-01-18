@@ -35,7 +35,6 @@ const AlertView: FC<AlertProps> = (props) => {
   let popRef = useRef<{ close:(animated?: boolean | (() => void), onCloseCallback?: () => void) => void }>(null)
 
   const hide = () => {
-    console.log('Alert hide')
     if (props.modal) {
       return null
     }
@@ -46,7 +45,6 @@ const AlertView: FC<AlertProps> = (props) => {
   }
 
   const close = (fn: (() => void) | undefined) => {
-    // console.log('Alert close')
     popRef.current?.close(() => {
       props.onClose && props.onClose()
       disappearCompleted(fn, props.onDisappearCompleted)
@@ -154,8 +152,6 @@ export default forwardRef(({
     useDark: false,
     ...other,
   }
-
-  console.log('initProps:', initProps)
 
   return (
     <Component {...initProps} refInstance={ref} />

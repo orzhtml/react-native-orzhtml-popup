@@ -47,7 +47,6 @@ const PopView: FC<PopViewProps> = (props) => {
   const hide = ({ onCloseCallback }: {
         onCloseCallback?: () => void
     }) => {
-    console.log('PopView hide')
     if (closed.current) return true
     closed.current = true
     disappear({
@@ -73,7 +72,6 @@ const PopView: FC<PopViewProps> = (props) => {
   }))
 
   const onLayout = (event: LayoutChangeEvent) => {
-    console.log('PopView onLayout')
     viewLayout.current = event.nativeEvent.layout
 
     if (!showed) {

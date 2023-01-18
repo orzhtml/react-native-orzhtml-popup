@@ -47,8 +47,6 @@ function Popup () {
   return (
     <>
       {elements.map((item: elementInterface) => {
-        console.log('item.key:', item.key)
-
         return (
           <View
             key={'PopupView' + item.key}

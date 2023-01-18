@@ -10,7 +10,6 @@ interface IProps {
     children?: React.ReactNode;
     paddingCorner?: number;
     contentStyle?: StyleProp<ViewStyle>;
-    popoverStyle?: StyleProp<ViewStyle>;
     headerStyle?: StyleProp<ViewStyle>;
     arrowStyle?: StyleProp<ViewStyle>;
     onLayout?: (event: LayoutChangeEvent) => void;
@@ -27,7 +26,7 @@ const PopoverView: FC<PopoverProps> = (props) => {
   })
 
   const buildStyle = () => {
-    let { style, arrow, paddingCorner, headerStyle, arrowStyle, contentStyle, popoverStyle } = props
+    let { style, arrow, paddingCorner, headerStyle, arrowStyle, contentStyle } = props
 
     let fs: ViewStyle = {
       backgroundColor: '#fff',

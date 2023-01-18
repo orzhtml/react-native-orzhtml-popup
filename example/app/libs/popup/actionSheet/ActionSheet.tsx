@@ -32,7 +32,6 @@ const ActionSheetView: FC<ActionSheetProps> = (props) => {
   let popRef = useRef<{ close:(animated?: boolean | (() => void), onCloseCallback?: () => void) => void }>(null)
 
   const hide = useCallback(() => {
-    // console.log('ActionSheetView hide')
     if (props.modal) {
       return null
     }
@@ -42,14 +41,12 @@ const ActionSheetView: FC<ActionSheetProps> = (props) => {
   }, [onDisappearCompleted, props.modal])
 
   const onCancel = useCallback(() => {
-    // console.log('ActionSheetView onCancel')
     popRef.current?.close(() => {
       disappearCompleted(cancel, onDisappearCompleted)
     })
   }, [onDisappearCompleted, cancel])
 
   const onConfirm = useCallback((item: any, index: React.Key) => {
-    // console.log('ActionSheetView onConfirm')
     popRef.current?.close(() => {
       disappearCompleted(() => {
         confirm && confirm(item, index)

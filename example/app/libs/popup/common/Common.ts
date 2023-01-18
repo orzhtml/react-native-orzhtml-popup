@@ -60,7 +60,6 @@ export const filterPopoverStyle = (fs: ViewStyle, includeRadius: boolean) => {
     borderTopRightRadius,
     ...others,
   } : { ...others }
-  console.log('style:', style)
 
   return filterContentStyle(style)
 }

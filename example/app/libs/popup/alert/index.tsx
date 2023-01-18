@@ -19,7 +19,7 @@ function Alert (title: string | React.ReactNode, message?: string | React.ReactN
     return null
   }
   let _message: string | React.ReactNode | AlertButtonType[] | AlertOptions = message
-  let _buttons: any = buttons
+  let _buttons: any = buttons || []
   let _options: any = options || {}
 
   if (isArray(message)) {
@@ -61,8 +61,6 @@ function Alert (title: string | React.ReactNode, message?: string | React.ReactN
       remove(key)
     },
   }
-
-  console.log('Alert props:', props)
 
   Keyboard.dismiss()
 

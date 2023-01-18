@@ -5,7 +5,10 @@ import Overlay from '../Overlay'
 import LoadingView from './Loading'
 
 class Loading {
-  static loadingRef = null
+  static loadingRef: { updateTitle: (title: string) => void } = {
+    updateTitle: (title: string) => {},
+  }
+
   static LoadingKey = 0
 
   static show (title = null, options: {

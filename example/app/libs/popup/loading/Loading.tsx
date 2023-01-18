@@ -38,7 +38,6 @@ const LoadingView: FC<LoadingProps> = (props) => {
 
   const renderIcon = () => {
     let { icon, iconStyle, size } = props
-    console.log('stylesIndicatorColor:', stylesIndicatorColor)
 
     if (icon) {
       return (<Image source={icon} style={iconStyle} />)
