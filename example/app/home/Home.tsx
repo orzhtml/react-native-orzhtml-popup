@@ -7,6 +7,7 @@ import LoadingDemo from './components/LoadingDemo'
 import PopoverDemo from './components/PopoverDemo'
 import PullDemo from './components/PullDemo'
 import ToastDemo from './components/ToastDemo'
+import ActionPopoverDemo from './components/ActionPopoverDemo'
 
 const Home = () => {
   const [tabs] = useState([{
@@ -27,6 +28,9 @@ const Home = () => {
   }, {
     id: 6,
     name: 'DatePicker',
+  }, {
+    id: 7,
+    name: 'ActionPopover',
   }])
   const [activeIndex, setActiveIndex] = useState(0)
 
@@ -65,6 +69,7 @@ const Home = () => {
         { activeIndex === 3 && (<LoadingDemo />)}
         { activeIndex === 4 && (<PullDemo />)}
         { activeIndex === 5 && (<DatePickerDemo />)}
+        { activeIndex === 6 && (<ActionPopoverDemo />)}
       </ScrollView>
     </View>
   )

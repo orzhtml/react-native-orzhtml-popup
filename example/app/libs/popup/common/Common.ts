@@ -1,4 +1,4 @@
-import { PixelRatio, StyleProp, TextStyle, ViewStyle } from 'react-native'
+import { PixelRatio, ViewStyle } from 'react-native'
 
 export type OverlayPointerEvents = 'none' | 'box-only' | 'auto' | undefined;
 
@@ -18,7 +18,27 @@ export type AlertButtonType = {
   text: string
 }
 
-export const arrowLayouts = {
+export type fromBoundsType = { x: number, y: number, width: number, height: number }
+
+export type headerLayoutsType = {
+  none: ViewStyle,
+  topLeft: ViewStyle,
+  top: ViewStyle,
+  topRight: ViewStyle,
+  rightTop: ViewStyle,
+  right: ViewStyle,
+  rightBottom: ViewStyle,
+  bottomRight: ViewStyle,
+  bottom: ViewStyle,
+  bottomLeft: ViewStyle,
+  leftBottom: ViewStyle,
+  left: ViewStyle,
+  leftTop: ViewStyle,
+}
+
+export type popRefType = { close:(animated?: boolean | (() => void), onCloseCallback?: () => void) => void }
+
+export const arrowLayouts: headerLayoutsType = {
   none: {},
   topLeft: { transform: [{ rotate: '45deg' }] },
   top: { transform: [{ rotate: '45deg' }] },
@@ -47,10 +67,16 @@ export const filterPopoverStyle = (fs: ViewStyle, includeRadius: boolean) => {
   }
 
   let {
-    borderRadius, borderBottomLeftRadius,
-    borderBottomRightRadius, borderTopLeftRadius,
-    borderTopRightRadius,
-    ...others
+    flexDirection, alignItems,
+    justifyContent, margin, marginBottom, marginHorizontal,
+    marginLeft, marginRight, marginTop, marginVertical, padding,
+    paddingBottom, paddingHorizontal, paddingLeft, paddingRight,
+    paddingTop, paddingVertical, backgroundColor, borderBottomColor,
+    borderBottomLeftRadius, borderBottomRightRadius, borderBottomWidth,
+    borderColor, borderLeftColor, borderLeftWidth, borderRadius,
+    borderRightColor, borderRightWidth, borderStyle, borderTopColor,
+    borderTopLeftRadius, borderTopRightRadius, borderTopWidth,
+    borderWidth, ...others
   } = fs
   let style = includeRadius ? {
     borderRadius,

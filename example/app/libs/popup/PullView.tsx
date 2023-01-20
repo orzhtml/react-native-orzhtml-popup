@@ -1,7 +1,7 @@
 import React, { useState, useRef, forwardRef, useImperativeHandle, FC } from 'react'
 import { Animated, LayoutChangeEvent, StyleProp, ViewStyle } from 'react-native'
 
-import { disappearCompleted, OverlayPointerEvents } from './common/Common'
+import { disappearCompleted, OverlayPointerEvents, popRefType } from './common/Common'
 import { marginStart, marginStop } from './common/Animated'
 
 import PView from './PView'
@@ -30,7 +30,7 @@ interface PullViewProps extends IProps {
 
 const PullView: FC<PullViewProps> = (props) => {
   let viewLayout = useRef({ x: 0, y: 0, width: 0, height: 0 })
-  let popRef = useRef<{ close:(animated?: boolean | (() => void), onCloseCallback?: () => void) => void }>(null)
+  let popRef = useRef<popRefType>(null)
   let closed = useRef(false)
   let [marginValue] = useState(new Animated.Value(0))
   let [showed, setShowed] = useState(false)

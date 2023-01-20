@@ -1,41 +1,21 @@
-import React, { useRef, useState, useCallback, useMemo, forwardRef, FC } from 'react'
+import React, { useRef, useState, useCallback, useMemo } from 'react'
 import { View, TouchableOpacity, Text } from 'react-native'
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context'
 import dayjs from 'dayjs'
 
-import { disappearCompleted, isLeapYear, OverlayPointerEvents, popRefType } from '../common/Common'
-import { scaleSizeFool, setSpText } from '../common/SetSize'
+import { initViewProps, initDatePickerProps, defaultProps, disappearCompleted, isLeapYear } from '../libs/Common'
+import { scaleSizeFool, setSpText } from '../libs/SetSize'
 import PullView from '../PullView'
 import Picker from '../picker'
 
-interface IProps {
-  modal: boolean,
-  animated: boolean,
-  overlayPointerEvents: OverlayPointerEvents,
-  isBackPress: boolean,
-  overlayOpacity: number,
-  onDisappearCompleted?: () => void,
-  onCloseRequest?: () => void,
-  cancel?: () => void,
-  confirm?: (date: string) => void,
-  value?: string,
-  max: number,
-  min: number,
-  showYear: boolean,
-  showMonth: boolean,
-  showDay: boolean,
-}
-
-interface DatePickerProps extends IProps {
-  refInstance: React.ForwardedRef<any>;
-}
-
-const DatePickerView: FC<DatePickerProps> = (props) => {
-  const { cancel, confirm, onDisappearCompleted } = props
-  let popRef = useRef<popRefType>(null)
-
+function DatePickerView (props) {
+  const propsData = defaultProps(props, { ...initViewProps, ...initDatePickerProps })
+  const { cancel, confirm, onDisappearCompleted } = propsData
+  let popRef = useRef(null)
   let [date, updateDate] = useState(() => {
-    let _date = new Date(props.value || '')
+    console.log('propsData.value:', propsData.value)
+    let _date = new Date(propsData.value)
+    console.log('_date_date:', _date)
     if (Number.isNaN(_date.getTime())) {
       _date = new Date()
     }
@@ -44,15 +24,15 @@ const DatePickerView: FC<DatePickerProps> = (props) => {
 
   let years = useMemo(() => {
     let _years = []
-    for (let i = props.min; i <= props.max; ++i) {
+    for (let i = propsData.min; i <= propsData.max; ++i) {
       _years.push({
         label: i + '年',
         value: i,
       })
     }
+    // console.log('_years init:', _years)
     return _years
-  }, [props.max, props.min])
-
+  }, [propsData.max, propsData.min])
   let months = useMemo(() => {
     let _months = []
     for (let i = 1; i <= 12; ++i) {
@@ -61,9 +41,9 @@ const DatePickerView: FC<DatePickerProps> = (props) => {
         value: i,
       })
     }
+    // console.log('_months init:', _months)
     return _months
   }, [])
-
   let daysCount = useMemo(() => {
     let d28 = { label: '28日', value: 28 }
     let d29 = { label: '29日', value: 29 }
@@ -73,35 +53,37 @@ const DatePickerView: FC<DatePickerProps> = (props) => {
       [d31, d28, d31, d30, d31, d30, d31, d31, d30, d31, d30, d31],
       [d31, d29, d31, d30, d31, d30, d31, d31, d30, d31, d30, d31],
     ]
+    // console.log('_daysCount init:', _daysCount)
     return _daysCount
   }, [])
 
   const hide = useCallback(() => {
-    if (props.modal) {
+    // console.log('DatePickerView hide')
+    if (propsData.modal) {
       return null
     }
-    popRef.current?.close(() => {
+    popRef && popRef.current && popRef.current.close(() => {
       disappearCompleted(onDisappearCompleted)
     })
-  }, [onDisappearCompleted, props.modal])
+  }, [onDisappearCompleted, propsData.modal])
 
   const onCancel = useCallback(() => {
-    popRef.current?.close(() => {
+    // console.log('DatePickerView onCancel')
+    popRef && popRef.current && popRef.current.close(() => {
       disappearCompleted(cancel, onDisappearCompleted)
     })
   }, [cancel, onDisappearCompleted])
 
   const onConfirm = useCallback(() => {
+    // console.log('DatePickerView onConfirm')
     let value = dayjs(new Date(date)).format('YYYY-MM-DD')
 
-    popRef.current?.close(() => {
-      disappearCompleted(() => {
-        confirm && confirm(value)
-      }, onDisappearCompleted)
+    popRef && popRef.current && popRef.current.close(() => {
+      disappearCompleted(() => confirm(value), onDisappearCompleted)
     })
   }, [date, confirm, onDisappearCompleted])
 
-  const onDateChange = useCallback((year: number, month: number, day: number) => {
+  const onDateChange = useCallback((year, month, day) => {
     date.setFullYear(year)
     let _daysCount_ = daysCount[isLeapYear(year) ? 1 : 0][month]
     if (day > _daysCount_.value) {
@@ -127,35 +109,35 @@ const DatePickerView: FC<DatePickerProps> = (props) => {
     return (
       <View style={{ backgroundColor: '#fff', flexDirection: 'row' }}>
         {
-          props.showYear ? (
+          propsData.showYear ? (
             <Picker
               style={{ height: scaleSizeFool(250), flex: 1 }}
-              //   itemStyle={{ textAlign: 'center' }}
+              itemStyle={{ textAlign: 'center' }}
               items={years}
               selectedValue={year}
-              onValueChange={(itemValue, itemIndex) => onDateChange(Number(itemValue), month, day)}
+              onValueChange={(itemValue, itemIndex) => onDateChange(itemValue, month, day)}
             />
           ) : null
         }
         {
-          props.showMonth ? (
+          propsData.showMonth ? (
             <Picker
               style={{ height: scaleSizeFool(250), flex: 1 }}
-              //   itemStyle={{ textAlign: 'center' }}
+              itemStyle={{ textAlign: 'center' }}
               items={months}
               selectedValue={month + 1}
-              onValueChange={(itemValue, itemIndex) => onDateChange(year, Number(itemValue) - 1, day)}
+              onValueChange={(itemValue, itemIndex) => onDateChange(year, itemValue - 1, day)}
             />
           ) : null
         }
         {
-          props.showMonth && props.showDay ? (
+          propsData.showDay ? (
             <Picker
               style={{ height: scaleSizeFool(250), flex: 1 }}
-              //   itemStyle={{ textAlign: 'center' }}
+              itemStyle={{ textAlign: 'center' }}
               items={days}
               selectedValue={day}
-              onValueChange={(itemValue, itemIndex) => onDateChange(year, month, Number(itemValue))}
+              onValueChange={(itemValue, itemIndex) => onDateChange(year, month, itemValue)}
             />
           ) : null
         }
@@ -169,7 +151,7 @@ const DatePickerView: FC<DatePickerProps> = (props) => {
       containerStyle={{ backgroundColor: 'rgba(0,0,0,0)' }}
       onCloseRequest={hide}
       side="bottom"
-      modal={props.modal}
+      modal={propsData.modal}
       isBackPress={false}
     >
       <View
@@ -198,33 +180,10 @@ const DatePickerView: FC<DatePickerProps> = (props) => {
       </View>
       {renderContent()}
       <SafeAreaInsetsContext.Consumer>
-        {(insets) => (<View style={{ backgroundColor: '#fff', height: insets?.bottom }} />)}
+        {(insets) => (<View style={{ backgroundColor: '#fff', height: insets.bottom }} />)}
       </SafeAreaInsetsContext.Consumer>
     </PullView>
   )
 }
 
-const Component = DatePickerView
-// 注意：这里不要在Component上使用ref;换个属性名字比如refInstance；不然会导致覆盖
-export default forwardRef(({
-  overlayPointerEvents = 'auto',
-  ...other
-}: Partial<IProps>, ref) => {
-  const initProps = {
-    modal: false,
-    animated: true,
-    overlayPointerEvents,
-    isBackPress: true,
-    overlayOpacity: 0.55,
-    max: 2080,
-    min: 1900,
-    showYear: true,
-    showMonth: true,
-    showDay: true,
-    ...other,
-  }
-
-  return (
-    <Component {...initProps} refInstance={ref} />
-  )
-})
+export default DatePickerView

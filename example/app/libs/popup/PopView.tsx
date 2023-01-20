@@ -1,7 +1,7 @@
 import React, { useState, useRef, forwardRef, useImperativeHandle, FC } from 'react'
 import { Animated, LayoutChangeEvent, StyleProp, ViewStyle } from 'react-native'
 
-import { disappearCompleted, OverlayPointerEvents } from './common/Common'
+import { disappearCompleted, OverlayPointerEvents, popRefType } from './common/Common'
 import { fadeStart, fadeStop, zoomStart, zoomStop } from './common/Animated'
 import PView from './PView'
 
@@ -35,7 +35,7 @@ interface PopViewProps extends IProps {
 
 const PopView: FC<PopViewProps> = (props) => {
   let viewLayout = useRef({ x: 0, y: 0, width: 0, height: 0 })
-  let popRef = useRef<{ close:(animated?: boolean | (() => void), onCloseCallback?: () => void) => void }>(null)
+  let popRef = useRef<popRefType>(null)
   let closed = useRef(false)
   let [opacityAnim] = useState(new Animated.Value(0))
   let [translateX] = useState(new Animated.Value(0))

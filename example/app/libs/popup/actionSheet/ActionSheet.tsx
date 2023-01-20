@@ -2,7 +2,7 @@ import React, { useRef, useCallback, forwardRef, FC } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, StyleProp, ViewStyle } from 'react-native'
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context'
 
-import { disappearCompleted, OverlayPointerEvents } from '../common/Common'
+import { disappearCompleted, OverlayPointerEvents, popRefType } from '../common/Common'
 import { scaleSizeFool, setSpText } from '../common/SetSize'
 
 import PullView from '../PullView'
@@ -29,7 +29,7 @@ interface ActionSheetProps extends IProps {
 
 const ActionSheetView: FC<ActionSheetProps> = (props) => {
   let { cancel, confirm, onDisappearCompleted } = props
-  let popRef = useRef<{ close:(animated?: boolean | (() => void), onCloseCallback?: () => void) => void }>(null)
+  let popRef = useRef<popRefType>(null)
 
   const hide = useCallback(() => {
     if (props.modal) {

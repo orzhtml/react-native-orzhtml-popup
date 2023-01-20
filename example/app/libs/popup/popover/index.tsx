@@ -1,14 +1,14 @@
-import React, { FC, forwardRef, useState } from 'react'
+import React, { FC, forwardRef } from 'react'
 import { LayoutChangeEvent, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import { useSingleState } from 'react-native-orzhtml-usecom'
 
-import { arrowLayouts, filterPopoverStyle, pixelSize, popoverArrow } from '../common/Common'
+import { arrowLayouts, filterContentStyle, filterPopoverStyle, headerLayoutsType, pixelSize, popoverArrow } from '../common/Common'
 
 interface IProps {
     arrow: popoverArrow;
-    style?: StyleProp<ViewStyle>;
     children?: React.ReactNode;
     paddingCorner?: number;
+    style?: StyleProp<ViewStyle>;
     contentStyle?: StyleProp<ViewStyle>;
     headerStyle?: StyleProp<ViewStyle>;
     arrowStyle?: StyleProp<ViewStyle>;
@@ -26,15 +26,16 @@ const PopoverView: FC<PopoverProps> = (props) => {
   })
 
   const buildStyle = () => {
-    let { style, arrow, paddingCorner, headerStyle, arrowStyle, contentStyle } = props
+    let { style, arrow, paddingCorner } = props
 
-    let fs: ViewStyle = {
+    let _style = [{
       backgroundColor: '#fff',
       borderColor: 'rgba(0, 0, 0, 0.15)',
       borderRadius: 4,
       borderWidth: pixelSize,
-    }
+    }, style]
 
+    let fs = StyleSheet.flatten(_style)
     let { backgroundColor, borderColor, borderWidth } = fs
 
     let arrowSize = 7 // Square side length
@@ -45,7 +46,7 @@ const PopoverView: FC<PopoverProps> = (props) => {
     let headerPaddingCorner = paddingCorner || 8
     let contentPadding = halfSquareSize
 
-    let headerLayouts = {
+    let headerLayouts: headerLayoutsType = {
       none: {},
       topLeft: { top: 0, left: 0, right: 0, height: headerSize, paddingTop: headerPadding, alignItems: 'flex-start', paddingLeft: headerPaddingCorner },
       top: { top: 0, left: 0, right: 0, height: headerSize, paddingTop: headerPadding, alignItems: 'center' },
@@ -60,6 +61,7 @@ const PopoverView: FC<PopoverProps> = (props) => {
       left: { top: 0, bottom: 0, left: 0, width: headerSize, paddingLeft: headerPadding, alignItems: 'flex-start', justifyContent: 'center' },
       leftTop: { top: 0, bottom: 0, left: 0, width: headerSize, paddingLeft: headerPadding, alignItems: 'flex-start', justifyContent: 'flex-start', paddingTop: headerPaddingCorner },
     }
+
     let popoverLayouts = {
       none: {},
       topLeft: { paddingTop: contentPadding },
@@ -75,10 +77,10 @@ const PopoverView: FC<PopoverProps> = (props) => {
       left: { paddingLeft: contentPadding },
       leftTop: { paddingLeft: contentPadding },
     }
-
-    if (!arrow) arrow = 'none'
-    let useArrow = arrow
-    switch (arrow) {
+    let _arrow: popoverArrow = arrow
+    if (!_arrow) _arrow = 'none'
+    let useArrow = _arrow
+    switch (_arrow) {
       case 'topLeft':
       case 'topRight':
         if (headerPaddingCorner + contentPadding > state.width / 2) useArrow = 'top'
@@ -96,32 +98,38 @@ const PopoverView: FC<PopoverProps> = (props) => {
         if (headerPaddingCorner + contentPadding > state.height / 2) useArrow = 'left'
         break
     }
+    console.log('useArrow:', useArrow, headerPadding)
+
+    let _headerStyle = Object.assign({
+      position: 'absolute',
+      overflow: 'hidden',
+      backgroundColor: 'rgba(0, 0, 0, 0)',
+    }, headerLayouts[useArrow])
+
+    let _arrowStyle = Object.assign({
+      backgroundColor,
+      width: arrowSize,
+      height: arrowSize,
+      borderColor,
+      borderTopWidth: borderWidth,
+      borderLeftWidth: borderWidth,
+    }, arrowLayouts[useArrow])
+
+    let _contentStyle = filterContentStyle(fs)
+    let _popoverStyle = [filterPopoverStyle(fs, useArrow === 'none'), {
+      backgroundColor: useArrow === 'none' ? '#fff' : 'rgba(0, 0, 0, 0)', // Transparent background will cause a warning at debug mode
+    }].concat(popoverLayouts[useArrow])
 
     return {
-      popoverStyle: [{
-        backgroundColor: useArrow === 'none' ? '#fff' : 'rgba(0, 0, 0, 0)', // Transparent background will cause a warning at debug mode
-        position: 'relative',
-      }, popoverLayouts[useArrow], filterPopoverStyle(StyleSheet.flatten(style), useArrow === 'none')],
-      contentStyle: [fs, contentStyle],
-      headerStyle: [{
-        position: 'absolute',
-        overflow: 'hidden',
-        backgroundColor: 'rgba(0, 0, 0, 0)',
-      }, headerLayouts[useArrow], headerStyle],
-      arrowStyle: [{
-        backgroundColor,
-        width: arrowSize,
-        height: arrowSize,
-        borderColor,
-        borderTopWidth: borderWidth,
-        borderLeftWidth: borderWidth,
-      }, arrowLayouts[useArrow], arrowStyle],
+      popoverStyle: _popoverStyle,
+      contentStyle: _contentStyle,
+      headerStyle: _headerStyle,
+      arrowStyle: _arrowStyle,
     }
   }
 
   const onLayout = (e: LayoutChangeEvent) => {
     let _layout = e.nativeEvent.layout
-
     if (_layout.width !== state.width || _layout.height !== state.height) {
       setState({
         width: _layout.width,
@@ -133,15 +141,20 @@ const PopoverView: FC<PopoverProps> = (props) => {
 
   let { style, children, arrow, paddingCorner, ...others } = props
   let { popoverStyle, contentStyle, headerStyle, arrowStyle } = buildStyle()
+  console.log('contentStyle1:', contentStyle, props.contentStyle)
 
   return (
-    <View style={popoverStyle} onLayout={onLayout} {...others}>
-      <View style={contentStyle}>
+    <View
+      style={StyleSheet.compose(popoverStyle, props.style)}
+      onLayout={onLayout}
+      {...others}
+    >
+      <View style={StyleSheet.compose(contentStyle, props.contentStyle)}>
         {children}
       </View>
       {!arrow || arrow === 'none' ? null : (
-        <View style={headerStyle}>
-          <View style={arrowStyle} />
+        <View style={StyleSheet.compose(headerStyle, props.headerStyle)}>
+          <View style={StyleSheet.compose(arrowStyle, props.arrowStyle)} />
         </View>
       )}
     </View>

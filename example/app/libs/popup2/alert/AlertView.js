@@ -1,61 +1,42 @@
-import React, { FC, forwardRef, useRef } from 'react'
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, StyleProp, TextStyle, useColorScheme } from 'react-native'
+import React, { useRef } from 'react'
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native'
+import { useDynamicValue } from 'react-native-dynamic'
 
-import { disappearCompleted, btnColor, OverlayPointerEvents, AlertButtonType, popRefType } from '../common/Common'
-import { scaleSizeFool, setSpText } from '../common/SetSize'
-
+import { initViewProps, initZoomProps, defaultProps, disappearCompleted, btnColor } from '../libs/Common'
+import { scaleSizeFool, setSpText } from '../libs/SetSize'
 import PopView from '../PopView'
 import dynamicStyles from '../style'
 
-interface IProps {
-    modal: boolean;
-    animated: boolean;
-    overlayPointerEvents: OverlayPointerEvents;
-    isBackPress: boolean;
-    useDark: boolean;
-    overlayOpacity: number;
-    type?: 'zoomIn' | 'zoomOut' | 'fade' | 'custom' | 'none';
-    onDisappearCompleted?: () => void;
-    title?: string | React.ReactNode;
-    message?: string | React.ReactNode;
-    titleStyle?: StyleProp<TextStyle>;
-    messageStyle?: StyleProp<TextStyle>;
-    onClose?: () => void;
-    buttons?: AlertButtonType[]
-}
-
-interface AlertProps extends IProps {
-    refInstance: React.ForwardedRef<any>;
-}
-
-const AlertView: FC<AlertProps> = (props) => {
-  const currentMode = useColorScheme()
-  const styles = props.useDark && currentMode ? dynamicStyles[currentMode] : dynamicStyles.light
-  const { title, message, buttons, titleStyle, messageStyle } = props
-  let popRef = useRef<popRefType>(null)
+const AlertView = (props) => {
+  const styles = useDynamicValue(dynamicStyles)
+  const propsData = defaultProps(props, { ...initViewProps, ...initZoomProps })
+  const { title, message, buttons, titleStyle, messageStyle } = propsData
+  let popRef = useRef(null)
 
   const hide = () => {
-    if (props.modal) {
+    // console.log('AlertView hide')
+    if (propsData.modal) {
       return null
     }
-    popRef.current?.close(() => {
-      props.onClose && props.onClose()
-      disappearCompleted(props.onDisappearCompleted)
+    popRef && popRef.current && popRef.current.close(() => {
+      propsData.onClose()
+      disappearCompleted(propsData.onDisappearCompleted)
     })
   }
 
-  const close = (fn: (() => void) | undefined) => {
-    popRef.current?.close(() => {
-      props.onClose && props.onClose()
-      disappearCompleted(fn, props.onDisappearCompleted)
+  const close = (fn) => {
+    // console.log('AlertView close')
+    popRef && popRef.current && popRef.current.close(() => {
+      propsData.onClose()
+      disappearCompleted(fn, propsData.onDisappearCompleted)
     })
   }
 
   return (
     <PopView
       ref={popRef}
-      type={props.type}
-      animated={props.animated}
+      type={propsData.type}
+      animated={propsData.animated}
       onCloseRequest={hide}
     >
       <View style={{ width: '72%', backgroundColor: styles.defaultBg, borderRadius: scaleSizeFool(5) }}>
@@ -101,7 +82,7 @@ const AlertView: FC<AlertProps> = (props) => {
           }}
         >
           {
-            buttons?.map((btn: AlertButtonType, i: React.Key) => {
+            buttons.map((btn, i) => {
               let key = 'btn-' + i
               return (
                 <TouchableOpacity
@@ -117,13 +98,13 @@ const AlertView: FC<AlertProps> = (props) => {
                   }}
                   onPress={() => {
                     if (btn.banClosed) {
-                      btn.onPress && btn.onPress()
+                      btn.onPress()
                     } else {
                       close(btn.onPress)
                     }
                   }}
                 >
-                  <Text style={{ fontSize: setSpText(16), color: btnColor[btn.style || 'default'] }}>
+                  <Text style={{ fontSize: setSpText(16), color: btnColor[btn.style] || btnColor.default }}>
                     {btn.text}
                   </Text>
                 </TouchableOpacity>
@@ -136,24 +117,4 @@ const AlertView: FC<AlertProps> = (props) => {
   )
 }
 
-const Component = AlertView
-// 注意：这里不要在Component上使用ref;换个属性名字比如refInstance；不然会导致覆盖
-export default forwardRef(({
-  overlayPointerEvents = 'auto',
-  type = 'zoomIn', // 'zoomIn' | 'zoomOut' | 'fade' | 'custom' | 'none' | undefined
-  ...other
-}: Partial<IProps>, ref) => {
-  const initProps = {
-    modal: false,
-    animated: true,
-    overlayPointerEvents,
-    isBackPress: true,
-    overlayOpacity: 0.55,
-    useDark: false,
-    ...other,
-  }
-
-  return (
-    <Component {...initProps} refInstance={ref} />
-  )
-})
+export default AlertView
