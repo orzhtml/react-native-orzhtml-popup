@@ -4,7 +4,7 @@ import { SafeAreaInsetsContext } from 'react-native-safe-area-context'
 import { useSingleState } from 'react-native-orzhtml-usecom'
 
 import { initViewProps, initPullPickerProps, defaultProps, disappearCompleted, isEmpty } from '../libs/Common'
-import { scaleSizeFool, setSpText } from '../libs/SetSize'
+import { scaleSize } from '../libs/SetSize'
 import PullView from '../PullView'
 import Picker from '../picker'
 
@@ -103,7 +103,7 @@ function PullPickerView (props) {
       <View
         style={{
           backgroundColor: '#fff',
-          paddingHorizontal: scaleSizeFool(5),
+          paddingHorizontal: scaleSize(5),
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -112,16 +112,16 @@ function PullPickerView (props) {
         <TouchableOpacity
           activeOpacity={1}
           onPress={onCancel}
-          style={{ padding: scaleSizeFool(16), justifyContent: 'center', alignItems: 'center' }}
+          style={{ padding: scaleSize(16), justifyContent: 'center', alignItems: 'center' }}
         >
-          <Text style={{ fontSize: setSpText(16), color: '#000' }}>取消</Text>
+          <Text style={{ fontSize: scaleSize(16), color: '#000' }}>取消</Text>
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={1}
           onPress={onConfirm}
-          style={{ padding: scaleSizeFool(16), justifyContent: 'center', alignItems: 'center' }}
+          style={{ padding: scaleSize(16), justifyContent: 'center', alignItems: 'center' }}
         >
-          <Text style={{ fontSize: setSpText(16), color: '#1ACB79' }}>完成</Text>
+          <Text style={{ fontSize: scaleSize(16), color: '#1ACB79' }}>完成</Text>
         </TouchableOpacity>
       </View>
       <Picker

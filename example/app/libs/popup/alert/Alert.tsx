@@ -1,31 +1,25 @@
 import React, { FC, forwardRef, useRef } from 'react'
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, StyleProp, TextStyle, useColorScheme } from 'react-native'
+import { ScrollView, StyleProp, StyleSheet, Text, TextStyle, TouchableOpacity, useColorScheme, View } from 'react-native'
 
-import { disappearCompleted, btnColor, OverlayPointerEvents, AlertButtonType, popRefType } from '../common/Common'
-import { scaleSizeFool, setSpText } from '../common/SetSize'
-
+import { AlertButtonType, btnColor, disappearCompleted, initViewProps, IProps, popRefType } from '../common/Common'
+import { scaleSize } from '../common/SetSize'
 import PopView from '../PopView'
+
 import dynamicStyles from '../style'
 
-interface IProps {
-    modal: boolean;
-    animated: boolean;
-    overlayPointerEvents: OverlayPointerEvents;
-    isBackPress: boolean;
-    useDark: boolean;
-    overlayOpacity: number;
-    type?: 'zoomIn' | 'zoomOut' | 'fade' | 'custom' | 'none';
-    onDisappearCompleted?: () => void;
-    title?: string | React.ReactNode;
-    message?: string | React.ReactNode;
-    titleStyle?: StyleProp<TextStyle>;
-    messageStyle?: StyleProp<TextStyle>;
-    onClose?: () => void;
-    buttons?: AlertButtonType[]
+interface CProps extends IProps {
+    type: 'zoomIn' | 'zoomOut' | 'fade' | 'custom' | 'none',
+    onDisappearCompleted?: () => void,
+    title?: string | React.ReactNode,
+    message?: string | React.ReactNode,
+    titleStyle?: StyleProp<TextStyle>,
+    messageStyle?: StyleProp<TextStyle>,
+    onClose?: () => void,
+    buttons?: AlertButtonType[],
 }
 
-interface AlertProps extends IProps {
-    refInstance: React.ForwardedRef<any>;
+interface AlertProps extends CProps {
+    refInstance: React.ForwardedRef<any>,
 }
 
 const AlertView: FC<AlertProps> = (props) => {
@@ -58,20 +52,24 @@ const AlertView: FC<AlertProps> = (props) => {
       animated={props.animated}
       onCloseRequest={hide}
     >
-      <View style={{ width: '72%', backgroundColor: styles.defaultBg, borderRadius: scaleSizeFool(5) }}>
-        <ScrollView style={{ padding: scaleSizeFool(15), marginTop: scaleSizeFool(10) }}>
+      <View style={{
+        width: '72%',
+        backgroundColor: styles.defaultBg,
+        borderRadius: scaleSize(5),
+      }}>
+        <ScrollView style={{ padding: scaleSize(15), marginTop: scaleSize(10) }}>
           {
             typeof title === 'string' ? (
-              <View style={{ marginBottom: scaleSizeFool(15), alignItems: 'center' }}>
+              <View style={{ marginBottom: scaleSize(15), alignItems: 'center' }}>
                 <Text style={[
                   {
-                    fontSize: setSpText(16),
+                    fontSize: scaleSize(16),
                     color: styles.alertTitle,
                     fontWeight: '500',
-                    lineHeight: scaleSizeFool(20),
+                    lineHeight: scaleSize(20),
                     textAlign: 'center',
                   },
-                  titleStyle,
+                  StyleSheet.flatten(titleStyle),
                 ]}>{title}</Text>
               </View>
             ) : title
@@ -81,11 +79,11 @@ const AlertView: FC<AlertProps> = (props) => {
               <View style={{ alignItems: 'center' }}>
                 <Text
                   style={[{
-                    fontSize: setSpText(14),
+                    fontSize: scaleSize(14),
                     color: styles.alertMsgColor,
                     textAlign: 'center',
-                    lineHeight: scaleSizeFool(20),
-                  }, messageStyle]}
+                    lineHeight: scaleSize(20),
+                  }, StyleSheet.flatten(messageStyle)]}
                 >{message}</Text>
               </View>
             ) : message
@@ -93,7 +91,7 @@ const AlertView: FC<AlertProps> = (props) => {
         </ScrollView>
         <View
           style={{
-            height: scaleSizeFool(48),
+            height: scaleSize(48),
             width: '100%',
             borderTopWidth: StyleSheet.hairlineWidth,
             borderTopColor: 'rgba(0, 0, 0, 0.2)',
@@ -109,7 +107,7 @@ const AlertView: FC<AlertProps> = (props) => {
                   activeOpacity={1}
                   style={{
                     flex: 1,
-                    height: scaleSizeFool(48),
+                    height: scaleSize(48),
                     justifyContent: 'center',
                     alignItems: 'center',
                     borderLeftColor: 'rgba(0, 0, 0, 0.2)',
@@ -123,7 +121,10 @@ const AlertView: FC<AlertProps> = (props) => {
                     }
                   }}
                 >
-                  <Text style={{ fontSize: setSpText(16), color: btnColor[btn.style || 'default'] }}>
+                  <Text style={{
+                    fontSize: scaleSize(16),
+                    color: btnColor[btn.style || 'default'],
+                  }}>
                     {btn.text}
                   </Text>
                 </TouchableOpacity>
@@ -138,19 +139,11 @@ const AlertView: FC<AlertProps> = (props) => {
 
 const Component = AlertView
 // 注意：这里不要在Component上使用ref;换个属性名字比如refInstance；不然会导致覆盖
-export default forwardRef(({
-  overlayPointerEvents = 'auto',
-  type = 'zoomIn', // 'zoomIn' | 'zoomOut' | 'fade' | 'custom' | 'none' | undefined
-  ...other
-}: Partial<IProps>, ref) => {
-  const initProps = {
-    modal: false,
-    animated: true,
-    overlayPointerEvents,
-    isBackPress: true,
-    overlayOpacity: 0.55,
-    useDark: false,
-    ...other,
+export default forwardRef((props: Partial<CProps>, ref) => {
+  const initProps: CProps = {
+    ...initViewProps,
+    type: 'zoomIn',
+    ...props,
   }
 
   return (

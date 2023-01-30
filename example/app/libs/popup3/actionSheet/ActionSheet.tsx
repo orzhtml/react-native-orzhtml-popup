@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, StyleProp, ViewStyle } from '
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context'
 
 import { disappearCompleted, OverlayPointerEvents, popRefType } from '../common/Common'
-import { scaleSizeFool, setSpText } from '../common/SetSize'
+import { scaleSize } from '../common/SetSize'
 
 import PullView from '../PullView'
 
@@ -63,7 +63,7 @@ const ActionSheetView: FC<ActionSheetProps> = (props) => {
       modal={props.modal}
       isBackPress={false}
     >
-      <View style={{ backgroundColor: '#fff', borderRadius: scaleSizeFool(10), maxHeight: scaleSizeFool(300) }}>
+      <View style={{ backgroundColor: '#fff', borderRadius: scaleSize(10), maxHeight: scaleSize(300) }}>
         {
           props.items?.map((item: { [x: string]: any }, index: React.Key) => {
             let text = typeof item === 'string' ? item : item[props.label]
@@ -77,8 +77,8 @@ const ActionSheetView: FC<ActionSheetProps> = (props) => {
                 }}
                 onPress={() => onConfirm(item, index)}
               >
-                <View style={{ height: scaleSizeFool(50), justifyContent: 'center', alignItems: 'center' }}>
-                  <Text style={{ fontSize: setSpText(14), color: '#333', fontWeight: '500' }}>{text}</Text>
+                <View style={{ height: scaleSize(50), justifyContent: 'center', alignItems: 'center' }}>
+                  <Text style={{ fontSize: scaleSize(14), color: '#333', fontWeight: '500' }}>{text}</Text>
                 </View>
               </TouchableOpacity>
             )
@@ -88,16 +88,16 @@ const ActionSheetView: FC<ActionSheetProps> = (props) => {
       <TouchableOpacity
         activeOpacity={1}
         style={{
-          marginTop: scaleSizeFool(10),
-          height: scaleSizeFool(50),
+          marginTop: scaleSize(10),
+          height: scaleSize(50),
           backgroundColor: '#fff',
-          borderRadius: scaleSizeFool(10),
+          borderRadius: scaleSize(10),
           justifyContent: 'center',
           alignItems: 'center',
         }}
         onPress={onCancel}
       >
-        <Text style={{ fontSize: setSpText(14), color: '#333', fontWeight: '500' }}>
+        <Text style={{ fontSize: scaleSize(14), color: '#333', fontWeight: '500' }}>
         取消
         </Text>
       </TouchableOpacity>

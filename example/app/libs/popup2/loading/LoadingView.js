@@ -3,7 +3,7 @@ import { Text, Image, ActivityIndicator } from 'react-native'
 import { useDarkMode } from 'react-native-dynamic'
 
 import { initViewProps, defaultProps } from '../libs/Common'
-import { scaleSizeFool, setSpText } from '../libs/SetSize'
+import { scaleSize } from '../libs/SetSize'
 
 import PView from '../PView'
 
@@ -41,9 +41,9 @@ const LoadingView = forwardRef((props, ref) => {
       _title_ = (
         <Text
           style={[{
-            fontSize: setSpText(16),
+            fontSize: scaleSize(16),
             color: stylesTitleColor,
-            marginTop: scaleSizeFool(10),
+            marginTop: scaleSize(10),
           }, titleStyle]}
         >{title}</Text>
       )

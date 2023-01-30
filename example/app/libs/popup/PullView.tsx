@@ -1,35 +1,28 @@
-import React, { useState, useRef, forwardRef, useImperativeHandle, FC } from 'react'
-import { Animated, LayoutChangeEvent, StyleProp, ViewStyle } from 'react-native'
+import React, { FC, forwardRef, useImperativeHandle, useRef, useState } from 'react'
+import { Animated, LayoutChangeEvent, LayoutRectangle, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 
-import { disappearCompleted, OverlayPointerEvents, popRefType } from './common/Common'
 import { marginStart, marginStop } from './common/Animated'
-
+import { disappearCompleted, initViewProps, IProps, popRefType } from './common/Common'
 import PView from './PView'
 
-interface IProps {
-    modal: boolean;
-    animated: boolean;
-    overlayPointerEvents: OverlayPointerEvents;
-    isBackPress: boolean;
-    useDark: boolean;
-    overlayOpacity: number;
-    children?: React.ReactNode;
-    style?: StyleProp<ViewStyle>;
-    barStyles?: StyleProp<ViewStyle>;
-    onDisappearCompleted?: () => void;
-    onCloseRequest?: () => void;
-    onAppearCompleted?: () => void;
-    containerStyle?: StyleProp<ViewStyle>;
-    side: 'bottom' | 'top' | 'left' | 'right';
-    content?: React.ReactNode;
+interface CProps extends IProps {
+    children?: React.ReactNode,
+    style?: StyleProp<ViewStyle>,
+    barStyles?: StyleProp<ViewStyle>,
+    containerStyle?: StyleProp<ViewStyle>,
+    side: 'bottom' | 'top' | 'left' | 'right',
+    content?: React.ReactNode,
+    onDisappearCompleted?: () => void,
+    onCloseRequest?: () => void,
+    onAppearCompleted?: () => void,
 }
 
-interface PullViewProps extends IProps {
-    refInstance: React.ForwardedRef<any>;
+interface PullViewProps extends CProps {
+    refInstance: React.ForwardedRef<any>,
 }
 
 const PullView: FC<PullViewProps> = (props) => {
-  let viewLayout = useRef({ x: 0, y: 0, width: 0, height: 0 })
+  let viewLayout = useRef<LayoutRectangle>({ x: 0, y: 0, width: 0, height: 0 })
   let popRef = useRef<popRefType>(null)
   let closed = useRef(false)
   let [marginValue] = useState(new Animated.Value(0))
@@ -133,7 +126,10 @@ const PullView: FC<PullViewProps> = (props) => {
       overlayOpacity={props.overlayOpacity}
       isBackPress={props.isBackPress}
     >
-      <Animated.View style={[containerStyle, contentStyle]} onLayout={onLayout}>
+      <Animated.View
+        style={[StyleSheet.flatten(containerStyle), contentStyle]}
+        onLayout={onLayout}
+      >
         {content || children}
       </Animated.View>
     </PView>
@@ -144,12 +140,7 @@ function appear ({ side, marginValue, onAppearCompleted, viewLayout }: {
     side: 'bottom' | 'top' | 'left' | 'right',
     marginValue: Animated.Value,
     onAppearCompleted?: () => void,
-    viewLayout: {
-        x: number;
-        y: number;
-        width: number;
-        height: number;
-    }
+    viewLayout: LayoutRectangle,
 }) {
   marginValue.setValue(marginSize(side, viewLayout))
   Animated.parallel(marginStart(marginValue)).start(e => {
@@ -160,23 +151,13 @@ function appear ({ side, marginValue, onAppearCompleted, viewLayout }: {
 function disappear ({ side, marginValue, viewLayout }: {
     side: 'bottom' | 'top' | 'left' | 'right',
     marginValue: Animated.Value,
-    viewLayout: {
-        x: number;
-        y: number;
-        width: number;
-        height: number;
-    }
+    viewLayout: LayoutRectangle,
 }) {
   Animated.parallel(marginStop(marginValue, marginSize(side, viewLayout)))
     .start(e => { })
 }
 
-function marginSize (side: 'bottom' | 'top' | 'left' | 'right', viewLayout: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-}) {
+function marginSize (side: 'bottom' | 'top' | 'left' | 'right', viewLayout: LayoutRectangle) {
   if (side === 'left' || side === 'right') {
     return -viewLayout.width
   } else {
@@ -186,20 +167,11 @@ function marginSize (side: 'bottom' | 'top' | 'left' | 'right', viewLayout: {
 
 const Component = PullView
 // 注意：这里不要在Component上使用ref;换个属性名字比如refInstance；不然会导致覆盖
-export default forwardRef(({
-  overlayPointerEvents = 'auto',
-  side = 'bottom',
-  ...other
-}: Partial<IProps>, ref) => {
-  const initProps = {
-    modal: false,
-    animated: true,
-    overlayPointerEvents,
-    isBackPress: true,
-    overlayOpacity: 0.55,
-    useDark: false,
-    side,
-    ...other,
+export default forwardRef((props: Partial<CProps>, ref) => {
+  const initProps: CProps = {
+    ...initViewProps,
+    side: 'bottom',
+    ...props,
   }
 
   return (

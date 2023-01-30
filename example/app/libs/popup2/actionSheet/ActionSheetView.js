@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context'
 
 import { initViewProps, initActionSheetProps, defaultProps, disappearCompleted } from '../libs/Common'
-import { scaleSizeFool, setSpText } from '../libs/SetSize'
+import { scaleSize } from '../libs/SetSize'
 import PullView from '../PullView'
 
 const ActionSheetView = (props) => {
@@ -44,7 +44,7 @@ const ActionSheetView = (props) => {
       modal={propsData.modal}
       isBackPress={false}
     >
-      <View style={{ backgroundColor: '#fff', borderRadius: scaleSizeFool(10), maxHeight: scaleSizeFool(300) }}>
+      <View style={{ backgroundColor: '#fff', borderRadius: scaleSize(10), maxHeight: scaleSize(300) }}>
         {
           propsData.items.map((item, index) => {
             let text = typeof item === 'string' ? item : item[propsData.label]
@@ -58,8 +58,8 @@ const ActionSheetView = (props) => {
                 }}
                 onPress={() => onConfirm(item, index)}
               >
-                <View style={{ height: scaleSizeFool(50), justifyContent: 'center', alignItems: 'center' }}>
-                  <Text style={{ fontSize: setSpText(14), color: '#333', fontWeight: '500' }}>{text}</Text>
+                <View style={{ height: scaleSize(50), justifyContent: 'center', alignItems: 'center' }}>
+                  <Text style={{ fontSize: scaleSize(14), color: '#333', fontWeight: '500' }}>{text}</Text>
                 </View>
               </TouchableOpacity>
             )
@@ -69,16 +69,16 @@ const ActionSheetView = (props) => {
       <TouchableOpacity
         activeOpacity={1}
         style={{
-          marginTop: scaleSizeFool(10),
-          height: scaleSizeFool(50),
+          marginTop: scaleSize(10),
+          height: scaleSize(50),
           backgroundColor: '#fff',
-          borderRadius: scaleSizeFool(10),
+          borderRadius: scaleSize(10),
           justifyContent: 'center',
           alignItems: 'center',
         }}
         onPress={onCancel}
       >
-        <Text style={{ fontSize: setSpText(14), color: '#333', fontWeight: '500' }}>取消</Text>
+        <Text style={{ fontSize: scaleSize(14), color: '#333', fontWeight: '500' }}>取消</Text>
       </TouchableOpacity>
       <SafeAreaInsetsContext.Consumer>
         {(insets) => (<View style={{ height: insets.bottom }} />)}

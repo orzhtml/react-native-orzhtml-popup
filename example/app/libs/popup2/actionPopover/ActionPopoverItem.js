@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Text, TouchableOpacity, PixelRatio } from 'react-native'
 
-import { setSpText } from '../libs/SetSize'
+import { scaleSize } from '../libs/SetSize'
 
 const pixelSize = (function () {
   let pixelRatio = PixelRatio.get()
@@ -19,7 +19,7 @@ const ActionPopoverItem = (props) => {
       let textStyle = {
         backgroundColor: 'rgba(0, 0, 0, 0)',
         color: '#fff',
-        fontSize: setSpText(14),
+        fontSize: scaleSize(14),
       }
       title = <Text style={textStyle} numberOfLines={1}>{title}</Text>
     }

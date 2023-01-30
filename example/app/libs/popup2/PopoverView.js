@@ -57,6 +57,7 @@ const PopoverView = props => {
       return
     }
     const { width, height } = e.nativeEvent.layout
+    console.log('onPopoverLayout width, height:', width, height)
     if (width !== popoverWidth || height !== popoverHeight) {
       setPopoverWidth(width)
       setPopoverHeight(height)
@@ -191,6 +192,7 @@ const PopoverView = props => {
 
   const { paddingCorner, content, children } = propsData
   const { popoverStyle, arrow } = buildPopoverStyle()
+  console.log('popoverStyle:', popoverStyle)
   return (
     <PView
       ref={popRef}

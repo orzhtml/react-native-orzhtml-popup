@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import { ImageSourcePropType, ImageStyle, StyleProp, TextStyle } from 'react-native'
 
 import Overlay from '../Overlay'
@@ -12,11 +12,11 @@ class Loading {
   static LoadingKey = 0
 
   static show (title = null, options: {
-    titleStyle?: StyleProp<TextStyle>;
-    size?: number | 'small' | 'large' | undefined;
+    titleStyle?: StyleProp<TextStyle>,
+    size?: number | 'small' | 'large' | undefined,
     color?: string,
     icon?: ImageSourcePropType | null,
-    iconStyle?: StyleProp<ImageStyle>;
+    iconStyle?: StyleProp<ImageStyle>,
   } = {
     size: 'large',
     color: '#191D26',

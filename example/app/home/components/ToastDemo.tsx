@@ -25,6 +25,7 @@ const ToastDemo = () => {
       Toast.success('提示 success')
     },
   }])
+
   return (
     <View style={{
       flexDirection: 'row',

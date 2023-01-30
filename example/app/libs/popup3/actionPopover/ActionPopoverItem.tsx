@@ -1,7 +1,7 @@
 import React, { FC, forwardRef } from 'react'
 import { Text, TouchableOpacity, PixelRatio, StyleProp, ViewStyle, TouchableOpacityProps } from 'react-native'
 
-import { setSpText } from '../common/SetSize'
+import { scaleSize } from '../common/SetSize'
 
 interface IProps extends TouchableOpacityProps {
     style?: StyleProp<ViewStyle>;
@@ -29,7 +29,7 @@ const ActionPopoverItem: FC<ActionSheetProps> = (props) => {
       let textStyle = {
         backgroundColor: 'rgba(0, 0, 0, 0)',
         color: '#fff',
-        fontSize: setSpText(14),
+        fontSize: scaleSize(14),
       }
       title = <Text style={textStyle} numberOfLines={1}>{title}</Text>
     }

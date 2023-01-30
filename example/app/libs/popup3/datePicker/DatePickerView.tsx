@@ -4,7 +4,7 @@ import { SafeAreaInsetsContext } from 'react-native-safe-area-context'
 import dayjs from 'dayjs'
 
 import { disappearCompleted, isLeapYear, OverlayPointerEvents, popRefType } from '../common/Common'
-import { scaleSizeFool, setSpText } from '../common/SetSize'
+import { scaleSize } from '../common/SetSize'
 import PullView from '../PullView'
 import Picker from '../picker'
 
@@ -129,7 +129,7 @@ const DatePickerView: FC<DatePickerProps> = (props) => {
         {
           props.showYear ? (
             <Picker
-              style={{ height: scaleSizeFool(250), flex: 1 }}
+              style={{ height: scaleSize(250), flex: 1 }}
               //   itemStyle={{ textAlign: 'center' }}
               items={years}
               selectedValue={year}
@@ -140,7 +140,7 @@ const DatePickerView: FC<DatePickerProps> = (props) => {
         {
           props.showMonth ? (
             <Picker
-              style={{ height: scaleSizeFool(250), flex: 1 }}
+              style={{ height: scaleSize(250), flex: 1 }}
               //   itemStyle={{ textAlign: 'center' }}
               items={months}
               selectedValue={month + 1}
@@ -151,7 +151,7 @@ const DatePickerView: FC<DatePickerProps> = (props) => {
         {
           props.showMonth && props.showDay ? (
             <Picker
-              style={{ height: scaleSizeFool(250), flex: 1 }}
+              style={{ height: scaleSize(250), flex: 1 }}
               //   itemStyle={{ textAlign: 'center' }}
               items={days}
               selectedValue={day}
@@ -175,7 +175,7 @@ const DatePickerView: FC<DatePickerProps> = (props) => {
       <View
         style={{
           backgroundColor: '#fff',
-          paddingHorizontal: scaleSizeFool(5),
+          paddingHorizontal: scaleSize(5),
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -184,16 +184,16 @@ const DatePickerView: FC<DatePickerProps> = (props) => {
         <TouchableOpacity
           activeOpacity={1}
           onPress={onCancel}
-          style={{ padding: scaleSizeFool(16), justifyContent: 'center', alignItems: 'center' }}
+          style={{ padding: scaleSize(16), justifyContent: 'center', alignItems: 'center' }}
         >
-          <Text style={{ fontSize: setSpText(16), color: '#000' }}>取消</Text>
+          <Text style={{ fontSize: scaleSize(16), color: '#000' }}>取消</Text>
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={1}
           onPress={onConfirm}
-          style={{ padding: scaleSizeFool(16), justifyContent: 'center', alignItems: 'center' }}
+          style={{ padding: scaleSize(16), justifyContent: 'center', alignItems: 'center' }}
         >
-          <Text style={{ fontSize: setSpText(16), color: '#1ACB79' }}>完成</Text>
+          <Text style={{ fontSize: scaleSize(16), color: '#1ACB79' }}>完成</Text>
         </TouchableOpacity>
       </View>
       {renderContent()}

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, View } from 'react-native'
 
-import { Popover } from '@app/libs/popup'
+import { Popover } from '@app/libs/popup2'
 
 const PopoverDemo = () => {
   return (
@@ -15,11 +15,15 @@ const PopoverDemo = () => {
         <View style={{ width: 200, marginLeft: 20 }}>
           <Popover
             contentStyle={[{
+              borderColor: 'red',
               paddingTop: 8,
               paddingBottom: 8,
               paddingLeft: 12,
               paddingRight: 12,
             }]}
+            arrowStyle={{
+              borderColor: 'red',
+            }}
             arrow='bottom'
             paddingCorner={16}
           >

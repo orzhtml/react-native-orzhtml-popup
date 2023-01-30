@@ -1,21 +1,39 @@
-import React, { useRef, useCallback, useEffect, forwardRef } from 'react'
-import { View, TouchableOpacity, Text } from 'react-native'
-import { SafeAreaInsetsContext } from 'react-native-safe-area-context'
+import React, { FC, forwardRef, useCallback, useEffect, useRef } from 'react'
+import { Text, TouchableOpacity, View } from 'react-native'
 import { useSingleState } from 'react-native-orzhtml-usecom'
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context'
 
-import { disappearCompleted, isEmpty, popRefType } from '../common/Common'
-import { scaleSizeFool, setSpText } from '../common/SetSize'
+import { disappearCompleted, initViewProps, IProps, isEmpty, popRefType } from '../common/Common'
+import { scaleSize } from '../common/SetSize'
 import PullView from '../PullView'
 import Picker from '../picker'
 
-interface IProps {
-  [p: string]: any;
+interface CProps extends IProps {
+    cancel?: () => void,
+    confirm?: (val: string | undefined, index: React.Key | undefined) => void,
+    onDisappearCompleted?: () => void,
+    label: string,
+    labelVal: string,
+    wheelHeight: number,
+    value: string,
+    items: any[],
+    all?: boolean,
+    allText: string,
+    allVal: string,
 }
 
-function PullPickerView (props: any) {
+interface PullPickerProps extends CProps {
+    refInstance: React.ForwardedRef<any>,
+}
+
+const PullPickerView: FC<PullPickerProps> = props => {
   const { cancel, confirm, onDisappearCompleted, wheelHeight } = props
   let popRef = useRef<popRefType>(null)
-  const [state, setState] = useSingleState<any>({
+  const [state, setState] = useSingleState<{
+    items: any[],
+    pickerValue?: string,
+    pickerIndex?: React.Key | string,
+  }>({
     items: [],
     pickerValue: props.value,
     pickerIndex: 0,
@@ -34,8 +52,8 @@ function PullPickerView (props: any) {
     if (props.all) {
       // all 是否有 请选择 选项，可修改内容文案
       _items_.push({
-        label: props.allText || '请选择',
-        value: props.allVal || '',
+        label: props.allText,
+        value: props.allVal,
       })
     }
 
@@ -58,6 +76,7 @@ function PullPickerView (props: any) {
         })
       }
     })
+
     setState({
       items: _items_,
       pickerIndex: index,
@@ -88,12 +107,15 @@ function PullPickerView (props: any) {
     }
 
     popRef.current?.close(() => {
-      disappearCompleted(() => confirm(_selectedValue, _selectedIndex), onDisappearCompleted)
+      disappearCompleted(() => {
+        confirm && confirm(_selectedValue, _selectedIndex)
+      }, onDisappearCompleted)
     })
   }
 
   const onValueChange = (itemValue: any, itemIndex: any) => {
     setState({
+      items: state.items,
       pickerValue: itemValue,
       pickerIndex: itemIndex,
     })
@@ -111,7 +133,7 @@ function PullPickerView (props: any) {
       <View
         style={{
           backgroundColor: '#fff',
-          paddingHorizontal: scaleSizeFool(5),
+          paddingHorizontal: scaleSize(5),
           flexDirection: 'row',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -120,16 +142,16 @@ function PullPickerView (props: any) {
         <TouchableOpacity
           activeOpacity={1}
           onPress={onCancel}
-          style={{ padding: scaleSizeFool(16), justifyContent: 'center', alignItems: 'center' }}
+          style={{ padding: scaleSize(16), justifyContent: 'center', alignItems: 'center' }}
         >
-          <Text style={{ fontSize: setSpText(16), color: '#000' }}>取消</Text>
+          <Text style={{ fontSize: scaleSize(16), color: '#000' }}>取消</Text>
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={1}
           onPress={onConfirm}
-          style={{ padding: scaleSizeFool(16), justifyContent: 'center', alignItems: 'center' }}
+          style={{ padding: scaleSize(16), justifyContent: 'center', alignItems: 'center' }}
         >
-          <Text style={{ fontSize: setSpText(16), color: '#1ACB79' }}>完成</Text>
+          <Text style={{ fontSize: scaleSize(16), color: '#1ACB79' }}>完成</Text>
         </TouchableOpacity>
       </View>
       <Picker
@@ -147,21 +169,17 @@ function PullPickerView (props: any) {
 
 const Component = PullPickerView
 // 注意：这里不要在Component上使用ref;换个属性名字比如refInstance；不然会导致覆盖
-export default forwardRef(({
-  overlayPointerEvents = 'auto',
-  ...other
-}: Partial<IProps>, ref) => {
-  const initProps = {
-    modal: false,
-    animated: true,
-    overlayPointerEvents,
-    isBackPress: true,
-    overlayOpacity: 0.55,
-    useDark: false,
+export default forwardRef((props: Partial<CProps>, ref) => {
+  const initProps: CProps = {
+    ...initViewProps,
     label: 'label',
     labelVal: 'value',
-    wheelHeight: scaleSizeFool(250),
-    ...other,
+    wheelHeight: scaleSize(250),
+    value: '',
+    items: [],
+    allText: '请选择',
+    allVal: '',
+    ...props,
   }
 
   return (

@@ -1,30 +1,24 @@
-import React, { useEffect, useRef, useCallback, forwardRef, useImperativeHandle, FC } from 'react'
-import { StyleSheet, Animated, View, PanResponder, Platform, StatusBar, useColorScheme, StyleProp, ViewStyle, BackHandler } from 'react-native'
+import React, { FC, forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from 'react'
+import { Animated, BackHandler, PanResponder, Platform, StatusBar, StyleProp, StyleSheet, useColorScheme, View, ViewStyle } from 'react-native'
 
-import { disappearCompleted, OverlayPointerEvents } from './common/Common'
 import { fadeStart, fadeStop } from './common/Animated'
+import { disappearCompleted, initViewProps, IProps } from './common/Common'
 import dynamicStyles from './style'
 
-interface IProps {
-  modal: boolean;
-  animated: boolean;
-  overlayPointerEvents: OverlayPointerEvents;
-  isBackPress: boolean;
-  useDark: boolean;
-  overlayOpacity: number;
-  children?: React.ReactNode;
-  style?: StyleProp<ViewStyle>;
-  barStyles?: StyleProp<ViewStyle>;
-  onDisappearCompleted?: () => void;
-  onCloseRequest?: () => void;
-  onAppearCompleted?: () => void;
+interface CProps extends IProps {
+    children?: React.ReactNode,
+    style?: StyleProp<ViewStyle>,
+    barStyles?: StyleProp<ViewStyle>,
+    onDisappearCompleted?: () => void,
+    onCloseRequest?: () => void,
+    onAppearCompleted?: () => void,
 }
 
-interface PViewProps extends IProps {
-  refInstance: React.ForwardedRef<any>;
+interface PViewProps extends CProps {
+    refInstance: React.ForwardedRef<any>,
 }
 
-const PView: FC<PViewProps> = (props) => {
+const PView: FC<PViewProps> = props => {
   const currentMode = useColorScheme()
   const styles = props.useDark && currentMode ? dynamicStyles[currentMode] : dynamicStyles.light
   const touchStateID = useRef<null | number>(null)
@@ -42,7 +36,6 @@ const PView: FC<PViewProps> = (props) => {
     })
     return true
   }, [props.onDisappearCompleted, props.animated])
-
   // 安卓返回键关闭弹窗
   const closeRequest = useCallback(() => {
     if (props.onCloseRequest) {
@@ -101,9 +94,10 @@ const PView: FC<PViewProps> = (props) => {
         style={[
           lineStyles.screen,
           {
-            backgroundColor: styles.markPullView, opacity: opacityAnim.current,
+            backgroundColor: styles.markPullView,
+            opacity: opacityAnim.current,
           },
-          props.barStyles,
+          StyleSheet.flatten(props.barStyles),
         ]}
         {...panResponder.panHandlers}
       >
@@ -111,8 +105,11 @@ const PView: FC<PViewProps> = (props) => {
       </Animated.View>
       <View
         style={[
-          { backgroundColor: 'rgba(0,0,0,0)', flex: 1 },
-          props.style,
+          {
+            backgroundColor: 'rgba(0,0,0,0)',
+            flex: 1,
+          },
+          StyleSheet.flatten(props.style),
         ]}
         pointerEvents='box-none'
       >
@@ -123,11 +120,11 @@ const PView: FC<PViewProps> = (props) => {
 }
 
 function appear ({ animated, opacityAnim, opacityAnimTo, onAppearCompleted }: {
-  animated: boolean;
-  opacityAnim: Animated.Value;
-  opacityAnimTo: number;
-  onAppearCompleted?: () => void;
-}) {
+    animated: boolean;
+    opacityAnim: Animated.Value;
+    opacityAnimTo: number;
+    onAppearCompleted?: () => void;
+  }) {
   if (animated) {
     opacityAnim.setValue(0)
     Animated.parallel(fadeStart(opacityAnim, opacityAnimTo)).start(e => {
@@ -140,11 +137,11 @@ function appear ({ animated, opacityAnim, opacityAnimTo, onAppearCompleted }: {
 }
 
 function disappear ({ animated, opacityAnim, onCloseCallback, onDisappearCompleted }: {
-  animated: boolean;
-  opacityAnim: Animated.Value;
-  onCloseCallback?: () => void,
-  onDisappearCompleted?: () => void
-}) {
+    animated: boolean;
+    opacityAnim: Animated.Value;
+    onCloseCallback?: () => void,
+    onDisappearCompleted?: () => void
+  }) {
   if (animated) {
     Animated.parallel(fadeStop(opacityAnim)).start(e => disappearCompleted(onCloseCallback, onDisappearCompleted))
   } else {
@@ -165,18 +162,10 @@ const lineStyles = StyleSheet.create({
 
 const Component = PView
 // 注意：这里不要在Component上使用ref;换个属性名字比如refInstance；不然会导致覆盖
-export default forwardRef(({
-  overlayPointerEvents = 'auto',
-  ...other
-}: Partial<IProps>, ref) => {
+export default forwardRef((props: Partial<CProps>, ref) => {
   const initProps = {
-    modal: false,
-    animated: true,
-    overlayPointerEvents,
-    isBackPress: true,
-    overlayOpacity: 0.55,
-    useDark: false,
-    ...other,
+    ...initViewProps,
+    ...props,
   }
 
   return (

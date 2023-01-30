@@ -43,7 +43,7 @@ const ActionPopoverView: FC<ActionPopoverProps> = (props) => {
 
   const buildPopoverStyle = () => {
     let popoverStyle: ViewStyle = {
-      backgroundColor: 'rgba(64, 64, 64, 0.9)', // 'rgba(0, 0, 0, 0.9)',
+      backgroundColor: 'red', // 'rgba(0, 0, 0, 0.9)',
       paddingVertical: 0,
       paddingHorizontal: 4,
       borderRadius: 8,

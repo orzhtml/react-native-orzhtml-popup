@@ -1,4 +1,4 @@
-import { scaleSizeFool } from '../libs/SetSize'
+import { scaleSize } from '../libs/SetSize'
 
 const initViewProps = {
   modal: false,
@@ -31,7 +31,7 @@ const initActionSheetProps = {
 const initPullPickerProps = {
   label: 'label',
   labelVal: 'value',
-  wheelHeight: scaleSizeFool(250),
+  wheelHeight: scaleSize(250),
 }
 
 const initDatePickerProps = {

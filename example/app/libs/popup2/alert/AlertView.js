@@ -3,7 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-nati
 import { useDynamicValue } from 'react-native-dynamic'
 
 import { initViewProps, initZoomProps, defaultProps, disappearCompleted, btnColor } from '../libs/Common'
-import { scaleSizeFool, setSpText } from '../libs/SetSize'
+import { scaleSize } from '../libs/SetSize'
 import PopView from '../PopView'
 import dynamicStyles from '../style'
 
@@ -39,17 +39,17 @@ const AlertView = (props) => {
       animated={propsData.animated}
       onCloseRequest={hide}
     >
-      <View style={{ width: '72%', backgroundColor: styles.defaultBg, borderRadius: scaleSizeFool(5) }}>
-        <ScrollView style={{ padding: scaleSizeFool(15), marginTop: scaleSizeFool(10) }}>
+      <View style={{ width: '72%', backgroundColor: styles.defaultBg, borderRadius: scaleSize(5) }}>
+        <ScrollView style={{ padding: scaleSize(15), marginTop: scaleSize(10) }}>
           {
             typeof title === 'string' ? (
-              <View style={{ marginBottom: scaleSizeFool(15), alignItems: 'center' }}>
+              <View style={{ marginBottom: scaleSize(15), alignItems: 'center' }}>
                 <Text style={[
                   {
-                    fontSize: setSpText(16),
+                    fontSize: scaleSize(16),
                     color: styles.alertTitle,
                     fontWeight: '500',
-                    lineHeight: scaleSizeFool(20),
+                    lineHeight: scaleSize(20),
                     textAlign: 'center',
                   },
                   titleStyle,
@@ -62,10 +62,10 @@ const AlertView = (props) => {
               <View style={{ alignItems: 'center' }}>
                 <Text
                   style={[{
-                    fontSize: setSpText(14),
+                    fontSize: scaleSize(14),
                     color: styles.alertMsgColor,
                     textAlign: 'center',
-                    lineHeight: scaleSizeFool(20),
+                    lineHeight: scaleSize(20),
                   }, messageStyle]}
                 >{message}</Text>
               </View>
@@ -74,7 +74,7 @@ const AlertView = (props) => {
         </ScrollView>
         <View
           style={{
-            height: scaleSizeFool(48),
+            height: scaleSize(48),
             width: '100%',
             borderTopWidth: StyleSheet.hairlineWidth,
             borderTopColor: 'rgba(0, 0, 0, 0.2)',
@@ -90,7 +90,7 @@ const AlertView = (props) => {
                   activeOpacity={1}
                   style={{
                     flex: 1,
-                    height: scaleSizeFool(48),
+                    height: scaleSize(48),
                     justifyContent: 'center',
                     alignItems: 'center',
                     borderLeftColor: 'rgba(0, 0, 0, 0.2)',
@@ -104,7 +104,7 @@ const AlertView = (props) => {
                     }
                   }}
                 >
-                  <Text style={{ fontSize: setSpText(16), color: btnColor[btn.style] || btnColor.default }}>
+                  <Text style={{ fontSize: scaleSize(16), color: btnColor[btn.style] || btnColor.default }}>
                     {btn.text}
                   </Text>
                 </TouchableOpacity>

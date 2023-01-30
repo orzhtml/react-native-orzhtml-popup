@@ -12,10 +12,10 @@ export type popoverArrow = 'none' | 'topLeft' | 'top' | 'topRight' |
   'leftBottom' | 'left' | 'leftTop';
 
 export type AlertButtonType = {
-  banClosed?: boolean;
-  onPress?: (() => void) | undefined;
-  style?: 'default' | 'cancel' | 'warning';
-  text: string
+  banClosed?: boolean,
+  onPress?: (() => void) | undefined,
+  style?: 'default' | 'cancel' | 'warning',
+  text: string,
 }
 
 export type fromBoundsType = { x: number, y: number, width: number, height: number }
@@ -125,10 +125,28 @@ export function isString (arg: any) {
   return Object.prototype.toString.call(arg) === '[object String]'
 }
 
-export function isEmpty (str: string | null | undefined) {
+export function isEmpty (str: string | null | undefined | number): boolean {
   return str === null || str === '' || str === undefined
 }
 
 export function isLeapYear (year: number) {
   return (year % 4 === 0) && (year % 100 !== 0 || year % 400 === 0)
+}
+
+export interface IProps {
+  modal: boolean,
+  animated: boolean,
+  overlayPointerEvents: OverlayPointerEvents;
+  isBackPress: boolean,
+  overlayOpacity: number,
+  useDark: boolean,
+}
+
+export const initViewProps: IProps = {
+  modal: false,
+  animated: true,
+  overlayPointerEvents: 'auto',
+  isBackPress: true,
+  overlayOpacity: 0.55,
+  useDark: false,
 }

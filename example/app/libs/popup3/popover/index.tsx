@@ -1,18 +1,17 @@
-import React, { FC, forwardRef } from 'react'
+import React, { FC, forwardRef, useState } from 'react'
 import { LayoutChangeEvent, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
-import { useSingleState } from 'react-native-orzhtml-usecom'
 
 import { arrowLayouts, filterContentStyle, filterPopoverStyle, headerLayoutsType, pixelSize, popoverArrow } from '../common/Common'
 
 interface IProps {
-    arrow: popoverArrow;
-    children?: React.ReactNode;
-    paddingCorner?: number;
-    style?: StyleProp<ViewStyle>;
-    contentStyle?: StyleProp<ViewStyle>;
-    headerStyle?: StyleProp<ViewStyle>;
-    arrowStyle?: StyleProp<ViewStyle>;
-    onLayout?: (event: LayoutChangeEvent) => void;
+  arrow: popoverArrow;
+  children?: React.ReactNode;
+  paddingCorner?: number;
+  style?: StyleProp<ViewStyle>;
+  contentStyle?: StyleProp<ViewStyle>;
+  headerStyle?: StyleProp<ViewStyle>;
+  arrowStyle?: StyleProp<ViewStyle>;
+  onLayout?: (event: LayoutChangeEvent) => void;
 }
 
 interface PopoverProps extends IProps {
@@ -20,23 +19,30 @@ interface PopoverProps extends IProps {
 }
 
 const PopoverView: FC<PopoverProps> = (props) => {
-  const [state, setState] = useSingleState({
-    width: 0,
-    height: 0,
-  })
+  const [width, setWidth] = useState(0)
+  const [height, setHeight] = useState(0)
 
   const buildStyle = () => {
-    let { style, arrow, paddingCorner } = props
-
+    let { style, contentStyle, arrow, paddingCorner } = props
+    let fStyle = StyleSheet.flatten(style)
+    const fContentStyle = StyleSheet.flatten(contentStyle)
+    console.log('fContentStyle:', contentStyle)
     let _style = [{
       backgroundColor: '#fff',
       borderColor: 'rgba(0, 0, 0, 0.15)',
       borderRadius: 4,
       borderWidth: pixelSize,
-    }, style]
+    }, fStyle]
+    let _contentStyle = [{
+      backgroundColor: '#fff',
+      borderColor: 'rgba(0, 0, 0, 0.15)',
+      borderRadius: 4,
+      borderWidth: pixelSize,
+    }, fStyle]
 
     let fs = StyleSheet.flatten(_style)
-    let { backgroundColor, borderColor, borderWidth } = fs
+    const fsCnt = StyleSheet.flatten(_contentStyle)
+    let { backgroundColor, borderColor, borderRadius, borderWidth } = fs
 
     let arrowSize = 7 // Square side length
     let halfSquareSize = Math.sqrt(arrowSize * arrowSize * 2) / 2 // The half-length of the square diagonal: sqrt(7^2 + 7^2) / 2 = 4.95
@@ -83,29 +89,27 @@ const PopoverView: FC<PopoverProps> = (props) => {
     switch (_arrow) {
       case 'topLeft':
       case 'topRight':
-        if (headerPaddingCorner + contentPadding > state.width / 2) useArrow = 'top'
+        if (headerPaddingCorner + contentPadding > width / 2) useArrow = 'top'
         break
       case 'rightTop':
       case 'rightBottom':
-        if (headerPaddingCorner + contentPadding > state.height / 2) useArrow = 'right'
+        if (headerPaddingCorner + contentPadding > height / 2) useArrow = 'right'
         break
       case 'bottomRight':
       case 'bottomLeft':
-        if (headerPaddingCorner + contentPadding > state.width / 2) useArrow = 'bottom'
+        if (headerPaddingCorner + contentPadding > width / 2) useArrow = 'bottom'
         break
       case 'leftBottom':
       case 'leftTop':
-        if (headerPaddingCorner + contentPadding > state.height / 2) useArrow = 'left'
+        if (headerPaddingCorner + contentPadding > height / 2) useArrow = 'left'
         break
     }
-    console.log('useArrow:', useArrow, headerPadding)
 
     let _headerStyle = Object.assign({
       position: 'absolute',
       overflow: 'hidden',
       backgroundColor: 'rgba(0, 0, 0, 0)',
     }, headerLayouts[useArrow])
-
     let _arrowStyle = Object.assign({
       backgroundColor,
       width: arrowSize,
@@ -114,15 +118,18 @@ const PopoverView: FC<PopoverProps> = (props) => {
       borderTopWidth: borderWidth,
       borderLeftWidth: borderWidth,
     }, arrowLayouts[useArrow])
-
-    let _contentStyle = filterContentStyle(fs)
+    let _contentStyles = filterContentStyle(fsCnt)
     let _popoverStyle = [filterPopoverStyle(fs, useArrow === 'none'), {
       backgroundColor: useArrow === 'none' ? '#fff' : 'rgba(0, 0, 0, 0)', // Transparent background will cause a warning at debug mode
-    }].concat(popoverLayouts[useArrow])
+    }, popoverLayouts[useArrow]]
+    console.log('_popoverStyle:', _popoverStyle)
+    console.log('_contentStyles:', _contentStyles)
+    console.log('_headerStyle:', _headerStyle)
+    console.log('_arrowStyle:', _arrowStyle)
 
     return {
       popoverStyle: _popoverStyle,
-      contentStyle: _contentStyle,
+      contentStyle: _contentStyles,
       headerStyle: _headerStyle,
       arrowStyle: _arrowStyle,
     }
@@ -130,32 +137,23 @@ const PopoverView: FC<PopoverProps> = (props) => {
 
   const onLayout = (e: LayoutChangeEvent) => {
     let _layout = e.nativeEvent.layout
-    if (_layout.width !== state.width || _layout.height !== state.height) {
-      setState({
-        width: _layout.width,
-        height: _layout.height,
-      })
+    if (_layout.width !== width || _layout.height !== height) {
+      setWidth(_layout.width)
+      setHeight(_layout.height)
     }
     props.onLayout && props.onLayout(e)
   }
 
   let { style, children, arrow, paddingCorner, ...others } = props
   let { popoverStyle, contentStyle, headerStyle, arrowStyle } = buildStyle()
-  console.log('contentStyle1:', contentStyle, props.contentStyle)
 
   return (
-    <View
-      style={StyleSheet.compose(popoverStyle, props.style)}
-      onLayout={onLayout}
-      {...others}
-    >
-      <View style={StyleSheet.compose(contentStyle, props.contentStyle)}>
+    <View {...others} style={popoverStyle} onLayout={onLayout}>
+      <View style={contentStyle}>
         {children}
       </View>
       {!arrow || arrow === 'none' ? null : (
-        <View style={StyleSheet.compose(headerStyle, props.headerStyle)}>
-          <View style={StyleSheet.compose(arrowStyle, props.arrowStyle)} />
-        </View>
+        <View style={headerStyle}><View style={arrowStyle} /></View>
       )}
     </View>
   )

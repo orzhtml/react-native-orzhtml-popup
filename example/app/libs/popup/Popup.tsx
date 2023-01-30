@@ -2,8 +2,8 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { View, DeviceEventEmitter } from 'react-native'
 
 interface elementInterface {
-    key: React.Key;
-    element: React.ReactNode
+    key: React.Key,
+    element: React.ReactNode,
 }
 
 function Popup () {
@@ -43,6 +43,7 @@ function Popup () {
   if (elements.length === 0) {
     return null
   }
+  console.log('elements:', elements)
 
   return (
     <>

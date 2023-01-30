@@ -1,36 +1,30 @@
-import React, { useState, useRef, forwardRef, useImperativeHandle, FC } from 'react'
-import { Animated, LayoutChangeEvent, StyleProp, ViewStyle } from 'react-native'
+import React, { FC, forwardRef, useImperativeHandle, useRef, useState } from 'react'
+import { Animated, LayoutChangeEvent, StyleProp, StyleSheet, ViewStyle } from 'react-native'
 
-import { disappearCompleted, OverlayPointerEvents, popRefType } from './common/Common'
 import { fadeStart, fadeStop, zoomStart, zoomStop } from './common/Animated'
+import { disappearCompleted, initViewProps, IProps, popRefType } from './common/Common'
 import PView from './PView'
 
-interface IProps {
-    modal: boolean;
-    animated: boolean;
-    overlayPointerEvents: OverlayPointerEvents;
-    isBackPress: boolean;
-    useDark: boolean;
-    overlayOpacity: number;
-    type?: 'zoomIn' | 'zoomOut' | 'fade' | 'custom' | 'none';
-    children?: React.ReactNode;
-    content?: React.ReactNode;
-    style?: StyleProp<ViewStyle>;
-    barStyles?: StyleProp<ViewStyle>;
-    containerStyle?: StyleProp<ViewStyle>;
+interface CProps extends IProps {
+    type?: 'zoomIn' | 'zoomOut' | 'fade' | 'custom' | 'none',
+    children?: React.ReactNode,
+    content?: React.ReactNode,
+    style?: StyleProp<ViewStyle>,
+    barStyles?: StyleProp<ViewStyle>,
+    containerStyle?: StyleProp<ViewStyle>,
     customBounds?: {
-        x: number;
-        y: number;
-        width: number;
-        height: number;
-    };
-    onDisappearCompleted?: () => void;
-    onAppearCompleted?: () => void;
-    onCloseRequest?: () => void;
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+    },
+    onDisappearCompleted?: () => void,
+    onAppearCompleted?: () => void,
+    onCloseRequest?: () => void,
 }
 
-interface PopViewProps extends IProps {
-    refInstance: React.ForwardedRef<any>;
+interface PopViewProps extends CProps {
+    refInstance: React.ForwardedRef<any>,
 }
 
 const PopView: FC<PopViewProps> = (props) => {
@@ -45,8 +39,8 @@ const PopView: FC<PopViewProps> = (props) => {
   let [showed, setShowed] = useState(false)
 
   const hide = ({ onCloseCallback }: {
-        onCloseCallback?: () => void
-    }) => {
+    onCloseCallback?: () => void
+}) => {
     if (closed.current) return true
     closed.current = true
     disappear({
@@ -90,19 +84,23 @@ const PopView: FC<PopViewProps> = (props) => {
     }
   }
 
-  let { containerStyle, style, content, children, barStyles } = props
-
-  let _containerStyle = {
+  let _containerStyle = [{
     backgroundColor: 'rgba(0, 0, 0, 0)',
     minWidth: 1,
     minHeight: 1,
-  }
+  }, StyleSheet.flatten(props.containerStyle), {
+    opacity: showed ? opacityAnim : 0,
+    transform: [{ translateX }, { translateY }, { scaleX }, { scaleY }],
+  }]
 
   return (
     <PView
       ref={popRef}
-      style={[{ justifyContent: 'center', alignItems: 'center' }, style]}
-      barStyles={barStyles}
+      style={[{
+        justifyContent: 'center',
+        alignItems: 'center',
+      }, StyleSheet.flatten(props.style)]}
+      barStyles={props.barStyles}
       onCloseRequest={() => {
         if (props.onCloseRequest) {
           props.onCloseRequest && props.onCloseRequest()
@@ -118,14 +116,11 @@ const PopView: FC<PopViewProps> = (props) => {
       isBackPress={props.isBackPress}
     >
       <Animated.View
-        style={[_containerStyle, containerStyle, {
-          opacity: showed ? opacityAnim : 0,
-          transform: [{ translateX }, { translateY }, { scaleX }, { scaleY }],
-        }]}
+        style={_containerStyle}
         pointerEvents='box-none'
         onLayout={(e) => onLayout(e)}
       >
-        {content || children}
+        {props.content || props.children}
       </Animated.View>
     </PView>
   )
@@ -163,7 +158,7 @@ function appear ({
     translateY.setValue(0)
     scaleX.setValue(1)
     scaleY.setValue(1)
-    Animated.parallel(fadeStart(opacityAnim, 1)).start(e => {
+    Animated.parallel(fadeStart(opacityAnim, 1)).start(() => {
       onAppearCompleted && onAppearCompleted()
     })
   } else if (type === 'none') {
@@ -179,7 +174,7 @@ function appear ({
     translateY.setValue(ft.translateY)
     scaleX.setValue(ft.scaleX)
     scaleY.setValue(ft.scaleY)
-    Animated.parallel(zoomStart(opacityAnim, translateX, translateY, scaleX, scaleY)).start(e => {
+    Animated.parallel(zoomStart(opacityAnim, translateX, translateY, scaleX, scaleY)).start(() => {
       onAppearCompleted && onAppearCompleted()
     })
   }
@@ -214,7 +209,7 @@ function disappear ({
     translateY.setValue(0)
     scaleX.setValue(1)
     scaleY.setValue(1)
-    Animated.parallel(fadeStop(opacityAnim)).start(e => { })
+    Animated.parallel(fadeStop(opacityAnim)).start(() => { })
   } else if (type === 'none') {
     opacityAnim.setValue(0)
     translateX.setValue(0)
@@ -222,7 +217,7 @@ function disappear ({
     scaleX.setValue(1)
     scaleY.setValue(1)
   } else {
-    Animated.parallel(zoomStop(ft, opacityAnim, translateX, translateY, scaleX, scaleY)).start(e => { })
+    Animated.parallel(zoomStop(ft, opacityAnim, translateX, translateY, scaleX, scaleY)).start(() => { })
   }
 }
 
@@ -279,20 +274,11 @@ function fromBounds (type: 'zoomIn' | 'zoomOut' | 'fade' | 'custom' | 'none' | u
 
 const Component = PopView
 // 注意：这里不要在Component上使用ref;换个属性名字比如refInstance；不然会导致覆盖
-export default forwardRef(({
-  overlayPointerEvents = 'auto',
-  type = 'zoomIn', // 'zoomIn' | 'zoomOut' | 'fade' | 'custom' | 'none' | undefined
-  ...other
-}: Partial<IProps>, ref) => {
-  const initProps = {
-    modal: false,
-    animated: true,
-    overlayPointerEvents,
-    isBackPress: true,
-    overlayOpacity: 0.55,
-    useDark: false,
-    type,
-    ...other,
+export default forwardRef((props: Partial<CProps>, ref) => {
+  const initProps: CProps = {
+    ...initViewProps,
+    type: 'zoomIn',
+    ...props,
   }
 
   return (

@@ -1,29 +1,26 @@
-import React, { forwardRef, useRef, useImperativeHandle, useState, FC } from 'react'
-import { Text, Image, ActivityIndicator, ImageStyle, StyleProp, TextStyle, ImageSourcePropType, useColorScheme } from 'react-native'
-import { useDarkMode } from 'react-native-dynamic'
+import React, { forwardRef, useImperativeHandle, useState, FC } from 'react'
+import { Text, Image, ActivityIndicator, ImageStyle, StyleProp, TextStyle, ImageSourcePropType, useColorScheme, StyleSheet } from 'react-native'
 
-import { scaleSizeFool, setSpText } from '../common/SetSize'
-
+import { initViewProps, IProps } from '../common/Common'
+import { scaleSize } from '../common/SetSize'
 import PView from '../PView'
 
 const darkColor = '#191D26'
 
-interface IProps {
-    title?: string | null | number;
-    color?: string;
-    icon?: ImageSourcePropType | null;
-    iconStyle?: StyleProp<ImageStyle>;
-    titleStyle?: StyleProp<TextStyle>;
-    size?: number | 'small' | 'large' | undefined;
-    overlayOpacity?: number;
+interface CProps extends IProps {
+    title?: string | null | number,
+    color?: string,
+    size?: number | 'small' | 'large' | undefined,
+    icon?: ImageSourcePropType | null,
+    iconStyle?: StyleProp<ImageStyle>,
+    titleStyle?: StyleProp<TextStyle>,
 }
 
-interface LoadingProps extends IProps {
-    refInstance: React.ForwardedRef<any>;
+interface LoadingProps extends CProps {
+    refInstance: React.ForwardedRef<any>,
 }
 
 const LoadingView: FC<LoadingProps> = (props) => {
-  const popRef = useRef(null)
   const [title, setTitle] = useState(props.title || null)
   const currentMode = useColorScheme()
   const indicatorColor = currentMode ? (currentMode === 'dark' ? '#fff' : darkColor) : props.color
@@ -47,15 +44,15 @@ const LoadingView: FC<LoadingProps> = (props) => {
   }
 
   const renderText = () => {
-    let { titleStyle } = props
+    const titleStyle = StyleSheet.flatten(props.titleStyle)
     let _title_ = null
     if (typeof title === 'string' || typeof title === 'number') {
       _title_ = (
         <Text
           style={[{
-            fontSize: setSpText(16),
+            fontSize: scaleSize(16),
             color: stylesTitleColor,
-            marginTop: scaleSizeFool(10),
+            marginTop: scaleSize(10),
           }, titleStyle]}
         >{title}</Text>
       )
@@ -66,7 +63,6 @@ const LoadingView: FC<LoadingProps> = (props) => {
 
   return (
     <PView
-      ref={popRef}
       style={{ justifyContent: 'center', alignItems: 'center' }}
       modal={true}
       animated={false}
@@ -83,6 +79,7 @@ const Component = LoadingView
 // 注意：这里不要在Component上使用ref;换个属性名字比如refInstance；不然会导致覆盖
 export default forwardRef((props: Partial<IProps>, ref) => {
   const initProps = {
+    ...initViewProps,
     ...props,
   }
   return (

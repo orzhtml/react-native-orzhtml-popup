@@ -1,5 +1,6 @@
 import React from 'react'
-import { StyleProp, ViewStyle } from 'react-native'
+import { ImageSourcePropType, StyleProp, ViewStyle } from 'react-native'
+
 import { durationType, OverlayPointerEvents, ToastPosition } from '../common/Common'
 
 import Overlay from '../Overlay'
@@ -10,19 +11,19 @@ class Toast {
   static defaultPosition: ToastPosition = 'center'
 
   static show (options: {
-    modal?: boolean;
-    animated?: boolean;
-    overlayPointerEvents?: OverlayPointerEvents;
-    isBackPress?: boolean;
-    useDark?: boolean;
-    overlayOpacity?: number;
-    children?: React.ReactNode;
-    style?: StyleProp<ViewStyle>;
-    position?: ToastPosition;
-    duration?: durationType;
-    contentStyle?: StyleProp<ViewStyle>;
-    text?: string | number | React.ReactNode;
-    icon?: string | number | React.ReactNode;
+    modal?: boolean,
+    animated?: boolean,
+    overlayPointerEvents?: OverlayPointerEvents,
+    isBackPress?: boolean,
+    useDark?: boolean,
+    overlayOpacity?: number,
+    children?: React.ReactNode,
+    style?: StyleProp<ViewStyle>,
+    position?: ToastPosition,
+    duration?: durationType,
+    contentStyle?: StyleProp<ViewStyle>,
+    text?: string | number | React.ReactNode,
+    icon?: string | number | React.ReactNode,
    }) {
     let { duration, ...others } = options && typeof options === 'object' ? options : { duration: 2000 }
 

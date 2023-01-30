@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 
-import { Loading, Toast } from '@app/libs/popup'
+import { Loading } from '@app/libs/popup'
 
 function mock (data: any, t: any) {
   return new Promise(function (resolve) {

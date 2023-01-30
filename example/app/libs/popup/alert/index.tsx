@@ -6,9 +6,9 @@ import Overlay from '../Overlay'
 import AlertView from './Alert'
 
 interface AlertOptions {
-    only?: boolean;
-    modal?: boolean;
-    type?: 'zoomIn' | 'zoomOut' | 'fade' | 'custom' | 'none';
+    only?: boolean,
+    modal?: boolean,
+    type?: 'zoomIn' | 'zoomOut' | 'fade' | 'custom' | 'none',
 }
 
 function Alert (title: string | React.ReactNode, message?: string | React.ReactNode | AlertButtonType[] | AlertOptions, buttons?: AlertButtonType[] | AlertOptions, options?: AlertOptions) {

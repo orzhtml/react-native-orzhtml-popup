@@ -3,7 +3,7 @@ import { Dimensions, View, Platform, FlatList, StyleSheet, Text } from 'react-na
 import { Picker } from '@react-native-picker/picker'
 import { useSingleInstanceVar } from 'react-native-orzhtml-usecom'
 
-import { setSpText, scaleSizeFool } from '../libs/SetSize'
+import { scaleSize } from '../libs/SetSize'
 
 interface CrossPlatformPickerProps {
     [p: string]: any;
@@ -165,13 +165,13 @@ const CrossPlatformPicker: FC<CrossPlatformPickerProps> = (props) => {
 
 CrossPlatformPicker.defaultProps = {
   selectedValue: null,
-  itemHeight: scaleSizeFool(50),
+  itemHeight: scaleSize(50),
 }
 
 const lineStyles = StyleSheet.create({
   text: {
     color: '#000',
-    fontSize: setSpText(16),
+    fontSize: scaleSize(16),
   },
 })
 

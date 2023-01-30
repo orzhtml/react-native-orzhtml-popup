@@ -75,7 +75,7 @@ const PopoverView: FC<PopoverProps> = props => {
       return
     }
     const { width, height } = e.nativeEvent.layout
-    console.log('width, height:', width, height)
+    console.log('onPopoverLayout width, height:', width, height)
 
     if (width !== popoverWidth || height !== popoverHeight) {
       setPopoverWidth(width)
@@ -112,7 +112,7 @@ const PopoverView: FC<PopoverProps> = props => {
         }
       }
       console.log('_popoverStyle2:', _popoverStyle)
-      return { popoverStyle: _popoverStyle, arrow: _arrow }
+      return { popoverStyle: StyleSheet.flatten(_popoverStyle), arrow: _arrow }
     }
 
     const screenWidth = Dimensions.get('window').width

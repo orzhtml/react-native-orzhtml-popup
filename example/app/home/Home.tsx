@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { ScrollView, Text, View, TouchableOpacity } from 'react-native'
+import { ScrollView, Text, View, TouchableOpacity, StyleSheet } from 'react-native'
 
 import AlertDemo from './components/AlertDemo'
 import DatePickerDemo from './components/DatePickerDemo'
@@ -8,6 +8,18 @@ import PopoverDemo from './components/PopoverDemo'
 import PullDemo from './components/PullDemo'
 import ToastDemo from './components/ToastDemo'
 import ActionPopoverDemo from './components/ActionPopoverDemo'
+
+const Vaa = (props: any) => {
+  const style = StyleSheet.flatten(props.style)
+  console.log('props.style:', props.style)
+  console.log('style:', style)
+  const _style = StyleSheet.compose(props.style, { with: 50 })
+  console.log('compose:', _style)
+
+  return (
+    <View style={_style}></View>
+  )
+}
 
 const Home = () => {
   const [tabs] = useState([{
@@ -33,9 +45,21 @@ const Home = () => {
     name: 'ActionPopover',
   }])
   const [activeIndex, setActiveIndex] = useState(0)
+  const _style = [{ width: 200, height: 50 }, { height: 30, backgroundColor: 'red' }]
+  const style = [{ width: 10 }]
+  const _style_ = [_style, style]
+
+  console.log('_style:', _style)
+  console.log('style:', style)
+  console.log('_style_:', _style_)
 
   return (
     <View style={{ flex: 1 }}>
+      <Vaa style={[
+        { width: 10 },
+        { height: 30 },
+        _style,
+      ]}></Vaa>
       <ScrollView contentContainerStyle={{
         flexDirection: 'row',
         flexWrap: 'wrap',

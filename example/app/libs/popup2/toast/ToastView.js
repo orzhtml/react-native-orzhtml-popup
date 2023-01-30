@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text, Image } from 'react-native'
 
 import { initViewProps, initToastProps, defaultProps } from '../libs/Common'
-import { scaleSizeFool, setSpText } from '../libs/SetSize'
+import { scaleSize } from '../libs/SetSize'
 import PView from '../PView'
 
 const imagesIcons = {
@@ -46,7 +46,7 @@ const ToastView = (props) => {
       }
       image = (
         <Image
-          style={{ width: scaleSizeFool(40), height: scaleSizeFool(40), tintColor: '#ddd' }}
+          style={{ width: scaleSize(40), height: scaleSize(40), tintColor: '#ddd' }}
           source={imageSource}
         />
       )
@@ -54,7 +54,7 @@ const ToastView = (props) => {
       image = icon
     }
     return (
-      <View style={{ paddingTop: scaleSizeFool(8), paddingBottom: scaleSizeFool(8) }}>
+      <View style={{ paddingTop: scaleSize(8), paddingBottom: scaleSize(8) }}>
         {image}
       </View>
     )
@@ -66,8 +66,8 @@ const ToastView = (props) => {
       text = (
         <Text style={{
           color: '#fff',
-          fontSize: setSpText(14),
-          lineHeight: setSpText(20),
+          fontSize: scaleSize(14),
+          lineHeight: scaleSize(20),
           textAlign: 'justify',
         }}>{text}</Text>
       )
@@ -78,10 +78,10 @@ const ToastView = (props) => {
   const buildStyle = () => {
     let { style, position } = propsData
     let _style_ = [{
-      paddingLeft: scaleSizeFool(40),
-      paddingRight: scaleSizeFool(40),
-      paddingTop: scaleSizeFool(160),
-      paddingBottom: scaleSizeFool(160),
+      paddingLeft: scaleSize(40),
+      paddingRight: scaleSize(40),
+      paddingTop: scaleSize(160),
+      paddingBottom: scaleSize(160),
       justifyContent: position === 'top' ? 'flex-start' : (position === 'bottom' ? 'flex-end' : 'center'),
       alignItems: 'center',
     }].concat(style)
@@ -99,11 +99,11 @@ const ToastView = (props) => {
     >
       <View style={[{
         backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        paddingLeft: scaleSizeFool(12),
-        paddingRight: scaleSizeFool(12),
-        paddingTop: scaleSizeFool(8),
-        paddingBottom: scaleSizeFool(8),
-        borderRadius: scaleSizeFool(4),
+        paddingLeft: scaleSize(12),
+        paddingRight: scaleSize(12),
+        paddingTop: scaleSize(8),
+        paddingBottom: scaleSize(8),
+        borderRadius: scaleSize(4),
         alignItems: 'center',
       }, propsData.contentStyle]}>
         { renderIcon() }
