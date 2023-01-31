@@ -160,7 +160,7 @@ const DatePickerView: FC<DatePickerProps> = (props) => {
   return (
     <PullView
       ref={popRef}
-      containerStyle={{ backgroundColor: 'rgba(0,0,0,0)' }}
+      containerStyle={{ backgroundColor: '#fff' }}
       onCloseRequest={hide}
       side="bottom"
       modal={props.modal}
@@ -192,7 +192,7 @@ const DatePickerView: FC<DatePickerProps> = (props) => {
       </View>
       {renderContent()}
       <SafeAreaInsetsContext.Consumer>
-        {(insets) => (<View style={{ backgroundColor: '#fff', height: insets?.bottom }} />)}
+        {(insets) => (<View style={{ height: insets?.bottom }} />)}
       </SafeAreaInsetsContext.Consumer>
     </PullView>
   )

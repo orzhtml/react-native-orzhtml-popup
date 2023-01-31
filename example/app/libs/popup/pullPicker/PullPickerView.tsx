@@ -124,7 +124,7 @@ const PullPickerView: FC<PullPickerProps> = props => {
   return (
     <PullView
       ref={popRef}
-      containerStyle={{ backgroundColor: 'rgba(0,0,0,0)' }}
+      containerStyle={{ backgroundColor: '#fff' }}
       onCloseRequest={hide}
       side="bottom"
       modal={props.modal}
@@ -161,7 +161,7 @@ const PullPickerView: FC<PullPickerProps> = props => {
         onValueChange={onValueChange}
       />
       <SafeAreaInsetsContext.Consumer>
-        {(insets) => (<View style={{ backgroundColor: '#fff', height: insets?.bottom }} />)}
+        {(insets) => (<View style={{ height: insets?.bottom }} />)}
       </SafeAreaInsetsContext.Consumer>
     </PullView>
   )

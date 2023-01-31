@@ -10,23 +10,23 @@
 
 import React from 'react'
 import {
-  SafeAreaView,
   StatusBar,
   View,
 } from 'react-native'
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 
 import { Popup } from './app/libs/popup'
 import Home from './app/home/Home'
 
 const App = () => {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaProvider style={{ flex: 1 }}>
       <StatusBar barStyle={'dark-content'} />
-      <View style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1 }}>
         <Home />
-      </View>
+      </SafeAreaView>
       <Popup />
-    </SafeAreaView>
+    </SafeAreaProvider>
   )
 }
 

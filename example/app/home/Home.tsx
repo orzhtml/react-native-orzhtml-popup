@@ -8,18 +8,8 @@ import PopoverDemo from './components/PopoverDemo'
 import PullDemo from './components/PullDemo'
 import ToastDemo from './components/ToastDemo'
 import ActionPopoverDemo from './components/ActionPopoverDemo'
-
-const Vaa = (props: any) => {
-  const style = StyleSheet.flatten(props.style)
-  // console.log('props.style:', props.style)
-  // console.log('style:', style)
-  const _style = StyleSheet.compose(props.style, { with: 50 })
-  // console.log('compose:', _style)
-
-  return (
-    <View style={_style}></View>
-  )
-}
+import ActionSheetDemo from './components/ActionSheetDemo'
+import PullPickerDemo from './components/PullPickerDemo'
 
 const Home = () => {
   const [tabs] = useState([{
@@ -43,50 +33,50 @@ const Home = () => {
   }, {
     id: 7,
     name: 'ActionPopover',
+  }, {
+    id: 8,
+    name: 'ActionSheet',
+  }, {
+    id: 9,
+    name: 'PullPicker',
   }])
   const [activeIndex, setActiveIndex] = useState(0)
-  const _style = [{ width: 200, height: 50 }, { height: 30, backgroundColor: 'red' }]
-  const style = [{ width: 10 }]
-  const _style_ = [_style, style]
-
-  // console.log('_style:', _style)
-  // console.log('style:', style)
-  // console.log('_style_:', _style_)
 
   return (
     <View style={{ flex: 1 }}>
-      <Vaa style={[
-        { width: 10 },
-        { height: 30 },
-        _style,
-      ]}></Vaa>
-      <ScrollView contentContainerStyle={{
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        paddingRight: 10,
-      }}>
-        {
-          tabs.map((item, index) => {
-            return (
-              <TouchableOpacity
-                key={item.id + index}
-                style={{
-                  borderWidth: 1,
-                  borderColor: activeIndex === index ? 'red' : '#444',
-                  paddingHorizontal: 10,
-                  paddingVertical: 5,
-                  marginLeft: 10,
-                  marginBottom: 10,
-                }}
-                onPress={() => {
-                  setActiveIndex(index)
-                }}
-              >
-                <Text style={{ color: activeIndex === index ? 'red' : '#444' }}>{item.name}</Text>
-              </TouchableOpacity>
-            )
-          })
-        }
+      <View>
+        <ScrollView
+          contentContainerStyle={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            paddingRight: 10,
+          }}
+        >
+          {
+            tabs.map((item, index) => {
+              return (
+                <TouchableOpacity
+                  key={item.id + index}
+                  style={{
+                    borderWidth: 1,
+                    borderColor: activeIndex === index ? 'red' : '#444',
+                    paddingHorizontal: 10,
+                    paddingVertical: 5,
+                    marginLeft: 10,
+                    marginBottom: 10,
+                  }}
+                  onPress={() => {
+                    setActiveIndex(index)
+                  }}
+                >
+                  <Text style={{ color: activeIndex === index ? 'red' : '#444' }}>{item.name}</Text>
+                </TouchableOpacity>
+              )
+            })
+          }
+        </ScrollView>
+      </View>
+      <View style={{ flex: 1 }}>
         { activeIndex === 0 && (<AlertDemo />) }
         { activeIndex === 1 && (<PopoverDemo />)}
         { activeIndex === 2 && (<ToastDemo />)}
@@ -94,7 +84,9 @@ const Home = () => {
         { activeIndex === 4 && (<PullDemo />)}
         { activeIndex === 5 && (<DatePickerDemo />)}
         { activeIndex === 6 && (<ActionPopoverDemo />)}
-      </ScrollView>
+        { activeIndex === 7 && (<ActionSheetDemo />)}
+        { activeIndex === 8 && (<PullPickerDemo />)}
+      </View>
     </View>
   )
 }

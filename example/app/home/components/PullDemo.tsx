@@ -47,7 +47,7 @@ const PullDemo = () => {
         side={size}
       >
         <View style={{
-          backgroundColor: '#fff',
+          backgroundColor: 'red',
           borderTopLeftRadius: size === 'bottom' ? 15 : 0,
           borderTopRightRadius: size === 'bottom' ? 15 : 0,
           borderBottomLeftRadius: size === 'top' ? 15 : 0,

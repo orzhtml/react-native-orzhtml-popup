@@ -8,8 +8,8 @@ class ActionSheet {
   static show ({ items, confirm, cancel, options = {} }: {
         items: { [x: string]: any }[];
         confirm: (item: { [x: string]: any } | string, index: React.Key) => void;
-        cancel: () => void;
-        options: { [x: string]: any }
+        cancel?: () => void;
+        options?: { [x: string]: any }
     }) {
     Keyboard.dismiss()
 
