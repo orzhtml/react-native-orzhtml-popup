@@ -1,3 +1,41 @@
 {
-  "dependencies": {}
+  "name": "react-native-orzhtml-popup",
+  "version": "1.0.0",
+  "description": "react react-native typescript popup",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orzhtml/react-native-orzhtml-popup.git"
+  },
+  "keywords": [
+    "react",
+    "react-native",
+    "typescript",
+    "hooks",
+    "popup"
+  ],
+  "author": "orzhtml",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/orzhtml/react-native-orzhtml-popup/issues"
+  },
+  "homepage": "https://github.com/orzhtml/react-native-orzhtml-popup#readme",
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  },
+  "jest": {
+    "preset": "react-native",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  }
 }
