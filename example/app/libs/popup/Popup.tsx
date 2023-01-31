@@ -43,7 +43,6 @@ function Popup () {
   if (elements.length === 0) {
     return null
   }
-  console.log('elements:', elements)
 
   return (
     <>

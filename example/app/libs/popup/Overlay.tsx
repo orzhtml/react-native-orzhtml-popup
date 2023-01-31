@@ -2,13 +2,13 @@ import React from 'react'
 
 import Popup from './Popup'
 import PView from './PView'
-// import PopView from './PopView'
-// import PullView from './PullView'
+import PopView from './PopView'
+import PullView from './PullView'
 
 class Overlay {
   static View = PView
-  // static PopView = PopView
-  // static PullView = PullView
+  static PopView = PopView
+  static PullView = PullView
 
   static show (view: React.FunctionComponentElement<{
     onDisappearCompleted: () => void;

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 
-import { Overlay } from '@app/libs/popup2'
+import { Overlay } from '@app/libs/popup'
 
 const PullDemo = () => {
   const [tabs] = useState([{

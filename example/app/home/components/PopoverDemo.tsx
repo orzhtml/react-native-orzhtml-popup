@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, View } from 'react-native'
 
-import { Popover } from '@app/libs/popup2'
+import { Popover } from '@app/libs/popup'
 
 const PopoverDemo = () => {
   return (

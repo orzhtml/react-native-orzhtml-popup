@@ -11,10 +11,10 @@ import ActionPopoverDemo from './components/ActionPopoverDemo'
 
 const Vaa = (props: any) => {
   const style = StyleSheet.flatten(props.style)
-  console.log('props.style:', props.style)
-  console.log('style:', style)
+  // console.log('props.style:', props.style)
+  // console.log('style:', style)
   const _style = StyleSheet.compose(props.style, { with: 50 })
-  console.log('compose:', _style)
+  // console.log('compose:', _style)
 
   return (
     <View style={_style}></View>
@@ -49,9 +49,9 @@ const Home = () => {
   const style = [{ width: 10 }]
   const _style_ = [_style, style]
 
-  console.log('_style:', _style)
-  console.log('style:', style)
-  console.log('_style_:', _style_)
+  // console.log('_style:', _style)
+  // console.log('style:', style)
+  // console.log('_style_:', _style_)
 
   return (
     <View style={{ flex: 1 }}>

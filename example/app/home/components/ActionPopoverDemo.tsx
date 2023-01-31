@@ -2,14 +2,14 @@
 import React, { useRef } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 
-import { ActionPopover } from '@app/libs/popup2'
+import { ActionPopover } from '@app/libs/popup'
 
 const ActionPopoverDemo = () => {
   const _shareRef = useRef<TouchableOpacity>(null)
 
   const _onLongPress = () => {
     _shareRef.current?.measure(
-      (width: number, height: number, pageX: number, pageY: number) => {
+      (x: number, y: number, width: number, height: number, pageX: number, pageY: number) => {
         let items = [
           {
             title: '分享微信',
@@ -43,7 +43,7 @@ const ActionPopoverDemo = () => {
       marginTop: 20,
       position: 'relative',
     }}>
-      {/* <TouchableOpacity
+      <TouchableOpacity
         ref={_shareRef}
         style={{
           borderWidth: 1,
@@ -56,7 +56,7 @@ const ActionPopoverDemo = () => {
         onLongPress={_onLongPress}
       >
         <Text style={{ color: '#999' }}>长按显示分享按钮</Text>
-      </TouchableOpacity> */}
+      </TouchableOpacity>
       <View style={{
         flexDirection: 'row',
         flexWrap: 'wrap',

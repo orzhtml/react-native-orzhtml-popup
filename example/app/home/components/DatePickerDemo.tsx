@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, View } from 'react-native'
 import { useSingleState } from 'react-native-orzhtml-usecom'
 import dayjs from 'dayjs'
 
-import { DatePicker } from '@app/libs/popup2'
+import { DatePicker } from '@app/libs/popup'
 
 const DatePickerDemo = () => {
   const [state, setState] = useSingleState<{
