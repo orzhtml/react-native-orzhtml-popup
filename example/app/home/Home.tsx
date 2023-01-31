@@ -10,6 +10,7 @@ import ToastDemo from './components/ToastDemo'
 import ActionPopoverDemo from './components/ActionPopoverDemo'
 import ActionSheetDemo from './components/ActionSheetDemo'
 import PullPickerDemo from './components/PullPickerDemo'
+import DrawerDemo from './components/DrawerDemo'
 
 const Home = () => {
   const [tabs] = useState([{
@@ -39,6 +40,9 @@ const Home = () => {
   }, {
     id: 9,
     name: 'PullPicker',
+  }, {
+    id: 10,
+    name: 'Open Drawer',
   }])
   const [activeIndex, setActiveIndex] = useState(0)
 
@@ -86,6 +90,7 @@ const Home = () => {
         { activeIndex === 6 && (<ActionPopoverDemo />)}
         { activeIndex === 7 && (<ActionSheetDemo />)}
         { activeIndex === 8 && (<PullPickerDemo />)}
+        { activeIndex === 9 && (<DrawerDemo />)}
       </View>
     </View>
   )
