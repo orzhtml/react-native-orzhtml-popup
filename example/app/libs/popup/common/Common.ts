@@ -106,8 +106,8 @@ export const btnColor = {
 }
 
 export function disappearCompleted (onCloseCallback?: () => void, onDisappearCompleted?: () => void) {
-  onCloseCallback && onCloseCallback()
   onDisappearCompleted && onDisappearCompleted()
+  onCloseCallback && onCloseCallback()
 }
 
 // 是否是数组
