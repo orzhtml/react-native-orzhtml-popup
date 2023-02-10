@@ -66,7 +66,11 @@ function Alert (title: string | React.ReactNode, message?: string | React.ReactN
 
   key = Overlay.show(<AlertView {...props} />)
 
-  Alert.AlertKey.push(key)
+  if (Alert.AlertKey.length === 1 && Alert.AlertKey[0] === 0) {
+    Alert.AlertKey = [key]
+  } else {
+    Alert.AlertKey.push(key)
+  }
 }
 
 Alert.AlertKey = [0]
