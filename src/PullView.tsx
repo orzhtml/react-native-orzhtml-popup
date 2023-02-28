@@ -22,10 +22,10 @@ interface PullViewProps extends CProps {
 }
 
 const PullView: FC<PullViewProps> = (props) => {
-  let viewLayout = useRef<LayoutRectangle>({ x: 0, y: 0, width: 0, height: 0 })
-  let popRef = useRef<popRefType>(null)
-  let closed = useRef(false)
-  let [marginValue] = useState(new Animated.Value(0))
+  const viewLayout = useRef<LayoutRectangle>({ x: 0, y: 0, width: 0, height: 0 })
+  const popRef = useRef<popRefType>(null)
+  const closed = useRef(false)
+  const marginValue = useRef(new Animated.Value(0)).current
   let [showed, setShowed] = useState(false)
 
   const hide = ({ onCloseCallback }: {

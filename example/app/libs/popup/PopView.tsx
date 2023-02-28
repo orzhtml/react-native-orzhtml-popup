@@ -28,14 +28,14 @@ interface PopViewProps extends CProps {
 }
 
 const PopView: FC<PopViewProps> = (props) => {
-  let viewLayout = useRef({ x: 0, y: 0, width: 0, height: 0 })
-  let popRef = useRef<popRefType>(null)
-  let closed = useRef(false)
-  let [opacityAnim] = useState(new Animated.Value(0))
-  let [translateX] = useState(new Animated.Value(0))
-  let [translateY] = useState(new Animated.Value(0))
-  let [scaleX] = useState(new Animated.Value(0))
-  let [scaleY] = useState(new Animated.Value(0))
+  const viewLayout = useRef({ x: 0, y: 0, width: 0, height: 0 })
+  const popRef = useRef<popRefType>(null)
+  const closed = useRef(false)
+  const opacityAnim = useRef(new Animated.Value(0)).current
+  const translateX = useRef(new Animated.Value(0)).current
+  const translateY = useRef(new Animated.Value(0)).current
+  const scaleX = useRef(new Animated.Value(0)).current
+  const scaleY = useRef(new Animated.Value(0)).current
   let [showed, setShowed] = useState(false)
 
   const hide = ({ onCloseCallback }: {
