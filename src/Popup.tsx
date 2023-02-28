@@ -1,33 +1,40 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { View, DeviceEventEmitter } from 'react-native'
+import { useSingleState } from 'react-native-orzhtml-usecom'
 
-interface elementInterface {
+interface ElementInterface {
     key: React.Key,
     element: React.ReactNode,
 }
 
 function Popup () {
-  let [elements, setElems] = useState<elementInterface[]>([])
+  let [state, setState] = useSingleState<{ elements: ElementInterface[] }>({
+    elements: [],
+  })
+  const elementsRef = useRef<ElementInterface[]>([])
 
-  const add = useCallback((e: elementInterface) => {
-    let elems = [...elements]
+  const add = (e: ElementInterface) => {
+    let elems = [...elementsRef.current]
     elems.push(e)
-    setElems(elems)
-  }, [elements])
+    elementsRef.current = elems
+    setState({ elements: elems })
+  }
 
-  const remove = useCallback((e: elementInterface) => {
-    let elems = [...elements]
+  const remove = (e: ElementInterface) => {
+    let elems = [...elementsRef.current]
     for (let i = elems.length - 1; i >= 0; --i) {
       if (elems[i].key === e.key) {
         elems.splice(i, 1)
         break
       }
     }
-    setElems(elems)
-  }, [elements])
+    elementsRef.current = elems
+    setState({ elements: elems })
+  }
 
   const removeAll = useCallback(() => {
-    setElems([])
+    elementsRef.current = []
+    setState({ elements: [] })
   }, [])
 
   useEffect(() => {
@@ -40,13 +47,13 @@ function Popup () {
     return () => listeners.forEach(e => e.remove())
   }, [add, remove, removeAll])
 
-  if (elements.length === 0) {
+  if (state.elements.length === 0) {
     return null
   }
 
   return (
     <>
-      {elements.map((item: elementInterface) => {
+      {state.elements.map((item: ElementInterface) => {
         return (
           <View
             key={'PopupView' + item.key}
