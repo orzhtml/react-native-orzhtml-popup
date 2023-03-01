@@ -1,4 +1,4 @@
-import React, { FC, forwardRef, useState } from 'react'
+import React, { FC, forwardRef, useCallback, useState } from 'react'
 import { LayoutChangeEvent, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 
 import { arrowLayouts, filterContentStyle, filterPopoverStyle, headerLayoutsType, pixelSize, popoverArrow } from '../common/Common'
@@ -117,14 +117,14 @@ const PopoverView: FC<PopoverProps> = (props) => {
     return { popoverStyle: StyleSheet.flatten(popoverStyle), contentStyle, headerStyle, arrowStyle }
   }
 
-  const onLayout = (e: LayoutChangeEvent) => {
+  const onLayout = useCallback((e: LayoutChangeEvent) => {
     let _layout = e.nativeEvent.layout
     if (_layout.width !== width || _layout.height !== height) {
       setWidth(_layout.width)
       setHeight(_layout.height)
     }
     props.onLayout && props.onLayout(e)
-  }
+  }, [width, height])
 
   let { children, arrow, paddingCorner, ...others } = props
   let { popoverStyle, contentStyle, headerStyle, arrowStyle } = buildStyle()

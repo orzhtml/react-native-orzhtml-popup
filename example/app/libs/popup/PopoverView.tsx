@@ -1,4 +1,4 @@
-import React, { forwardRef, useState, useRef, useEffect, useImperativeHandle, FC } from 'react'
+import React, { forwardRef, useState, useRef, useEffect, useImperativeHandle, FC, useCallback } from 'react'
 import { Platform, Dimensions, StyleProp, ViewStyle, LayoutChangeEvent, StyleSheet, View } from 'react-native'
 
 import { disappearCompleted, fromBoundsType, initViewProps, IProps, popoverArrow, popRefType } from './common/Common'
@@ -60,7 +60,7 @@ const PopoverView: FC<PopoverProps> = props => {
     return true
   }
 
-  const onPopoverLayout = (e: LayoutChangeEvent) => {
+  const onPopoverLayout = useCallback((e: LayoutChangeEvent) => {
     if (
       Platform.OS === 'android' &&
       (popoverWidth !== null || popoverHeight != null)
@@ -73,7 +73,8 @@ const PopoverView: FC<PopoverProps> = props => {
       setPopoverWidth(width)
       setPopoverHeight(height)
     }
-  }
+  }, [popoverWidth, popoverHeight])
+
   const buildPopoverStyle = () => {
     let {
       style,

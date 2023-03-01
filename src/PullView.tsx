@@ -1,4 +1,4 @@
-import React, { FC, forwardRef, useImperativeHandle, useRef, useState } from 'react'
+import React, { FC, forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react'
 import { Animated, LayoutChangeEvent, LayoutRectangle, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 
 import { marginStart, marginStop } from './common/Animated'
@@ -25,7 +25,7 @@ const PullView: FC<PullViewProps> = (props) => {
   const viewLayout = useRef<LayoutRectangle>({ x: 0, y: 0, width: 0, height: 0 })
   const popRef = useRef<popRefType>(null)
   const closed = useRef(false)
-  const marginValue = useRef(new Animated.Value(0)).current
+  const marginValue = useRef(new Animated.Value(0))
   let [showed, setShowed] = useState(false)
 
   const hide = ({ onCloseCallback }: {
@@ -35,7 +35,7 @@ const PullView: FC<PullViewProps> = (props) => {
     closed.current = true
     disappear({
       side: props.side,
-      marginValue,
+      marginValue: marginValue.current,
       viewLayout: viewLayout.current,
     })
     popRef.current?.close(() => {
@@ -50,7 +50,7 @@ const PullView: FC<PullViewProps> = (props) => {
     },
   }))
 
-  const onLayout = (event: LayoutChangeEvent) => {
+  const onLayout = useCallback((event: LayoutChangeEvent) => {
     viewLayout.current = event.nativeEvent.layout
 
     if (!showed) {
@@ -59,10 +59,10 @@ const PullView: FC<PullViewProps> = (props) => {
         onAppearCompleted: props.onAppearCompleted,
         viewLayout: viewLayout.current,
         side: props.side,
-        marginValue,
+        marginValue: marginValue.current,
       })
     }
-  }
+  }, [props.onAppearCompleted, props.side, showed, marginValue])
 
   const buildStyle = () => {
     let sideStyle: ViewStyle
@@ -94,16 +94,16 @@ const PullView: FC<PullViewProps> = (props) => {
     } = {}
   switch (side) {
     case 'top':
-      contentStyle = { marginTop: marginValue }
+      contentStyle = { marginTop: marginValue.current }
       break
     case 'left':
-      contentStyle = { marginLeft: marginValue }
+      contentStyle = { marginLeft: marginValue.current }
       break
     case 'right':
-      contentStyle = { marginRight: marginValue }
+      contentStyle = { marginRight: marginValue.current }
       break
     default:
-      contentStyle = { marginBottom: marginValue }
+      contentStyle = { marginBottom: marginValue.current }
   }
 
   contentStyle.opacity = showed ? 1 : 0

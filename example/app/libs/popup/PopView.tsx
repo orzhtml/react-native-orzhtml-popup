@@ -1,4 +1,4 @@
-import React, { FC, forwardRef, useImperativeHandle, useRef, useState } from 'react'
+import React, { FC, forwardRef, useImperativeHandle, useRef, useState, useCallback } from 'react'
 import { Animated, LayoutChangeEvent, StyleProp, StyleSheet, ViewStyle } from 'react-native'
 
 import { fadeStart, fadeStop, zoomStart, zoomStop } from './common/Animated'
@@ -31,11 +31,11 @@ const PopView: FC<PopViewProps> = (props) => {
   const viewLayout = useRef({ x: 0, y: 0, width: 0, height: 0 })
   const popRef = useRef<popRefType>(null)
   const closed = useRef(false)
-  const opacityAnim = useRef(new Animated.Value(0)).current
-  const translateX = useRef(new Animated.Value(0)).current
-  const translateY = useRef(new Animated.Value(0)).current
-  const scaleX = useRef(new Animated.Value(0)).current
-  const scaleY = useRef(new Animated.Value(0)).current
+  const opacityAnim = useRef(new Animated.Value(0))
+  const translateX = useRef(new Animated.Value(0))
+  const translateY = useRef(new Animated.Value(0))
+  const scaleX = useRef(new Animated.Value(0))
+  const scaleY = useRef(new Animated.Value(0))
   let [showed, setShowed] = useState(false)
 
   const hide = ({ onCloseCallback }: {
@@ -46,11 +46,11 @@ const PopView: FC<PopViewProps> = (props) => {
     disappear({
       type: props.type,
       customBounds: props.customBounds,
-      opacityAnim,
-      translateX,
-      translateY,
-      scaleX,
-      scaleY,
+      opacityAnim: opacityAnim.current,
+      translateX: translateX.current,
+      translateY: translateY.current,
+      scaleX: scaleX.current,
+      scaleY: scaleY.current,
       viewLayout: viewLayout.current,
     })
     popRef.current?.close(() => {
@@ -65,7 +65,7 @@ const PopView: FC<PopViewProps> = (props) => {
     },
   }))
 
-  const onLayout = (event: LayoutChangeEvent) => {
+  const onLayout = useCallback((event: LayoutChangeEvent) => {
     viewLayout.current = event.nativeEvent.layout
 
     if (!showed) {
@@ -75,22 +75,28 @@ const PopView: FC<PopViewProps> = (props) => {
         viewLayout: viewLayout.current,
         type: props.type,
         customBounds: props.customBounds,
-        opacityAnim: opacityAnim,
-        translateX: translateX,
-        translateY: translateY,
-        scaleX: scaleX,
-        scaleY: scaleY,
+        opacityAnim: opacityAnim.current,
+        translateX: translateX.current,
+        translateY: translateY.current,
+        scaleX: scaleX.current,
+        scaleY: scaleY.current,
       })
     }
-  }
+  }, [props.onAppearCompleted, props.type, props.customBounds,
+    showed, opacityAnim, translateX, translateY, scaleX, scaleY])
 
   let _containerStyle = [{
     backgroundColor: 'rgba(0, 0, 0, 0)',
     minWidth: 1,
     minHeight: 1,
   }, StyleSheet.flatten(props.containerStyle), {
-    opacity: showed ? opacityAnim : 0,
-    transform: [{ translateX }, { translateY }, { scaleX }, { scaleY }],
+    opacity: showed ? opacityAnim.current : 0,
+    transform: [
+      { translateX: translateX.current },
+      { translateY: translateY.current },
+      { scaleX: scaleX.current },
+      { scaleY: scaleY.current },
+    ],
   }]
 
   return (
