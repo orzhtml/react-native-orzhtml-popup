@@ -74,7 +74,7 @@ const PView: FC<PViewProps> = props => {
     appear({
       animated: !!props.animated,
       opacityAnim: opacityAnim.current,
-      opacityAnimTo: props.overlayOpacity || 1,
+      opacityAnimTo: props.overlayOpacity,
       onAppearCompleted: props.onAppearCompleted,
     })
   }, [props.animated, props.overlayOpacity, props.onAppearCompleted])
