@@ -182,7 +182,7 @@ const DatePickerView: FC<DatePickerProps> = (props) => {
           onPress={onCancel}
           style={{ padding: scaleSize(16), justifyContent: 'center', alignItems: 'center' }}
         >
-          <Text style={{ fontSize: scaleSize(16), color: '#000' }}>取消</Text>
+          <Text style={{ fontSize: scaleSize(16), color: '#000' }}>{props.leftBtnText}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={1}
@@ -191,7 +191,7 @@ const DatePickerView: FC<DatePickerProps> = (props) => {
           }}
           style={{ padding: scaleSize(16), justifyContent: 'center', alignItems: 'center' }}
         >
-          <Text style={{ fontSize: scaleSize(16), color: '#1ACB79' }}>完成</Text>
+          <Text style={{ fontSize: scaleSize(16), color: '#1ACB79' }}>{props.rightBtnText}</Text>
         </TouchableOpacity>
       </View>
       {renderContent()}
@@ -213,7 +213,7 @@ export default forwardRef((props: Partial<CProps>, ref) => {
     showMonth: true,
     showDay: true,
     leftBtnText: '取消',
-    rightBtnText: '确定',
+    rightBtnText: '完成',
     yearText: '年',
     monthText: '月',
     dayText: '日',
