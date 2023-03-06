@@ -66,7 +66,7 @@ const CrossPicker: FC<PickerProps> = (props) => {
   const onMomentumScrollBegin = () => {
     if (inst.timer) {
       clearTimeout(inst.timer)
-      inst.timer = null
+      inst.timer = undefined
       inst.canUpdate = true
     }
   }
@@ -139,7 +139,12 @@ const CrossPicker: FC<PickerProps> = (props) => {
         renderItem={({ item }) => {
           let isSelect = item.value === selectedValue
           return (
-            <View style={{ height: inst.itemH, justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
+            <View style={{
+              height: inst.itemH,
+              justifyContent: 'center',
+              alignItems: 'center',
+              position: 'relative',
+            }}>
               <Text style={[lineStyles.text, { opacity: isSelect ? 1 : 0.6 }]}>
                 {item.label}
               </Text>

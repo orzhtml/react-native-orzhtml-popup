@@ -1,5 +1,5 @@
 import React, { forwardRef, useState, useRef, useEffect, useImperativeHandle, FC, useCallback } from 'react'
-import { Platform, Dimensions, StyleProp, ViewStyle, LayoutChangeEvent, StyleSheet, View } from 'react-native'
+import { Platform, Dimensions, StyleProp, ViewStyle, LayoutChangeEvent, StyleSheet } from 'react-native'
 
 import { disappearCompleted, fromBoundsType, initViewProps, IProps, popoverArrow, popRefType } from './common/Common'
 import PView from './PView'

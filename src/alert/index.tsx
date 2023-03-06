@@ -15,7 +15,7 @@ function Alert (title: string | React.ReactNode, message?: string | React.ReactN
   let key = 0
 
   if (title === null || title === undefined || title === '' || isArray(title) || isObject(title)) {
-    console.error('title 不能为空')
+    console.error('can not be empty')
     return null
   }
   let _message: string | React.ReactNode | AlertButtonType[] | AlertOptions = message
@@ -37,15 +37,15 @@ function Alert (title: string | React.ReactNode, message?: string | React.ReactN
   }
 
   if (_buttons && _buttons.length === 0) {
-    _buttons = [{ text: '确定' }]
+    _buttons = [{ text: 'Ok' }]
   }
 
   if (_options?.only === undefined) {
-    _options.only = true // 如果为空，默认 true
+    _options.only = true // If it is empty, the default is true
   }
 
   if (_options?.modal === undefined) {
-    _options.modal = true // 如果为空，默认 true
+    _options.modal = true // If it is empty, the default is true
   }
 
   if (_options?.only && Alert.AlertKey[0]) {

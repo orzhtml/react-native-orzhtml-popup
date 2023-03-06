@@ -1,5 +1,5 @@
 import React from 'react'
-import { ImageSourcePropType, StyleProp, ViewStyle } from 'react-native'
+import { StyleProp, ViewStyle } from 'react-native'
 
 import { durationType, OverlayPointerEvents, ToastPosition } from '../common/Common'
 

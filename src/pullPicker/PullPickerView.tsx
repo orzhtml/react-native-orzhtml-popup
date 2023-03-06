@@ -20,6 +20,8 @@ interface CProps extends IProps {
     all?: boolean,
     allText: string,
     allVal: string,
+    cancelText?: string,
+    completeText?: string,
 }
 
 interface PullPickerProps extends CProps {
@@ -144,14 +146,14 @@ const PullPickerView: FC<PullPickerProps> = props => {
           onPress={onCancel}
           style={{ padding: scaleSize(16), justifyContent: 'center', alignItems: 'center' }}
         >
-          <Text style={{ fontSize: scaleSize(16), color: '#000' }}>取消</Text>
+          <Text style={{ fontSize: scaleSize(16), color: '#000' }}>{props.cancelText}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={1}
           onPress={onConfirm}
           style={{ padding: scaleSize(16), justifyContent: 'center', alignItems: 'center' }}
         >
-          <Text style={{ fontSize: scaleSize(16), color: '#1ACB79' }}>完成</Text>
+          <Text style={{ fontSize: scaleSize(16), color: '#1ACB79' }}>{props.completeText}</Text>
         </TouchableOpacity>
       </View>
       <Picker
@@ -179,6 +181,8 @@ export default forwardRef((props: Partial<CProps>, ref) => {
     items: [],
     allText: '请选择',
     allVal: '',
+    cancelText: '取消',
+    completeText: '确定',
     ...props,
   }
 

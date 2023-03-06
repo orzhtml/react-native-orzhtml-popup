@@ -14,6 +14,7 @@ interface CProps extends IProps {
     items?: { [x: string]: any }[];
     cancel?: () => void;
     confirm?: (item: { [x: string]: any } | string, index: React.Key) => void;
+    cancelText?: string,
 }
 
 interface ActionSheetProps extends CProps {
@@ -106,7 +107,7 @@ const ActionSheetView: FC<ActionSheetProps> = (props) => {
           fontSize: scaleSize(14),
           color: '#333',
           fontWeight: '500',
-        }}>取消</Text>
+        }}>{props.cancelText}</Text>
       </TouchableOpacity>
       <SafeAreaInsetsContext.Consumer>
         {(insets) => (<View style={{ height: insets?.bottom }} />)}
@@ -122,6 +123,7 @@ export default forwardRef((props: Partial<CProps>, ref) => {
     ...initViewProps,
     label: 'label',
     labelVal: 'value',
+    cancelText: '取消',
     ...props,
   }
 

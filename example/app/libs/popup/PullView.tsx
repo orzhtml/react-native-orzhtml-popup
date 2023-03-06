@@ -1,5 +1,5 @@
 import React, { FC, forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react'
-import { Animated, LayoutChangeEvent, LayoutRectangle, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import { Animated, LayoutChangeEvent, LayoutRectangle, StyleProp, StyleSheet, ViewStyle } from 'react-native'
 
 import { marginStart, marginStop } from './common/Animated'
 import { disappearCompleted, initViewProps, IProps, popRefType } from './common/Common'
