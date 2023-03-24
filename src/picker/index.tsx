@@ -91,7 +91,7 @@ const CrossPicker: FC<PickerProps> = (props) => {
       viewPosition: 0.5,
     })
     // 通过 floor 获取 i 实际下标
-    props.onValueChange && props.onValueChange(props.items[Math.floor(i)].value, i)
+    props.onValueChange && props.onValueChange(props.items[Math.floor(i)].value, Math.floor(i))
   }
 
   const renderiOS = () => {

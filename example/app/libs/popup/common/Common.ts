@@ -140,6 +140,7 @@ export interface IProps {
   isBackPress: boolean,
   overlayOpacity: number,
   useDark: boolean,
+  zIndex?: number,
 }
 
 export const initViewProps: IProps = {

@@ -12,6 +12,7 @@ interface CProps extends IProps {
     onDisappearCompleted?: () => void,
     onCloseRequest?: () => void,
     onAppearCompleted?: () => void,
+    zIndex?: number,
 }
 
 interface PViewProps extends CProps {
@@ -87,7 +88,12 @@ const PView: FC<PViewProps> = props => {
 
   return (
     <View
-      style={lineStyles.screen}
+      style={[
+        lineStyles.screen,
+        props.zIndex ? {
+          zIndex: props.zIndex,
+        } : null,
+      ]}
       pointerEvents={props.overlayPointerEvents}
     >
       <Animated.View

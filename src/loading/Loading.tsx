@@ -68,6 +68,7 @@ const LoadingView: FC<LoadingProps> = (props) => {
       animated={false}
       overlayOpacity={props.overlayOpacity}
       isBackPress={false}
+      zIndex={props.zIndex}
     >
       { renderIcon() }
       { renderText() }
@@ -80,6 +81,7 @@ const Component = LoadingView
 export default forwardRef((props: Partial<IProps>, ref) => {
   const initProps = {
     ...initViewProps,
+    zIndex: 9999,
     ...props,
   }
   return (
