@@ -1,7 +1,7 @@
 import React, { FC, forwardRef, useEffect, useRef } from 'react'
 import {
   Dimensions, View, Platform, FlatList, StyleSheet, Text,
-  NativeSyntheticEvent, NativeScrollEvent, StyleProp, ViewStyle,
+  NativeSyntheticEvent, NativeScrollEvent, StyleProp, ViewStyle, TextStyle,
 } from 'react-native'
 import { Picker } from '@react-native-picker/picker'
 import { useSingleInstanceVar } from 'react-native-orzhtml-usecom'
@@ -13,7 +13,8 @@ interface IProps {
     selectedValue?: string | number;
     items?: any;
     onValueChange?: (value: string | number, index: React.Key) => void;
-    style?: StyleProp<ViewStyle>
+    style?: StyleProp<ViewStyle>,
+    itemStyle?: StyleProp<TextStyle>,
 }
 
 interface PickerProps extends IProps {
@@ -101,7 +102,7 @@ const CrossPicker: FC<PickerProps> = (props) => {
       <Picker
         selectedValue={selectedValue}
         style={[{ height: inst.itemH * 5, width: Dimensions.get('window').width }, style]}
-        itemStyle={lineStyles.text}
+        itemStyle={[lineStyles.text, props.itemStyle]}
         onValueChange={onValueChange}
       >
         {
@@ -145,7 +146,7 @@ const CrossPicker: FC<PickerProps> = (props) => {
               alignItems: 'center',
               position: 'relative',
             }}>
-              <Text style={[lineStyles.text, { opacity: isSelect ? 1 : 0.6 }]}>
+              <Text style={[lineStyles.text, props.itemStyle, { opacity: isSelect ? 1 : 0.6 }]}>
                 {item.label}
               </Text>
               {
@@ -182,7 +183,7 @@ const CrossPicker: FC<PickerProps> = (props) => {
 const lineStyles = StyleSheet.create({
   text: {
     color: '#000',
-    fontSize: scaleSize(16),
+    fontSize: scaleSize(12),
   },
 })
 

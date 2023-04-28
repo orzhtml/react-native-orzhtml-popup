@@ -1,5 +1,5 @@
 import React, { FC, forwardRef, useCallback, useEffect, useRef } from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { Text, TouchableOpacity, View, StyleProp, TextStyle } from 'react-native'
 import { useSingleState } from 'react-native-orzhtml-usecom'
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context'
 
@@ -22,6 +22,7 @@ interface CProps extends IProps {
     allVal: string,
     cancelText?: string,
     completeText?: string,
+    itemStyle?: StyleProp<TextStyle>,
 }
 
 interface PullPickerProps extends CProps {
@@ -158,6 +159,7 @@ const PullPickerView: FC<PullPickerProps> = props => {
       </View>
       <Picker
         style={{ backgroundColor: '#fff', height: wheelHeight }}
+        itemStyle={props.itemStyle}
         selectedValue={state.pickerValue}
         items={state.items}
         onValueChange={onValueChange}

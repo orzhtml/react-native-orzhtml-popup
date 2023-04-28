@@ -15,8 +15,8 @@ interface CProps extends IProps {
     cancel?: () => void,
     confirm?: (date: string) => void,
     value?: string,
-    max: number,
-    min: number,
+    max: string,
+    min: string,
     showYear: boolean,
     showMonth: boolean,
     showDay: boolean,
@@ -29,6 +29,14 @@ interface CProps extends IProps {
 
 interface DatePickerProps extends CProps {
     refInstance: React.ForwardedRef<any>;
+}
+
+function maxOrMinDate (date: string) {
+  return {
+    year: Number(dayjs(date).format('YYYY')),
+    month: Number(dayjs(date).format('MM')),
+    day: Number(dayjs(date).format('DD')),
+  }
 }
 
 const DatePickerView: FC<DatePickerProps> = (props) => {
@@ -46,7 +54,7 @@ const DatePickerView: FC<DatePickerProps> = (props) => {
 
   let years = useMemo(() => {
     let _years = []
-    for (let i = props.min; i <= props.max; ++i) {
+    for (let i = maxOrMinDate(props.min).year; i <= maxOrMinDate(props.max).year; ++i) {
       _years.push({
         label: i + (props?.yearText || ''),
         value: i,
@@ -56,15 +64,26 @@ const DatePickerView: FC<DatePickerProps> = (props) => {
   }, [props.max, props.min])
 
   let months = useMemo(() => {
+    let year = state.date.get('year')
+    const maxArr = maxOrMinDate(props.max)
+    const minArr = maxOrMinDate(props.min)
+    let maxMonth = 12
+    let minMonth = 1
+
+    if (year === maxArr.year) {
+      maxMonth = maxArr.month
+    } else if (year === minArr.year) {
+      minMonth = minArr.month
+    }
     let _months = []
-    for (let i = 1; i <= 12; ++i) {
+    for (let i = minMonth; i <= maxMonth; ++i) {
       _months.push({
         label: i + (props.monthText || ''),
         value: i,
       })
     }
     return _months
-  }, [])
+  }, [props.max, props.min, state.date])
 
   let daysCount = useMemo(() => {
     let d28 = { label: '28' + (props.dayText || ''), value: 28 }
@@ -120,9 +139,22 @@ const DatePickerView: FC<DatePickerProps> = (props) => {
 
     let _daysCount_ = daysCount[isLeapYear(year) ? 1 : 0][month]
     let days = []
-    for (let i = 1; i <= _daysCount_.value; ++i) {
+
+    const maxArr = maxOrMinDate(props.max)
+    const minArr = maxOrMinDate(props.min)
+    let maxDay = _daysCount_.value
+    let minDay = 1
+
+    if (year === maxArr.year) {
+      maxDay = maxArr.day
+    } else if (year === minArr.year) {
+      minDay = minArr.day
+    }
+
+    for (let i = minDay; i <= maxDay; ++i) {
       days.push({ label: `${i}${props.dayText}`, value: i })
     }
+
     return (
       <View style={{ backgroundColor: '#fff', flexDirection: 'row' }}>
         {
@@ -207,8 +239,8 @@ const Component = DatePickerView
 export default forwardRef((props: Partial<CProps>, ref) => {
   const initProps: CProps = {
     ...initViewProps,
-    max: 2080,
-    min: 1900,
+    max: '2080/12/31',
+    min: '1900/01/01',
     showYear: true,
     showMonth: true,
     showDay: true,

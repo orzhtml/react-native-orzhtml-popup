@@ -1,6 +1,6 @@
-import React, { useRef, useCallback, forwardRef, FC } from 'react'
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
-import { SafeAreaInsetsContext } from 'react-native-safe-area-context'
+import React, { useRef, useCallback, forwardRef, FC, useState, useEffect } from 'react'
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView } from 'react-native'
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { disappearCompleted, initViewProps, IProps, popRefType } from '../common/Common'
 import { scaleSize } from '../common/SetSize'
@@ -23,7 +23,13 @@ interface ActionSheetProps extends CProps {
 
 const ActionSheetView: FC<ActionSheetProps> = (props) => {
   let { cancel, confirm, onDisappearCompleted } = props
+  const [maxHeight, setMaxHeight] = useState(500)
   let popRef = useRef<popRefType>(null)
+  const _insets = useSafeAreaInsets()
+
+  useEffect(() => {
+    setMaxHeight(Dimensions.get('window').height - (_insets.bottom + _insets.top + 70))
+  }, [_insets.bottom, _insets.top])
 
   const hide = useCallback(() => {
     if (props.modal) {
@@ -57,61 +63,60 @@ const ActionSheetView: FC<ActionSheetProps> = (props) => {
       modal={props.modal}
       isBackPress={false}
     >
-      <View style={{
-        backgroundColor: '#fff',
-        borderRadius: scaleSize(10),
-        maxHeight: scaleSize(300),
-      }}>
-        {
-          props.items?.map((item: { [x: string]: any }, index: React.Key) => {
-            let text = typeof item === 'string' ? item : item[props.label]
-            return (
-              <TouchableOpacity
-                key={index}
-                activeOpacity={1}
-                style={{
-                  borderBottomWidth: index !== (props.items?.length || 0) - 1 ? StyleSheet.hairlineWidth : 0,
-                  borderBottomColor: '#ccc',
-                }}
-                onPress={() => onConfirm(item, index)}
-              >
-                <View style={{
-                  height: scaleSize(50),
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                  <Text style={{
-                    fontSize: scaleSize(14),
-                    color: '#333',
-                    fontWeight: '500',
-                  }}>{text}</Text>
-                </View>
-              </TouchableOpacity>
-            )
-          })
-        }
-      </View>
-      <TouchableOpacity
-        activeOpacity={1}
-        style={{
-          marginTop: scaleSize(10),
-          height: scaleSize(50),
+      <SafeAreaView edges={['bottom', 'top']}>
+        <ScrollView style={{
           backgroundColor: '#fff',
           borderRadius: scaleSize(10),
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-        onPress={onCancel}
-      >
-        <Text style={{
-          fontSize: scaleSize(14),
-          color: '#333',
-          fontWeight: '500',
-        }}>{props.cancelText}</Text>
-      </TouchableOpacity>
-      <SafeAreaInsetsContext.Consumer>
-        {(insets) => (<View style={{ height: insets?.bottom }} />)}
-      </SafeAreaInsetsContext.Consumer>
+          maxHeight: maxHeight,
+        }}>
+          {
+            props.items?.map((item: { [x: string]: any }, index: React.Key) => {
+              let text = typeof item === 'string' ? item : item[props.label]
+              return (
+                <TouchableOpacity
+                  key={index}
+                  activeOpacity={1}
+                  style={{
+                    borderBottomWidth: index !== (props.items?.length || 0) - 1 ? StyleSheet.hairlineWidth : 0,
+                    borderBottomColor: '#ccc',
+                  }}
+                  onPress={() => onConfirm(item, index)}
+                >
+                  <View style={{
+                    height: scaleSize(50),
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                    <Text style={{
+                      fontSize: scaleSize(14),
+                      color: '#333',
+                      fontWeight: '500',
+                    }}>{text}</Text>
+                  </View>
+                </TouchableOpacity>
+              )
+            })
+          }
+        </ScrollView>
+        <TouchableOpacity
+          activeOpacity={1}
+          style={{
+            marginTop: scaleSize(10),
+            height: scaleSize(50),
+            backgroundColor: '#fff',
+            borderRadius: scaleSize(10),
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          onPress={onCancel}
+        >
+          <Text style={{
+            fontSize: scaleSize(14),
+            color: '#333',
+            fontWeight: '500',
+          }}>{props.cancelText}</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
     </PullView>
   )
 }
