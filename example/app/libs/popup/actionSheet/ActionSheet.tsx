@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, forwardRef, FC, useState, useEffect } from 'react'
+import React, { useRef, useCallback, useState, useEffect } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView } from 'react-native'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 
@@ -6,22 +6,18 @@ import { disappearCompleted, initViewProps, IProps, popRefType } from '../common
 import { scaleSize } from '../common/SetSize'
 import PullView from '../PullView'
 
-interface CProps extends IProps {
+interface CProps<T> extends IProps {
     onDisappearCompleted?: () => void;
     onCloseRequest?: () => void;
     label: string;
     labelVal: string;
-    items?: { [x: string]: any }[];
+    items?: T[];
     cancel?: () => void;
-    confirm?: (item: { [x: string]: any } | string, index: React.Key) => void;
+    confirm?: (item: T, index: React.Key) => void;
     cancelText?: string,
 }
 
-interface ActionSheetProps extends CProps {
-    refInstance: React.ForwardedRef<any>;
-}
-
-const ActionSheetView: FC<ActionSheetProps> = (props) => {
+function ActionSheetView<T> (props: CProps<T>) {
   let { cancel, confirm, onDisappearCompleted } = props
   const [maxHeight, setMaxHeight] = useState(500)
   let popRef = useRef<popRefType>(null)
@@ -46,7 +42,7 @@ const ActionSheetView: FC<ActionSheetProps> = (props) => {
     })
   }, [onDisappearCompleted, cancel])
 
-  const onConfirm = useCallback((item: any, index: React.Key) => {
+  const onConfirm = useCallback((item: T, index: React.Key) => {
     popRef.current?.close(() => {
       disappearCompleted(() => {
         confirm && confirm(item, index)
@@ -70,7 +66,7 @@ const ActionSheetView: FC<ActionSheetProps> = (props) => {
           maxHeight: maxHeight,
         }}>
           {
-            props.items?.map((item: { [x: string]: any }, index: React.Key) => {
+            props.items?.map((item, index) => {
               let text = typeof item === 'string' ? item : item[props.label]
               return (
                 <TouchableOpacity
@@ -80,7 +76,7 @@ const ActionSheetView: FC<ActionSheetProps> = (props) => {
                     borderBottomWidth: index !== (props.items?.length || 0) - 1 ? StyleSheet.hairlineWidth : 0,
                     borderBottomColor: '#ccc',
                   }}
-                  onPress={() => onConfirm(item, index)}
+                  onPress={() => onConfirm(text, index)}
                 >
                   <View style={{
                     height: scaleSize(50),
@@ -121,10 +117,8 @@ const ActionSheetView: FC<ActionSheetProps> = (props) => {
   )
 }
 
-const Component = ActionSheetView
-// 注意：这里不要在Component上使用ref;换个属性名字比如refInstance；不然会导致覆盖
-export default forwardRef((props: Partial<CProps>, ref) => {
-  const initProps: CProps = {
+function ActionSheet<T> (props: Partial<CProps<T>>) {
+  const initProps: CProps<T> = {
     ...initViewProps,
     label: 'label',
     labelVal: 'value',
@@ -133,6 +127,8 @@ export default forwardRef((props: Partial<CProps>, ref) => {
   }
 
   return (
-    <Component {...initProps} refInstance={ref} />
+    <ActionSheetView {...initProps} />
   )
-})
+}
+
+export default ActionSheet

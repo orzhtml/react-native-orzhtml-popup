@@ -1,10 +1,9 @@
-import React, { FC, forwardRef, useRef } from 'react'
+import React, { FC, useRef } from 'react'
 import { ScrollView, StyleProp, StyleSheet, Text, TextStyle, TouchableOpacity, useColorScheme, View } from 'react-native'
 
 import { AlertButtonType, btnColor, disappearCompleted, initViewProps, IProps, popRefType } from '../common/Common'
 import { scaleSize } from '../common/SetSize'
 import PopView from '../PopView'
-
 import dynamicStyles from '../style'
 
 interface CProps extends IProps {
@@ -18,11 +17,7 @@ interface CProps extends IProps {
     buttons?: AlertButtonType[],
 }
 
-interface AlertProps extends CProps {
-    refInstance: React.ForwardedRef<any>,
-}
-
-const AlertView: FC<AlertProps> = (props) => {
+const AlertView: FC<CProps> = (props) => {
   const currentMode = useColorScheme()
   const styles = props.useDark && currentMode ? dynamicStyles[currentMode] : dynamicStyles.light
   const { title, message, buttons, titleStyle, messageStyle } = props
@@ -114,11 +109,7 @@ const AlertView: FC<AlertProps> = (props) => {
                     borderLeftWidth: i > 0 ? StyleSheet.hairlineWidth : 0,
                   }}
                   onPress={() => {
-                    if (btn.banClosed) {
-                      btn.onPress && btn.onPress()
-                    } else {
-                      close(btn.onPress)
-                    }
+                    close(btn.onPress)
                   }}
                 >
                   <Text style={{
@@ -137,9 +128,7 @@ const AlertView: FC<AlertProps> = (props) => {
   )
 }
 
-const Component = AlertView
-// 注意：这里不要在Component上使用ref;换个属性名字比如refInstance；不然会导致覆盖
-export default forwardRef((props: Partial<CProps>, ref) => {
+function Alert (props: Partial<CProps>) {
   const initProps: CProps = {
     ...initViewProps,
     type: 'zoomIn',
@@ -147,6 +136,8 @@ export default forwardRef((props: Partial<CProps>, ref) => {
   }
 
   return (
-    <Component {...initProps} refInstance={ref} />
+    <AlertView {...initProps} />
   )
-})
+}
+
+export default Alert

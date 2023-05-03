@@ -1,62 +1,45 @@
 import React from 'react'
 import { Keyboard } from 'react-native'
 
-import { AlertButtonType, isArray, isObject } from '../common/Common'
+import { AlertOptions } from '../common/Common'
+
 import Overlay from '../Overlay'
 import AlertView from './Alert'
 
-interface AlertOptions {
-    only?: boolean,
-    modal?: boolean,
-    type?: 'zoomIn' | 'zoomOut' | 'fade' | 'custom' | 'none',
-}
-
-function Alert (title: string | React.ReactNode, message?: string | React.ReactNode | AlertButtonType[] | AlertOptions, buttons?: AlertButtonType[] | AlertOptions, options?: AlertOptions) {
+function Alert (title: string | React.ReactNode, options?: AlertOptions) {
   let key = 0
 
-  if (title === null || title === undefined || title === '' || isArray(title) || isObject(title)) {
-    console.error('can not be empty')
+  if (!title) {
+    console.error('Title can not be empty')
     return null
   }
-  let _message: string | React.ReactNode | AlertButtonType[] | AlertOptions = message
-  let _buttons: any = buttons || []
-  let _options: any = options || {}
 
-  if (isArray(message)) {
-    if (isObject(buttons)) {
-      _options = buttons
+  const { message, buttons, onOk, onCancel, okText = '确认', cancelText = '取消', alertOptions = {} } = options || {}
+  let _buttons = buttons || []
+
+  if (_buttons.length === 0) {
+    if (onOk || onCancel) {
+      _buttons.push({
+        text: cancelText, style: 'cancel', onPress: onCancel,
+      }, { text: okText, style: 'default', onPress: onOk })
+    } else {
+      _buttons.push({ text: okText, style: 'default' })
     }
-    _buttons = message
-    _message = ''
-  } else if (isObject(message)) {
-    _options = message
-    _buttons = []
-    _message = ''
-  } else if (typeof message === 'string' || React.isValidElement(message)) {
-    _message = message
   }
 
-  if (_buttons && _buttons.length === 0) {
-    _buttons = [{ text: 'Ok' }]
-  }
+  const { only = true, modal = true, type = 'zoomIn' } = alertOptions
 
-  if (_options?.only === undefined) {
-    _options.only = true // If it is empty, the default is true
-  }
-
-  if (_options?.modal === undefined) {
-    _options.modal = true // If it is empty, the default is true
-  }
-
-  if (_options?.only && Alert.AlertKey[0]) {
+  if (only && Alert.AlertKey[0]) {
     return Alert.AlertKey
   }
 
   let props = {
     title: title,
-    message: _message,
+    message: message,
     buttons: _buttons,
-    ..._options,
+    only,
+    modal,
+    type,
     onClose: () => {
       remove(key)
     },

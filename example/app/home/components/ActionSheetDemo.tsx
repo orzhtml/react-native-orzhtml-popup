@@ -3,6 +3,19 @@ import { Text, TouchableOpacity, View } from 'react-native'
 
 import { ActionSheet } from '@app/libs/popup'
 
+const DataA = [
+  { label: '小明1', value: '01' }, { label: '小红', value: '02' },
+  { label: '小明3', value: '01' }, { label: '小红', value: '02' },
+  { label: '小明5', value: '01' }, { label: '小红', value: '02' },
+  { label: '小明7', value: '01' }, { label: '小红', value: '02' },
+  { label: '小明9', value: '01' }, { label: '小红', value: '02' },
+  { label: '小明11', value: '01' }, { label: '小红', value: '02' },
+  { label: '小明13', value: '01' }, { label: '小红', value: '02' },
+  { label: '小明15', value: '01' }, { label: '小红', value: '02' },
+]
+
+const DataB = ['小明1', '小明2']
+
 const ActionSheetDemo = () => {
   const [name, setName] = useState('')
   const [tabs] = useState([{
@@ -10,19 +23,11 @@ const ActionSheetDemo = () => {
     name: 'Action Sheet Demo',
     onPress: () => {
       ActionSheet.show({
-        items: [
-          { label: '小明1', value: '01' }, { label: '小红', value: '02' },
-          // { label: '小明3', value: '01' }, { label: '小红', value: '02' },
-          // { label: '小明5', value: '01' }, { label: '小红', value: '02' },
-          // { label: '小明7', value: '01' }, { label: '小红', value: '02' },
-          // { label: '小明9', value: '01' }, { label: '小红', value: '02' },
-          // { label: '小明11', value: '01' }, { label: '小红', value: '02' },
-          // { label: '小明13', value: '01' }, { label: '小红', value: '02' },
-          // { label: '小明15', value: '01' }, { label: '小红', value: '02' },
-      ],
-        confirm: (item: any, index: any) => {
+        items: DataB,
+        confirm: (item, index) => {
           console.log('item, index:', item, index)
-          setName(item.label)
+          // setName(item.label)
+          setName(item)
         },
         // cancel: () => { console.log('cancel') },
         // options: {

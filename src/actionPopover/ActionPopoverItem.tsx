@@ -1,4 +1,4 @@
-import React, { FC, forwardRef } from 'react'
+import React, { FC } from 'react'
 import { Text, TouchableOpacity, StyleProp, ViewStyle, TouchableOpacityProps, StyleSheet } from 'react-native'
 
 import { pixelSize } from '../common/Common'
@@ -11,11 +11,7 @@ interface IProps extends TouchableOpacityProps {
     rightSeparator?: boolean,
 }
 
-interface ActionSheetProps extends IProps {
-    refInstance: React.ForwardedRef<any>;
-}
-
-const ActionPopoverItem: FC<ActionSheetProps> = (props) => {
+const ActionPopoverItemView: FC<IProps> = (props) => {
   const renderTitle = () => {
     let { title } = props
 
@@ -49,10 +45,10 @@ const ActionPopoverItem: FC<ActionSheetProps> = (props) => {
   )
 }
 
-const Component = ActionPopoverItem
-// 注意：这里不要在Component上使用ref;换个属性名字比如refInstance；不然会导致覆盖
-export default forwardRef((props: Partial<IProps>, ref) => {
+function ActionPopoverItem (props: Partial<IProps>) {
   return (
-    <Component {...props} refInstance={ref} />
+    <ActionPopoverItemView {...props} />
   )
-})
+}
+
+export default ActionPopoverItem

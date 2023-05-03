@@ -1,16 +1,12 @@
 import React from 'react'
 import { Keyboard } from 'react-native'
 
+import { ActionSheetProps } from '../common/Common'
 import Overlay from '../Overlay'
 import ActionSheetView from './ActionSheet'
 
 class ActionSheet {
-  static show ({ items, confirm, cancel, options = {} }: {
-        items: { [x: string]: any }[];
-        confirm: (item: { [x: string]: any } | string, index: React.Key) => void;
-        cancel?: () => void;
-        options?: { [x: string]: any }
-    }) {
+  static show<T> ({ items, confirm, cancel, options = {} }: ActionSheetProps<T>) {
     Keyboard.dismiss()
 
     let key = Overlay.show(

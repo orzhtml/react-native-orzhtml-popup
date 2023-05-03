@@ -9,7 +9,7 @@ class ActionPopover {
   static show (fromBounds: fromBoundsType, items: {
     type?: string,
     title: string,
-    onPress: () => void,
+    onPress: (item: { type: string, title: string }) => void,
   }[], options = {}) {
     let key = Overlay.show(
       <ActionPopoverView fromBounds={fromBounds} items={items} {...options} />,

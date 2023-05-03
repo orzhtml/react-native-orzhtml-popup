@@ -1,45 +1,23 @@
-import React, { useRef, useCallback, useMemo, forwardRef, FC } from 'react'
+import React, { useRef, useCallback, useMemo, FC } from 'react'
 import { View, TouchableOpacity, Text } from 'react-native'
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context'
 import { useSingleState } from 'react-native-orzhtml-usecom'
 import dayjs from 'dayjs'
 
-import { disappearCompleted, initViewProps, IProps, isLeapYear, popRefType } from '../common/Common'
+import { DatePickerInit, disappearCompleted, getMonths, initViewProps, IProps, IPullPickerOptions, isLeapYear, maxOrMinDate, popRefType } from '../common/Common'
 import { scaleSize } from '../common/SetSize'
 import PullView from '../PullView'
 import Picker from '../picker'
 
-interface CProps extends IProps {
+interface CProps extends IProps, IPullPickerOptions {
     onDisappearCompleted?: () => void,
     onCloseRequest?: () => void,
     cancel?: () => void,
     confirm?: (date: string) => void,
-    value?: string,
-    max: string,
-    min: string,
-    showYear: boolean,
-    showMonth: boolean,
-    showDay: boolean,
-    leftBtnText?: string,
-    rightBtnText?: string,
-    yearText?: string,
-    monthText?: string,
-    dayText?: string,
+    value: string,
 }
 
-interface DatePickerProps extends CProps {
-    refInstance: React.ForwardedRef<any>;
-}
-
-function maxOrMinDate (date: string) {
-  return {
-    year: Number(dayjs(date).format('YYYY')),
-    month: Number(dayjs(date).format('MM')),
-    day: Number(dayjs(date).format('DD')),
-  }
-}
-
-const DatePickerView: FC<DatePickerProps> = (props) => {
+const DatePickerView: FC<CProps> = (props) => {
   const { cancel, confirm, onDisappearCompleted } = props
   let popRef = useRef<popRefType>(null)
   let [state, setState] = useSingleState(() => {
@@ -53,49 +31,38 @@ const DatePickerView: FC<DatePickerProps> = (props) => {
   })
 
   let years = useMemo(() => {
+    const yearText = props.yearText || ''
     let _years = []
     for (let i = maxOrMinDate(props.min).year; i <= maxOrMinDate(props.max).year; ++i) {
       _years.push({
-        label: i + (props?.yearText || ''),
+        label: i + yearText,
         value: i,
       })
     }
     return _years
   }, [props.max, props.min])
 
-  let months = useMemo(() => {
+  const months = useMemo(() => {
     let year = state.date.get('year')
-    const maxArr = maxOrMinDate(props.max)
-    const minArr = maxOrMinDate(props.min)
-    let maxMonth = 12
-    let minMonth = 1
+    const { min, max, monthText = '' } = props
+    const { year: minYear, month: minMonth } = maxOrMinDate(min)
+    const { year: maxYear, month: maxMonth } = maxOrMinDate(max)
 
-    if (year === maxArr.year) {
-      maxMonth = maxArr.month
-    } else if (year === minArr.year) {
-      minMonth = minArr.month
-    }
-    let _months = []
-    for (let i = minMonth; i <= maxMonth; ++i) {
-      _months.push({
-        label: i + (props.monthText || ''),
-        value: i,
-      })
-    }
-    return _months
-  }, [props.max, props.min, state.date])
+    return getMonths(year, minYear, minMonth, maxYear, maxMonth, monthText)
+  }, [props.max, props.min, props.monthText, state.date])
 
   let daysCount = useMemo(() => {
-    let d28 = { label: '28' + (props.dayText || ''), value: 28 }
-    let d29 = { label: '29' + (props.dayText || ''), value: 29 }
-    let d30 = { label: '30' + (props.dayText || ''), value: 30 }
-    let d31 = { label: '31' + (props.dayText || ''), value: 31 }
+    let dayText = props.dayText || ''
+    let d28 = { label: '28' + dayText, value: 28 }
+    let d29 = { label: '29' + dayText, value: 29 }
+    let d30 = { label: '30' + dayText, value: 30 }
+    let d31 = { label: '31' + dayText, value: 31 }
     let _daysCount = [
       [d31, d28, d31, d30, d31, d30, d31, d31, d30, d31, d30, d31],
       [d31, d29, d31, d30, d31, d30, d31, d31, d30, d31, d30, d31],
     ]
     return _daysCount
-  }, [])
+  }, [props.dayText])
 
   const hide = useCallback(() => {
     if (props.modal) {
@@ -123,14 +90,38 @@ const DatePickerView: FC<DatePickerProps> = (props) => {
 
   const onDateChange = useCallback((year: number, month: number, day: number) => {
     let _date = state.date.set('year', year)
-    let _daysCount_ = daysCount[isLeapYear(year) ? 1 : 0][month]
+    const maxDate = maxOrMinDate(props.max)
+    const minDate = maxOrMinDate(props.min)
 
-    if (day > _daysCount_.value) {
-      day = _daysCount_.value
+    const maxYear = maxDate.year
+    const maxMonth = maxDate.month - 1
+    const maxDay = maxDate.day
+
+    const minYear = minDate.year
+    const minMonth = minDate.month - 1
+    const minDay = minDate.day
+
+    let newMonth = month
+    let newDay = day
+
+    if (year === maxYear) {
+      newMonth = Math.min(maxMonth, month)
+      newDay = Math.min(maxDay, day)
+    } else if (year === minYear) {
+      newMonth = Math.max(minMonth, month)
+      newDay = Math.max(minDay, day)
     }
-    _date = _date.set('year', year).set('month', month).set('date', day)
+
+    let _daysCount_ = daysCount[isLeapYear(year) ? 1 : 0][newMonth]
+
+    if (newDay > _daysCount_.value) {
+      newDay = _daysCount_.value
+    }
+
+    _date = _date.set('year', year).set('month', newMonth).set('date', newDay)
+
     setState({ date: _date })
-  }, [state.date, daysCount])
+  }, [state.date, daysCount, props.max, props.min])
 
   const renderContent = () => {
     let year = state.date.get('year')
@@ -218,9 +209,7 @@ const DatePickerView: FC<DatePickerProps> = (props) => {
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={1}
-          onPress={() => {
-            onConfirm()
-          }}
+          onPress={() => onConfirm()}
           style={{ padding: scaleSize(16), justifyContent: 'center', alignItems: 'center' }}
         >
           <Text style={{ fontSize: scaleSize(16), color: '#1ACB79' }}>{props.rightBtnText}</Text>
@@ -234,25 +223,16 @@ const DatePickerView: FC<DatePickerProps> = (props) => {
   )
 }
 
-const Component = DatePickerView
-// 注意：这里不要在Component上使用ref;换个属性名字比如refInstance；不然会导致覆盖
-export default forwardRef((props: Partial<CProps>, ref) => {
+function DatePicker (props: Partial<CProps>) {
   const initProps: CProps = {
     ...initViewProps,
-    max: '2080/12/31',
-    min: '1900/01/01',
-    showYear: true,
-    showMonth: true,
-    showDay: true,
-    leftBtnText: '取消',
-    rightBtnText: '完成',
-    yearText: '年',
-    monthText: '月',
-    dayText: '日',
+    ...DatePickerInit,
     ...props,
   }
 
   return (
-    <Component {...initProps} refInstance={ref} />
+    <DatePickerView {...initProps} />
   )
-})
+}
+
+export default DatePicker

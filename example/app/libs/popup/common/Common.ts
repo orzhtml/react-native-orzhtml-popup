@@ -1,4 +1,6 @@
+import React from 'react'
 import { PixelRatio, ViewStyle } from 'react-native'
+import dayjs from 'dayjs'
 
 export type OverlayPointerEvents = 'none' | 'box-only' | 'auto' | undefined;
 
@@ -12,10 +14,23 @@ export type popoverArrow = 'none' | 'topLeft' | 'top' | 'topRight' |
   'leftBottom' | 'left' | 'leftTop';
 
 export type AlertButtonType = {
-  banClosed?: boolean,
   onPress?: (() => void) | undefined,
   style?: 'default' | 'cancel' | 'warning',
   text: string,
+}
+
+export interface AlertOptions {
+  message?: string | React.ReactNode,
+  onOk?: () => void,
+  okText?: string,
+  onCancel?: () => void,
+  cancelText?: string,
+  buttons?: AlertButtonType[],
+  alertOptions?: {
+    only?: boolean,
+    modal?: boolean,
+    type?: 'zoomIn' | 'zoomOut' | 'fade' | 'custom' | 'none',
+  },
 }
 
 export type fromBoundsType = { x: number, y: number, width: number, height: number }
@@ -150,4 +165,94 @@ export const initViewProps: IProps = {
   isBackPress: true,
   overlayOpacity: 0.55,
   useDark: false,
+}
+
+export interface ActionSheetProps<T> {
+  items: T[];
+  confirm: (item: T, index: React.Key) => void;
+  cancel?: () => void;
+  options?: {
+    label?: string;
+    labelVal?: string;
+    cancelText?: string,
+   }
+}
+
+export interface IPullPickerOptions {
+  max: string,
+  min: string,
+  showYear: boolean,
+  showMonth: boolean,
+  showDay: boolean,
+  leftBtnText: string,
+  rightBtnText: string,
+  yearText: string,
+  monthText: string,
+  dayText: string,
+}
+
+export interface IPullPickerProps {
+  value: string;
+  confirm: (date: string) => void;
+  options?: Partial<IPullPickerOptions>
+}
+
+export function maxOrMinDate (date: string) {
+  const dayjsDate = dayjs(date)
+  if (!dayjsDate.isValid()) {
+    console.warn('不是有效日期格式，请检查:', date)
+    return {
+      year: 0,
+      month: 0,
+      day: 0,
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+    }
+  }
+  return {
+    year: dayjsDate.year(),
+    month: dayjsDate.month() + 1,
+    day: dayjsDate.date(),
+    hours: dayjsDate.hour(),
+    minutes: dayjsDate.minute(),
+    seconds: dayjsDate.second(),
+  }
+}
+
+export const DatePickerInit = {
+  value: '',
+  max: '2080/12/31',
+  min: '1900/01/01',
+  showYear: true,
+  showMonth: true,
+  showDay: true,
+  leftBtnText: '取消',
+  rightBtnText: '完成',
+  yearText: '年',
+  monthText: '月',
+  dayText: '日',
+}
+
+export const getMonths = (year: number, minYear: number, minMonth: number, maxYear: number, maxMonth: number, monthText: string) => {
+  let months = []
+  let startMonth = 1
+  let endMonth = 12
+
+  if (year === minYear) {
+    startMonth = minMonth
+  }
+
+  if (year === maxYear) {
+    endMonth = maxMonth
+  }
+
+  for (let i = startMonth; i <= endMonth; i++) {
+    months.push({
+      label: i + monthText,
+      value: i,
+    })
+  }
+
+  return months
 }

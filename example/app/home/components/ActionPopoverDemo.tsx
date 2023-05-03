@@ -10,26 +10,24 @@ const ActionPopoverDemo = () => {
   const _onLongPress = () => {
     _shareRef.current?.measure(
       (x: number, y: number, width: number, height: number, pageX: number, pageY: number) => {
-        let items = [
-          {
-            title: '分享微信',
-            type: 'friend',
-            onPress: async () => {
-              console.log('shareToSession')
-            },
-          },
-          {
-            title: '分享朋友圈',
-            type: 'share',
-            onPress: async () => {
-              console.log('shareToTimeline')
-            },
-          },
-        ]
-
         ActionPopover.show(
           { x: pageX, y: pageY, width, height },
-          items,
+          [
+            {
+              title: '分享微信',
+              type: 'friend',
+              onPress: (item) => {
+                console.log('shareToSession:', item)
+              },
+            },
+            {
+              title: '分享朋友圈',
+              type: 'share',
+              onPress: (item) => {
+                console.log('shareToTimeline:', item)
+              },
+            },
+          ],
         )
       },
     )

@@ -35,7 +35,7 @@ const DatePickerDemo = () => {
   const handleDate = () => {
     DatePicker.show({
       value: dayjs(state.startDate).format('YYYY/MM/DD'),
-      confirm: (val: any) => {
+      confirm: (val) => {
         console.log('val, index:', val)
         setState({ startDate: val })
       },
@@ -45,12 +45,12 @@ const DatePickerDemo = () => {
   const handleDateMaxMin = () => {
     DatePicker.show({
       value: dayjs(state.startDate).format('YYYY/MM/DD'),
-      confirm: (val: string) => {
+      confirm: (val) => {
         console.log('val, index:', val)
         setState({ startDate: val })
       },
       options: {
-        max: '2030/12/31',
+        max: '2030/09/25',
         min: dayjs().format('YYYY/MM/DD'),
       },
     })
@@ -59,12 +59,12 @@ const DatePickerDemo = () => {
   const handleDateDisDay = () => {
     DatePicker.show({
       value: dayjs(state.startDate).format('YYYY/MM/DD'),
-      confirm: (val: string) => {
+      confirm: (val) => {
         console.log('val, index:', val)
         setState({ startDate: val })
       },
       options: {
-        max: '2030/12/31',
+        max: '2030/10/20',
         min: dayjs().format('YYYY/MM/DD'),
         showMonth: false,
       },

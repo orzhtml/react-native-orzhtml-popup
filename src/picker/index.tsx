@@ -1,7 +1,7 @@
-import React, { FC, forwardRef, useEffect, useRef } from 'react'
+import React, { FC, useEffect, useRef } from 'react'
 import {
-  Dimensions, View, Platform, FlatList, StyleSheet, Text, TextStyle,
-  NativeSyntheticEvent, NativeScrollEvent, StyleProp, ViewStyle,
+  Dimensions, View, Platform, FlatList, StyleSheet, Text,
+  NativeSyntheticEvent, NativeScrollEvent, StyleProp, ViewStyle, TextStyle,
 } from 'react-native'
 import { Picker } from '@react-native-picker/picker'
 import { useSingleInstanceVar } from 'react-native-orzhtml-usecom'
@@ -10,24 +10,20 @@ import { scaleSize } from '../common/SetSize'
 
 interface IProps {
     itemHeight: number,
-    selectedValue?: string | number,
-    items?: any,
+    selectedValue: string | number,
+    items: { label: string, value: string | number }[],
     onValueChange?: (value: string | number, index: React.Key) => void,
     style?: StyleProp<ViewStyle>,
     itemStyle?: StyleProp<TextStyle>,
 }
 
-interface PickerProps extends IProps {
-    refInstance: React.ForwardedRef<any>;
-}
-
-const CrossPicker: FC<PickerProps> = (props) => {
+const CrossPickerView: FC<IProps> = (props) => {
   const _listRef = useRef<FlatList>(null)
   const inst = useSingleInstanceVar<{
-    init: boolean;
-    itemH: number;
-    timer: NodeJS.Timeout | string | number | undefined;
-    canUpdate: boolean;
+    init: boolean,
+    itemH: number,
+    timer: NodeJS.Timeout | string | number | undefined,
+    canUpdate: boolean,
   }>({
     init: false,
     itemH: props.itemHeight,
@@ -44,7 +40,7 @@ const CrossPicker: FC<PickerProps> = (props) => {
     }
   }, [props.selectedValue])
 
-  const scrollToValue = (value: string | number | undefined) => {
+  const scrollToValue = (value: string | number) => {
     for (let index = 0; index < props.items.length; index++) {
       if (props.items[index].value === value) {
         _listRef.current?.scrollToIndex({
@@ -106,7 +102,7 @@ const CrossPicker: FC<PickerProps> = (props) => {
         onValueChange={onValueChange}
       >
         {
-          items.map((item: any) => {
+          items.map((item) => {
             return (<Picker.Item {...item} key={item.value} />)
           })
         }
@@ -137,7 +133,7 @@ const CrossPicker: FC<PickerProps> = (props) => {
         onMomentumScrollBegin={onMomentumScrollBegin}
         onMomentumScrollEnd={onMomentumScrollEnd}
         data={items}
-        renderItem={({ item }) => {
+        renderItem={({ item }: { item: { label: string, value: string | number } }) => {
           let isSelect = item.value === selectedValue
           return (
             <View style={{
@@ -187,15 +183,17 @@ const lineStyles = StyleSheet.create({
   },
 })
 
-const Component = CrossPicker
-// 注意：这里不要在Component上使用ref;换个属性名字比如refInstance；不然会导致覆盖
-export default forwardRef((props: Partial<IProps>, ref) => {
+function CrossPicker (props: Partial<IProps>) {
   const initProps = {
     itemHeight: scaleSize(50),
+    items: [],
+    selectedValue: '',
     ...props,
   }
 
   return (
-    <Component {...initProps} refInstance={ref} />
+    <CrossPickerView {...initProps} />
   )
-})
+}
+
+export default CrossPicker

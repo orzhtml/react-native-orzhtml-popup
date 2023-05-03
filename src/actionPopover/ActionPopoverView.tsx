@@ -1,4 +1,4 @@
-import React, { FC, forwardRef, useRef, useState } from 'react'
+import React, { FC, useRef, useState } from 'react'
 import { StyleProp, StyleSheet, ViewStyle } from 'react-native'
 
 import { disappearCompleted, fromBoundsType, initViewProps, IProps, popRefType } from '../common/Common'
@@ -11,7 +11,7 @@ interface CProps extends IProps {
     items: {
       type?: string,
       title: string,
-      onPress: () => void,
+      onPress: (item: { type: string, title: string }) => void,
     }[],
     direction: 'down' | 'up' | 'right' | 'left',
     align: 'end' | 'start' | 'center' | 'right' | 'left',
@@ -19,16 +19,21 @@ interface CProps extends IProps {
     fromBounds?: fromBoundsType,
 }
 
-interface ActionPopoverProps extends CProps {
-    refInstance: React.ForwardedRef<any>;
-}
-
-const ActionPopoverView: FC<ActionPopoverProps> = (props) => {
+const ActionPopoverView: FC<CProps> = (props) => {
   const [defaultDirectionInsets] = useState(4)
   const popoverRef = useRef<popRefType>(null)
-  const onItemPress = (item: { [x: string]: any; onPress?: () => void }) => {
-    item.onPress && item.onPress()
-    popoverRef.current && popoverRef.current.close(() => {
+
+  const onItemPress = (item: {
+    type?: string;
+    title: string;
+    onPress: (itm: { type: string; title: string }) => void;
+  }) => {
+    item.onPress &&
+      item.onPress({
+        type: item.type || '',
+        title: item.title,
+      })
+    popoverRef.current?.close(() => {
       disappearCompleted(props.onDisappearCompleted)
     })
   }
@@ -75,9 +80,7 @@ const ActionPopoverView: FC<ActionPopoverProps> = (props) => {
   )
 }
 
-const Component = ActionPopoverView
-// 注意：这里不要在Component上使用ref;换个属性名字比如refInstance；不然会导致覆盖
-export default forwardRef((props: Partial<CProps>, ref) => {
+function ActionPopover (props: Partial<CProps>) {
   const initProps: CProps = {
     ...initViewProps,
     items: [],
@@ -88,6 +91,8 @@ export default forwardRef((props: Partial<CProps>, ref) => {
   }
 
   return (
-    <Component {...initProps} refInstance={ref} />
+    <ActionPopoverView {...initProps} />
   )
-})
+}
+
+export default ActionPopover

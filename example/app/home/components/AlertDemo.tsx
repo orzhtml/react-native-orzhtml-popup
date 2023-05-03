@@ -8,19 +8,22 @@ const AlertDemo = () => {
     id: 1,
     name: '完整弹窗',
     onPress: () => {
-      Alert('提示', '提示内容有确认取消按钮', [{
-        text: '取消',
-        style: 'cancel',
-        onPress: () => {
-          console.log('取消')
-        },
-      }, {
-        text: '确定',
-        style: 'warning',
-        onPress: () => {
-          console.log('确定')
-        },
-      }])
+      Alert('提示', {
+        message: '提示内容有确认取消按钮',
+        buttons: [{
+          text: '取消',
+          style: 'cancel',
+          onPress: () => {
+            console.log('取消')
+          },
+        }, {
+          text: '确定',
+          style: 'default',
+          onPress: () => {
+            console.log('确定')
+          },
+        }],
+      })
     },
   }, {
     id: 2,
@@ -32,29 +35,27 @@ const AlertDemo = () => {
     id: 3,
     name: '有提示内容',
     onPress: () => {
-      Alert('标题', '默认有一个按钮')
+      Alert('标题', { message: '默认有一个按钮' })
     },
   }, {
     id: 4,
     name: '非模态弹窗',
     onPress: () => {
-      Alert('提示非模态弹窗点背景关闭', [{
-        text: '取消',
-        style: 'cancel',
-        onPress: () => {
+      Alert('提示非模态弹窗点背景关闭', {
+        message: '简化按钮调用方式',
+        onCancel: () => {
           console.log('取消')
         },
-      }, {
-        text: '确定',
-        style: 'warning',
-        onPress: () => {
+        onOk: () => {
           console.log('确定')
         },
-      }], {
-        modal: false,
+        alertOptions: {
+          modal: false,
+        },
       })
     },
   }])
+
   return (
     <View style={{
       flexDirection: 'row',
