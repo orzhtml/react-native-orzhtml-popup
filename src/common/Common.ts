@@ -186,7 +186,7 @@ export const initViewProps: IProps = {
 
 export interface ActionSheetProps<T> {
   items: T[];
-  confirm: (item: T, index: React.Key) => void;
+  confirm: (item: T, index: number) => void;
   cancel?: () => void;
   options?: {
     label?: string;
@@ -288,7 +288,7 @@ export const PullPickerInit = {
 export interface IPullPickerProps<T> {
   items: T[],
   value: string | number,
-  confirm: (val: string | number, index: React.Key) => void,
+  confirm: (val: string | number, index: number) => void,
   options?: Partial<IPullPickerOptions>,
 }
 

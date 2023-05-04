@@ -9,6 +9,7 @@ import ActionSheet from './actionSheet'
 import Popover from './popover'
 import ActionPopover from './actionPopover'
 import Drawer from './drawer'
+export * from './common/Common'
 
 export {
   Popup,

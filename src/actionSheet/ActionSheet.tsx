@@ -13,7 +13,7 @@ interface CProps<T> extends IProps {
     labelVal: string;
     items?: T[];
     cancel?: () => void;
-    confirm?: (item: T, index: React.Key) => void;
+    confirm?: (item: T, index: number) => void;
     cancelText?: string,
 }
 
@@ -42,7 +42,7 @@ function ActionSheetView<T> (props: CProps<T>) {
     })
   }, [onDisappearCompleted, cancel])
 
-  const onConfirm = useCallback((item: T, index: React.Key) => {
+  const onConfirm = useCallback((item: T, index: number) => {
     PullVRef.current?.close(() => {
       disappearCompleted(() => {
         confirm && confirm(item, index)

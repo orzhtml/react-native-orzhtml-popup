@@ -1,4 +1,4 @@
-import React, { FC, forwardRef } from 'react'
+import React, { FC } from 'react'
 import { Text, TouchableOpacity, StyleProp, ViewStyle, TouchableOpacityProps, StyleSheet } from 'react-native'
 
 import { pixelSize } from '../common/Common'

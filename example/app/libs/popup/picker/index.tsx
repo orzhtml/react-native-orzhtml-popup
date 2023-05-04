@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import {
   Dimensions, View, Platform, FlatList, StyleSheet, Text,
   NativeSyntheticEvent, NativeScrollEvent, StyleProp, ViewStyle, TextStyle,
@@ -17,7 +17,7 @@ interface IProps<T> {
     itemHeight: number,
     selectedValue: string | number,
     items: T[],
-    onValueChange?: (value: string | number, index: React.Key) => void,
+    onValueChange?: (value: string | number, index: number) => void,
     style?: StyleProp<ViewStyle>,
     itemStyle?: StyleProp<TextStyle>,
 }

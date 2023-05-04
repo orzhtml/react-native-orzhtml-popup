@@ -94,7 +94,7 @@ const AlertView: FC<CProps> = (props) => {
           }}
         >
           {
-            buttons?.map((btn: AlertButtonType, i: React.Key) => {
+            buttons?.map((btn: AlertButtonType, i: number) => {
               let key = 'btn-' + i
               return (
                 <TouchableOpacity

@@ -27,7 +27,7 @@ class Drawer {
     return this.key
   }
 
-  static close (_key: React.Key) {
+  static close (_key: number) {
     Overlay.hide(_key)
     this.key = 0
   }

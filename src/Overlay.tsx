@@ -14,7 +14,7 @@ class Overlay {
     onDisappearCompleted: () => void;
     onCloseCompleted: () => void;
   }>) {
-    let key: React.Key = 0
+    let key: number = 0
     const onCloseCompleted = view.props.onCloseCompleted
     // 弹窗关闭后调用 onCloseCompleted
     const element = React.cloneElement(view, {
@@ -28,7 +28,7 @@ class Overlay {
     return key
   }
 
-  static hide (key: React.Key) {
+  static hide (key: number) {
     Popup.remove(key)
   }
 }

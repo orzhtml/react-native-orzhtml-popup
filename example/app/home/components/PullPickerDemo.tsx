@@ -23,9 +23,9 @@ const PullPickerDemo = () => {
     PullPicker.show({
       items: nameList.current,
       value: state.nameValue,
-      confirm: (item: any, index: any) => {
+      confirm: (item, index) => {
         console.log('item, index:', item, index)
-        setState({ nameValue: item })
+        setState({ nameValue: item as string })
       },
       // cancel: () => { console.log('cancel') },
       // options: {

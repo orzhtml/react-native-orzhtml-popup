@@ -15,7 +15,7 @@ interface Items {
 
 interface CProps<T> extends IProps, IPullPickerOptions {
     cancel?: () => void,
-    confirm?: (val: string | number, index: React.Key) => void,
+    confirm?: (val: string | number, index: number) => void,
     onDisappearCompleted?: () => void,
     value: string | number,
     items: T[],
@@ -27,7 +27,7 @@ function PullPickerView<T> (props: CProps<T>) {
   const [state, setState] = useSingleState({
     items: [] as Items[],
     pickerValue: props.value,
-    pickerIndex: 0 as React.Key,
+    pickerIndex: 0,
   })
 
   useEffect(() => {
@@ -93,7 +93,7 @@ function PullPickerView<T> (props: CProps<T>) {
     if (isEmpty(_selectedValue) || _selectedValue === '') {
       _selectedValue = state.items[0][props.labelVal]
     }
-    if (isEmpty(_selectedIndex) || _selectedIndex === '') {
+    if (isEmpty(_selectedIndex)) {
       _selectedIndex = 0
     }
 
@@ -104,7 +104,7 @@ function PullPickerView<T> (props: CProps<T>) {
     })
   }
 
-  const onValueChange = (itemValue: string | number, itemIndex: React.Key) => {
+  const onValueChange = (itemValue: string | number, itemIndex: number) => {
     setState({
       items: state.items,
       pickerValue: itemValue,

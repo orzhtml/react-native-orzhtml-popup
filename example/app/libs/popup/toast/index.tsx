@@ -27,7 +27,7 @@ class Toast {
    }) {
     let { duration, ...others } = options && typeof options === 'object' ? options : { duration: 2000 }
 
-    let key: React.Key = Overlay.show(<ToastView {...others} />)
+    let key: number = Overlay.show(<ToastView {...others} />)
 
     if (typeof duration !== 'number') {
       switch (duration) {
@@ -41,12 +41,12 @@ class Toast {
     return key
   }
 
-  static hide (key: React.Key) {
+  static hide (key: number) {
     Overlay.hide(key)
   }
 
   static message (text: string | number | React.ReactNode, duration = this.defaultDuration, position = this.defaultPosition) {
-    let key: React.Key = this.show({ text, duration, position })
+    let key: number = this.show({ text, duration, position })
     return key
   }
 

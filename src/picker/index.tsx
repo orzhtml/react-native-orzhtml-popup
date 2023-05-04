@@ -17,7 +17,7 @@ interface IProps<T> {
     itemHeight: number,
     selectedValue: string | number,
     items: T[],
-    onValueChange?: (value: string | number, index: React.Key) => void,
+    onValueChange?: (value: string | number, index: number) => void,
     style?: StyleProp<ViewStyle>,
     itemStyle?: StyleProp<TextStyle>,
 }

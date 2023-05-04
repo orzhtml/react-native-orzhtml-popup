@@ -3,7 +3,7 @@ import { View, DeviceEventEmitter } from 'react-native'
 import { useSingleState } from 'react-native-orzhtml-usecom'
 
 interface ElementInterface {
-    key: React.Key,
+    key: number,
     element: React.ReactNode,
 }
 
@@ -83,7 +83,7 @@ Popup.add = function (element: React.ReactNode) {
   return key
 }
 
-Popup.remove = function (key: React.Key) {
+Popup.remove = function (key: number) {
   DeviceEventEmitter.emit('removePopup', { key })
 }
 

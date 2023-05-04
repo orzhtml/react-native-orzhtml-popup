@@ -58,7 +58,7 @@ function Alert (title: string | React.ReactNode, options?: AlertOptions) {
 
 Alert.AlertKey = [0]
 
-function remove (key: React.Key) {
+function remove (key: number) {
   for (let i = Alert.AlertKey.length - 1; i >= 0; --i) {
     if (Alert.AlertKey[i] === key) {
       Alert.AlertKey.splice(i, 1)
