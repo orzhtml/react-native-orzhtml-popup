@@ -1,10 +1,9 @@
-import React, { useRef, useCallback, useMemo, FC } from 'react'
+import React, { useRef, useCallback, useMemo, FC, useState } from 'react'
 import { View, TouchableOpacity, Text } from 'react-native'
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context'
-import { useSingleState } from 'react-native-orzhtml-usecom'
 import dayjs from 'dayjs'
 
-import { DatePickerInit, disappearCompleted, getMonths, initViewProps, IProps, IDatePickerOptions, isLeapYear, maxOrMinDate, PullVHandleRef } from '../common/Common'
+import { DatePickerInit, disappearCompleted, getMonths, initViewProps, IProps, IDatePickerOptions, isLeapYear, maxOrMinDate, PullVHandleRef, daysInMonth } from '../common/Common'
 import { scaleSize } from '../common/SetSize'
 import PullView from '../PullView'
 import Picker from '../picker'
@@ -20,49 +19,90 @@ interface CProps extends IProps, IDatePickerOptions {
 const DatePickerView: FC<CProps> = (props) => {
   const { cancel, confirm, onDisappearCompleted } = props
   let PullVRef = useRef<PullVHandleRef>(null)
-  let [state, setState] = useSingleState(() => {
-    let _date = dayjs(props.value || '')
-    if (Number.isNaN(_date.valueOf())) {
-      _date = dayjs()
+  const maxDate = useMemo(() => {
+    return maxOrMinDate(props.max)
+  }, [props.max])
+  const minDate = useMemo(() => {
+    return maxOrMinDate(props.min)
+  }, [props.min])
+  const [dateValue, setDateValue] = useState(() => {
+    const value = props.value ? dayjs(props.value) : dayjs()
+
+    const maxYear = maxDate.year
+    const maxMonth = maxDate.month - 1
+    const maxDay = maxDate.day
+
+    const minYear = minDate.year
+    const minMonth = minDate.month - 1
+    const minDay = minDate.day
+
+    let year = value.year()
+    const month = value.month()
+    const day = value.date()
+    if (year > maxYear) {
+      year = maxYear
+    } else if (year < minYear) {
+      year = minYear
     }
-    return {
-      date: _date,
+    let newMonth = month
+    let newDay = day
+    if (year === maxYear) {
+      newMonth = Math.min(maxMonth, month)
+      newDay = Math.min(maxDay, day)
+    } else if (year === minYear) {
+      newMonth = Math.max(minMonth, month)
+      newDay = Math.max(minDay, day)
     }
+
+    return dayjs().year(year).month(newMonth).date(newDay)
   })
 
-  let years = useMemo(() => {
+  const years = useMemo(() => {
     const yearText = props.yearText || ''
-    let _years = []
-    for (let i = maxOrMinDate(props.min).year; i <= maxOrMinDate(props.max).year; ++i) {
-      _years.push({
-        label: i + yearText,
-        value: i,
-      })
+    const minYear = minDate.year
+    const maxYear = maxDate.year
+
+    const _years = []
+    for (let i = minYear; i <= maxYear; i++) {
+      _years.push({ label: `${i}${yearText}`, value: i })
     }
     return _years
-  }, [props.max, props.min])
+  }, [maxDate.year, minDate.year, props.yearText])
 
   const months = useMemo(() => {
-    let year = state.date.get('year')
-    const { min, max, monthText = '' } = props
-    const { year: minYear, month: minMonth } = maxOrMinDate(min)
-    const { year: maxYear, month: maxMonth } = maxOrMinDate(max)
+    const { monthText = '' } = props
+    const year = dateValue.year()
+    const { year: minYear, month: minMonth } = minDate
+    const { year: maxYear, month: maxMonth } = maxDate
 
     return getMonths(year, minYear, minMonth, maxYear, maxMonth, monthText)
-  }, [props.max, props.min, props.monthText, state.date])
+  }, [minDate, maxDate, props.monthText, dateValue])
 
-  let daysCount = useMemo(() => {
-    let dayText = props.dayText || ''
-    let d28 = { label: '28' + dayText, value: 28 }
-    let d29 = { label: '29' + dayText, value: 29 }
-    let d30 = { label: '30' + dayText, value: 30 }
-    let d31 = { label: '31' + dayText, value: 31 }
-    let _daysCount = [
-      [d31, d28, d31, d30, d31, d30, d31, d31, d30, d31, d30, d31],
-      [d31, d29, d31, d30, d31, d30, d31, d31, d30, d31, d30, d31],
+  const days = useMemo(() => {
+    const year = dateValue.year()
+    const month = dateValue.month()
+    const { dayText = '' } = props
+    const _days = []
+    let daysCount = [
+      [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
+      [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
     ]
-    return _daysCount
-  }, [props.dayText])
+    let maxDay = daysCount[isLeapYear(year) ? 1 : 0][month]
+    let minDay = 1
+
+    if (year === maxDate.year && month === maxDate.month - 1) {
+      maxDay = maxDate.day
+    }
+    if (year === minDate.year && month === minDate.month - 1) {
+      minDay = minDate.day
+    }
+
+    for (let i = minDay; i <= maxDay; i++) {
+      _days.push({ label: `${i}${dayText}`, value: i })
+    }
+
+    return _days
+  }, [dateValue, maxDate, minDate, props.dayText])
 
   const hide = useCallback(() => {
     if (props.modal) {
@@ -80,72 +120,83 @@ const DatePickerView: FC<CProps> = (props) => {
   }, [cancel, onDisappearCompleted])
 
   const onConfirm = useCallback(() => {
-    let value = state.date.format('YYYY/MM/DD')
+    let value = dateValue.format('YYYY/MM/DD')
     PullVRef.current?.close(() => {
       disappearCompleted(() => {
         confirm && confirm(value)
       }, onDisappearCompleted)
     })
-  }, [state.date, confirm, onDisappearCompleted])
+  }, [dateValue, confirm, onDisappearCompleted])
 
   const onDateChange = useCallback((year: number, month: number, day: number) => {
-    let _date = state.date.set('year', year)
-    const maxDate = maxOrMinDate(props.max)
-    const minDate = maxOrMinDate(props.min)
-
-    const maxYear = maxDate.year
-    const maxMonth = maxDate.month - 1
-    const maxDay = maxDate.day
-
-    const minYear = minDate.year
-    const minMonth = minDate.month - 1
-    const minDay = minDate.day
-
+    let newDate = dateValue
     let newMonth = month
     let newDay = day
 
-    if (year === maxYear) {
-      newMonth = Math.min(maxMonth, month)
-      newDay = Math.min(maxDay, day)
-    } else if (year === minYear) {
-      newMonth = Math.max(minMonth, month)
-      newDay = Math.max(minDay, day)
+    if (year === maxDate.year) {
+      if (newMonth > maxDate.month - 1) {
+        newMonth = maxDate.month - 1
+        if (day > maxDate.day) {
+          newDay = maxDate.day
+        } else if (day > daysInMonth(maxDate.month, year)) {
+          newDay = daysInMonth(maxDate.month, year)
+        }
+      } else if (newMonth === maxDate.month - 1) {
+        if (day > maxDate.day) {
+          newDay = maxDate.day
+        }
+      } else {
+        const maxDays = daysInMonth(newMonth + 1, year)
+        if (newDay > maxDays) {
+          newDay = maxDays
+        }
+      }
+      // console.log('newMonth1 newDay:', newMonth, newDay)
+    } else if (year === minDate.year) {
+      if (newMonth < minDate.month - 1) {
+        newMonth = minDate.month - 1
+        if (day < minDate.day) {
+          newDay = minDate.day
+        } else if (day > daysInMonth(minDate.month, year)) {
+          newDay = daysInMonth(minDate.month, year)
+        }
+      } else if (newMonth === minDate.month - 1) {
+        if (day < minDate.day) {
+          newDay = minDate.day
+        }
+      } else {
+        const minDays = daysInMonth(newMonth + 1, year)
+        if (newDay > minDays) {
+          newDay = minDays
+        }
+      }
+      // console.log('newMonth2 newDay:', newMonth, newDay)
+    } else {
+      // check if the day exceeds the maximum number of days in the new month
+      const maxDays = daysInMonth(newMonth + 1, year)
+      if (newDay > maxDays) {
+        newDay = maxDays
+      }
+      // console.log('newMonth3 newDay:', newMonth, newDay)
     }
 
-    let _daysCount_ = daysCount[isLeapYear(year) ? 1 : 0][newMonth]
+    newDate = newDate.set('year', year).set('month', newMonth).set('date', newDay)
+    // console.log('newDate:', newDate.format('YYYY/MM/DD'))
 
-    if (newDay > _daysCount_.value) {
-      newDay = _daysCount_.value
-    }
+    setDateValue(newDate)
+  }, [dateValue])
 
-    _date = _date.set('year', year).set('month', newMonth).set('date', newDay)
+  const onValueChange = useCallback(
+    (values: number[]) => {
+      const [year, month, day] = values
+      // console.log('year, month, day:', year, month, day)
 
-    setState({ date: _date })
-  }, [state.date, daysCount, props.max, props.min])
+      onDateChange(year, month, day)
+    },
+    [onDateChange],
+  )
 
   const renderContent = () => {
-    let year = state.date.get('year')
-    let month = state.date.get('months')
-    let day = state.date.get('date')
-
-    let _daysCount_ = daysCount[isLeapYear(year) ? 1 : 0][month]
-    let days = []
-
-    const maxArr = maxOrMinDate(props.max)
-    const minArr = maxOrMinDate(props.min)
-    let maxDay = _daysCount_.value
-    let minDay = 1
-
-    if (year === maxArr.year) {
-      maxDay = maxArr.day
-    } else if (year === minArr.year) {
-      minDay = minArr.day
-    }
-
-    for (let i = minDay; i <= maxDay; ++i) {
-      days.push({ label: `${i}${props.dayText}`, value: i })
-    }
-
     return (
       <View style={{ backgroundColor: '#fff', flexDirection: 'row' }}>
         {
@@ -153,8 +204,8 @@ const DatePickerView: FC<CProps> = (props) => {
             <Picker
               style={{ height: scaleSize(250), flex: 1 }}
               items={years}
-              selectedValue={year}
-              onValueChange={itemValue => onDateChange(Number(itemValue), month, day)}
+              selectedValue={dateValue.year()}
+              onValueChange={itemValue => onValueChange([Number(itemValue), dateValue.month(), dateValue.date()])}
             />
           ) : null
         }
@@ -163,8 +214,8 @@ const DatePickerView: FC<CProps> = (props) => {
             <Picker
               style={{ height: scaleSize(250), flex: 1 }}
               items={months}
-              selectedValue={month + 1}
-              onValueChange={itemValue => onDateChange(year, Number(itemValue) - 1, day)}
+              selectedValue={dateValue.month() + 1}
+              onValueChange={itemValue => onValueChange([dateValue.year(), Number(itemValue) - 1, dateValue.date()])}
             />
           ) : null
         }
@@ -173,8 +224,8 @@ const DatePickerView: FC<CProps> = (props) => {
             <Picker
               style={{ height: scaleSize(250), flex: 1 }}
               items={days}
-              selectedValue={day}
-              onValueChange={itemValue => onDateChange(year, month, Number(itemValue))}
+              selectedValue={dateValue.date()}
+              onValueChange={itemValue => onValueChange([dateValue.year(), dateValue.month(), Number(itemValue)])}
             />
           ) : null
         }

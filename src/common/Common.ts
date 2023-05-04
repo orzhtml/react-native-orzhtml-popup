@@ -252,25 +252,24 @@ export const DatePickerInit = {
 }
 
 export const getMonths = (year: number, minYear: number, minMonth: number, maxYear: number, maxMonth: number, monthText: string) => {
-  let months = []
   let startMonth = 1
   let endMonth = 12
-
   if (year === minYear) {
     startMonth = minMonth
   }
-
   if (year === maxYear) {
     endMonth = maxMonth
   }
-
-  for (let i = startMonth; i <= endMonth; i++) {
-    months.push({
-      label: i + monthText,
-      value: i,
-    })
-  }
-
+  // if (year < minYear || year > maxYear) {
+  //   return []
+  // }
+  const months = Array.from({ length: endMonth - startMonth + 1 }, (_, index) => {
+    const month = startMonth + index
+    return {
+      label: `${month}${monthText}`,
+      value: month,
+    }
+  })
   return months
 }
 
@@ -303,4 +302,8 @@ export interface IPullPickerOptions {
   cancelText?: string,
   completeText?: string,
   itemStyle?: StyleProp<TextStyle>,
+}
+
+export function daysInMonth (month: number, year: number): number {
+  return new Date(year, month, 0).getDate()
 }
