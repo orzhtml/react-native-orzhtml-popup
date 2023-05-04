@@ -4,7 +4,7 @@ import { SafeAreaInsetsContext } from 'react-native-safe-area-context'
 import { useSingleState } from 'react-native-orzhtml-usecom'
 import dayjs from 'dayjs'
 
-import { DatePickerInit, disappearCompleted, getMonths, initViewProps, IProps, IDatePickerOptions, isLeapYear, maxOrMinDate, popRefType } from '../common/Common'
+import { DatePickerInit, disappearCompleted, getMonths, initViewProps, IProps, IDatePickerOptions, isLeapYear, maxOrMinDate, PullVHandleRef } from '../common/Common'
 import { scaleSize } from '../common/SetSize'
 import PullView from '../PullView'
 import Picker from '../picker'
@@ -19,7 +19,7 @@ interface CProps extends IProps, IDatePickerOptions {
 
 const DatePickerView: FC<CProps> = (props) => {
   const { cancel, confirm, onDisappearCompleted } = props
-  let popRef = useRef<popRefType>(null)
+  let PullVRef = useRef<PullVHandleRef>(null)
   let [state, setState] = useSingleState(() => {
     let _date = dayjs(props.value || '')
     if (Number.isNaN(_date.valueOf())) {
@@ -68,20 +68,20 @@ const DatePickerView: FC<CProps> = (props) => {
     if (props.modal) {
       return null
     }
-    popRef.current?.close(() => {
+    PullVRef.current?.close(() => {
       disappearCompleted(onDisappearCompleted)
     })
   }, [onDisappearCompleted, props.modal])
 
   const onCancel = useCallback(() => {
-    popRef.current?.close(() => {
+    PullVRef.current?.close(() => {
       disappearCompleted(cancel, onDisappearCompleted)
     })
   }, [cancel, onDisappearCompleted])
 
   const onConfirm = useCallback(() => {
     let value = state.date.format('YYYY/MM/DD')
-    popRef.current?.close(() => {
+    PullVRef.current?.close(() => {
       disappearCompleted(() => {
         confirm && confirm(value)
       }, onDisappearCompleted)
@@ -184,7 +184,7 @@ const DatePickerView: FC<CProps> = (props) => {
 
   return (
     <PullView
-      ref={popRef}
+      ref={PullVRef}
       containerStyle={{ backgroundColor: '#fff' }}
       onCloseRequest={hide}
       side="bottom"

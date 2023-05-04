@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, View } from 'react-native'
 import { useSingleState } from 'react-native-orzhtml-usecom'
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context'
 
-import { disappearCompleted, initViewProps, IProps, IPullPickerOptions, isEmpty, popRefType, PullPickerInit } from '../common/Common'
+import { disappearCompleted, initViewProps, IProps, IPullPickerOptions, isEmpty, PullVHandleRef, PullPickerInit } from '../common/Common'
 import { scaleSize } from '../common/SetSize'
 import PullView from '../PullView'
 import Picker from '../picker'
@@ -23,7 +23,7 @@ interface CProps<T> extends IProps, IPullPickerOptions {
 
 function PullPickerView<T> (props: CProps<T>) {
   const { cancel, confirm, onDisappearCompleted, wheelHeight } = props
-  let popRef = useRef<popRefType>(null)
+  let PullVRef = useRef<PullVHandleRef>(null)
   const [state, setState] = useSingleState({
     items: [] as Items[],
     pickerValue: props.value,
@@ -75,13 +75,13 @@ function PullPickerView<T> (props: CProps<T>) {
   }, [props.items])
 
   const hide = useCallback(() => {
-    popRef.current?.close(() => {
+    PullVRef.current?.close(() => {
       disappearCompleted(onDisappearCompleted)
     })
   }, [onDisappearCompleted])
 
   const onCancel = useCallback(() => {
-    popRef.current?.close(() => {
+    PullVRef.current?.close(() => {
       disappearCompleted(cancel, onDisappearCompleted)
     })
   }, [cancel, onDisappearCompleted])
@@ -97,7 +97,7 @@ function PullPickerView<T> (props: CProps<T>) {
       _selectedIndex = 0
     }
 
-    popRef.current?.close(() => {
+    PullVRef.current?.close(() => {
       disappearCompleted(() => {
         confirm && confirm(_selectedValue, _selectedIndex)
       }, onDisappearCompleted)
@@ -114,7 +114,7 @@ function PullPickerView<T> (props: CProps<T>) {
 
   return (
     <PullView
-      ref={popRef}
+      ref={PullVRef}
       containerStyle={{ backgroundColor: '#fff' }}
       onCloseRequest={hide}
       side="bottom"

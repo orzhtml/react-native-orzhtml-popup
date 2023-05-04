@@ -2,7 +2,7 @@ import React, { FC, forwardRef, useCallback, useImperativeHandle, useRef, useSta
 import { Animated, LayoutChangeEvent, LayoutRectangle, StyleProp, StyleSheet, ViewStyle } from 'react-native'
 
 import { marginStart, marginStop } from './common/Animated'
-import { disappearCompleted, initViewProps, IProps, popRefType } from './common/Common'
+import { disappearCompleted, initViewProps, IProps, PullVHandleRef, PVHandleRef } from './common/Common'
 import PView from './PView'
 
 interface CProps extends IProps {
@@ -18,12 +18,12 @@ interface CProps extends IProps {
 }
 
 interface PullViewProps extends CProps {
-    refInstance: React.ForwardedRef<any>,
+    refInstance: React.ForwardedRef<PullVHandleRef>,
 }
 
 const PullView: FC<PullViewProps> = (props) => {
   const viewLayout = useRef<LayoutRectangle>({ x: 0, y: 0, width: 0, height: 0 })
-  const popRef = useRef<popRefType>(null)
+  const PVRef = useRef<PVHandleRef>(null)
   const closed = useRef(false)
   const marginValue = useRef(new Animated.Value(0))
   let [showed, setShowed] = useState(false)
@@ -38,7 +38,7 @@ const PullView: FC<PullViewProps> = (props) => {
       marginValue: marginValue.current,
       viewLayout: viewLayout.current,
     })
-    popRef.current?.close(() => {
+    PVRef.current?.close(() => {
       disappearCompleted(onCloseCallback, props.onDisappearCompleted)
     })
     return true
@@ -110,7 +110,7 @@ const PullView: FC<PullViewProps> = (props) => {
 
   return (
     <PView
-      ref={popRef}
+      ref={PVRef}
       style={buildStyle()}
       onCloseRequest={() => {
         if (props.onCloseRequest) {
@@ -167,7 +167,7 @@ function marginSize (side: 'bottom' | 'top' | 'left' | 'right', viewLayout: Layo
 
 const Component = PullView
 // 注意：这里不要在Component上使用ref;换个属性名字比如refInstance；不然会导致覆盖
-export default forwardRef((props: Partial<CProps>, ref) => {
+export default forwardRef<PullVHandleRef, Partial<CProps>>((props: Partial<CProps>, ref) => {
   const initProps: CProps = {
     ...initViewProps,
     side: 'bottom',

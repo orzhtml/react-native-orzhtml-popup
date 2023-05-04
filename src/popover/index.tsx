@@ -1,7 +1,7 @@
-import React, { FC, forwardRef, useCallback, useState } from 'react'
+import React, { FC, useCallback, useState } from 'react'
 import { LayoutChangeEvent, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 
-import { arrowLayouts, filterContentStyle, filterPopoverStyle, headerLayoutsType, pixelSize, popoverArrow } from '../common/Common'
+import { arrowLayouts, filterContentStyle, filterPopoverStyle, pixelSize, popoverArrow } from '../common/Common'
 
 interface CProps {
     children?: React.ReactNode;
@@ -14,50 +14,49 @@ interface CProps {
     onLayout?: (event: LayoutChangeEvent) => void;
 }
 
-interface PopoverProps extends CProps {
-    refInstance: React.ForwardedRef<any>;
-}
-
-const PopoverView: FC<PopoverProps> = (props) => {
+const PopoverView: FC<CProps> = (props) => {
   const [width, setWidth] = useState(0)
   const [height, setHeight] = useState(0)
 
   const buildStyle = () => {
-    let { style, arrow, paddingCorner } = props
-    let fStyle = StyleSheet.flatten(style)
-    let _style = [{
+    const { style, arrow, paddingCorner } = props
+    const fStyle = StyleSheet.flatten(style)
+    const _style = [{
       backgroundColor: '#fff',
       borderColor: 'rgba(0, 0, 0, 0.15)',
       borderRadius: 4,
       borderWidth: pixelSize,
     }, fStyle]
 
-    let fs = StyleSheet.flatten(_style)
-    let { backgroundColor, borderColor, borderRadius, borderWidth } = fs
-    let arrowSize = 7 // Square side length
+    const fs = StyleSheet.flatten(_style)
+    const { backgroundColor, borderColor, borderRadius, borderWidth } = fs
+    const arrowSize = 7 // Square side length
     let halfSquareSize = Math.sqrt(arrowSize * arrowSize * 2) / 2 // The half-length of the square diagonal: sqrt(7^2 + 7^2) / 2 = 4.95
     halfSquareSize = Math.ceil(halfSquareSize / pixelSize) * pixelSize
-    let headerSize = halfSquareSize + (borderWidth || 0)
-    let headerPadding = headerSize - arrowSize / 2 // Let the center of square on the edge: 5 - (7 / 2) = 1.5
-    let headerPaddingCorner = paddingCorner
-    let contentPadding = halfSquareSize
-
-    let headerLayouts: headerLayoutsType = {
+    const headerSize = halfSquareSize + (borderWidth || 0)
+    const headerPadding = headerSize - arrowSize / 2 // Let the center of square on the edge: 5 - (7 / 2) = 1.5
+    const headerPaddingCorner = paddingCorner
+    const contentPadding = halfSquareSize
+    const headerTopLayout = { top: 0, left: 0, right: 0, height: headerSize, paddingTop: headerPadding }
+    const headerRightLayout = { top: 0, bottom: 0, right: 0, width: headerSize, paddingRight: headerPadding, alignItems: 'flex-end' }
+    const headerBottom = { bottom: 0, left: 0, right: 0, height: headerSize, paddingBottom: headerPadding }
+    const headerLeft = { top: 0, bottom: 0, left: 0, width: headerSize, paddingLeft: headerPadding, alignItems: 'flex-start' }
+    const headerLayouts = {
       none: {},
-      topLeft: { top: 0, left: 0, right: 0, height: headerSize, paddingTop: headerPadding, alignItems: 'flex-start', paddingLeft: headerPaddingCorner },
-      top: { top: 0, left: 0, right: 0, height: headerSize, paddingTop: headerPadding, alignItems: 'center' },
-      topRight: { top: 0, left: 0, right: 0, height: headerSize, paddingTop: headerPadding, alignItems: 'flex-end', paddingRight: headerPaddingCorner },
-      rightTop: { top: 0, bottom: 0, right: 0, width: headerSize, paddingRight: headerPadding, alignItems: 'flex-end', justifyContent: 'flex-start', paddingTop: headerPaddingCorner },
-      right: { top: 0, bottom: 0, right: 0, width: headerSize, paddingRight: headerPadding, alignItems: 'flex-end', justifyContent: 'center' },
-      rightBottom: { top: 0, bottom: 0, right: 0, width: headerSize, paddingRight: headerPadding, alignItems: 'flex-end', justifyContent: 'flex-end', paddingBottom: headerPaddingCorner },
-      bottomRight: { bottom: 0, left: 0, right: 0, height: headerSize, paddingBottom: headerPadding, alignItems: 'flex-end', justifyContent: 'flex-end', paddingRight: headerPaddingCorner },
-      bottom: { bottom: 0, left: 0, right: 0, height: headerSize, paddingBottom: headerPadding, alignItems: 'center', justifyContent: 'flex-end' },
-      bottomLeft: { bottom: 0, left: 0, right: 0, height: headerSize, paddingBottom: headerPadding, alignItems: 'flex-start', justifyContent: 'flex-end', paddingLeft: headerPaddingCorner },
-      leftBottom: { top: 0, bottom: 0, left: 0, width: headerSize, paddingLeft: headerPadding, alignItems: 'flex-start', justifyContent: 'flex-end', paddingBottom: headerPaddingCorner },
-      left: { top: 0, bottom: 0, left: 0, width: headerSize, paddingLeft: headerPadding, alignItems: 'flex-start', justifyContent: 'center' },
-      leftTop: { top: 0, bottom: 0, left: 0, width: headerSize, paddingLeft: headerPadding, alignItems: 'flex-start', justifyContent: 'flex-start', paddingTop: headerPaddingCorner },
+      topLeft: { ...headerTopLayout, alignItems: 'flex-start', paddingLeft: headerPaddingCorner },
+      top: { ...headerTopLayout, alignItems: 'center' },
+      topRight: { ...headerTopLayout, alignItems: 'flex-end', paddingRight: headerPaddingCorner },
+      rightTop: { ...headerRightLayout, justifyContent: 'flex-start', paddingTop: headerPaddingCorner },
+      right: { ...headerRightLayout, justifyContent: 'center' },
+      rightBottom: { ...headerRightLayout, justifyContent: 'flex-end', paddingBottom: headerPaddingCorner },
+      bottomRight: { ...headerBottom, alignItems: 'flex-end', justifyContent: 'flex-end', paddingRight: headerPaddingCorner },
+      bottom: { ...headerBottom, alignItems: 'center', justifyContent: 'flex-end' },
+      bottomLeft: { ...headerBottom, alignItems: 'flex-start', justifyContent: 'flex-end', paddingLeft: headerPaddingCorner },
+      leftBottom: { ...headerLeft, justifyContent: 'flex-end', paddingBottom: headerPaddingCorner },
+      left: { ...headerLeft, justifyContent: 'center' },
+      leftTop: { ...headerLeft, justifyContent: 'flex-start', paddingTop: headerPaddingCorner },
     }
-    let popoverLayouts = {
+    const popoverLayouts = {
       none: {},
       topLeft: { paddingTop: contentPadding },
       top: { paddingTop: contentPadding },
@@ -72,40 +71,39 @@ const PopoverView: FC<PopoverProps> = (props) => {
       left: { paddingLeft: contentPadding },
       leftTop: { paddingLeft: contentPadding },
     }
-    let _arrow = arrow
-    if (!_arrow) _arrow = 'none'
-    let useArrow = _arrow
-    switch (_arrow) {
+    let useArrow = arrow || 'none'
+    const totalPadding = headerPaddingCorner + contentPadding
+    switch (arrow) {
       case 'topLeft':
       case 'topRight':
-        if (headerPaddingCorner + contentPadding > width / 2) useArrow = 'top'
+        if (totalPadding > width / 2) useArrow = 'top'
         break
       case 'rightTop':
       case 'rightBottom':
-        if (headerPaddingCorner + contentPadding > height / 2) useArrow = 'right'
+        if (totalPadding > height / 2) useArrow = 'right'
         break
       case 'bottomRight':
       case 'bottomLeft':
-        if (headerPaddingCorner + contentPadding > width / 2) useArrow = 'bottom'
+        if (totalPadding > width / 2) useArrow = 'bottom'
         break
       case 'leftBottom':
       case 'leftTop':
-        if (headerPaddingCorner + contentPadding > height / 2) useArrow = 'left'
+        if (totalPadding > height / 2) useArrow = 'left'
         break
     }
 
-    let popoverStyle = [filterPopoverStyle(fs, useArrow === 'none'), {
+    const popoverStyle = [filterPopoverStyle(fs, useArrow === 'none'), {
       backgroundColor: useArrow === 'none' ? '#fff' : 'rgba(0, 0, 0, 0)', // Transparent background will cause a warning at debug mode
     }].concat(popoverLayouts[useArrow])
-    let fContentStyle = StyleSheet.flatten(props.contentStyle)
-    let { position, left, right, bottom, top, ...fCOther } = fs
-    let contentStyle = filterContentStyle({ ...fCOther, ...fContentStyle })
-    let headerStyle = Object.assign({
+    const fContentStyle = StyleSheet.flatten(props.contentStyle)
+    const { position, left, right, bottom, top, ...fCOther } = fs
+    const contentStyle = filterContentStyle({ ...fCOther, ...fContentStyle })
+    const headerStyle = Object.assign({
       position: 'absolute',
       overflow: 'hidden',
       backgroundColor: 'rgba(0, 0, 0, 0)',
     }, headerLayouts[useArrow], props.headerStyle)
-    let arrowStyle = Object.assign({
+    const arrowStyle = Object.assign({
       backgroundColor,
       width: arrowSize,
       height: arrowSize,
@@ -147,9 +145,7 @@ const PopoverView: FC<PopoverProps> = (props) => {
   )
 }
 
-const Component = PopoverView
-// 注意：这里不要在Component上使用ref;换个属性名字比如refInstance；不然会导致覆盖
-export default forwardRef((props: Partial<CProps>, ref) => {
+function Popover (props: Partial<CProps>) {
   const initProps: CProps = {
     arrow: 'none',
     paddingCorner: 8,
@@ -157,6 +153,8 @@ export default forwardRef((props: Partial<CProps>, ref) => {
   }
 
   return (
-    <Component {...initProps} refInstance={ref} />
+    <PopoverView {...initProps} />
   )
-})
+}
+
+export default Popover

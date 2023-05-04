@@ -1,7 +1,7 @@
 import React, { forwardRef, useImperativeHandle, useState, FC } from 'react'
 import { Text, Image, ActivityIndicator, ImageStyle, StyleProp, TextStyle, ImageSourcePropType, useColorScheme, StyleSheet } from 'react-native'
 
-import { initViewProps, IProps } from '../common/Common'
+import { initViewProps, IProps, LoadingHandleRef } from '../common/Common'
 import { scaleSize } from '../common/SetSize'
 import PView from '../PView'
 
@@ -17,7 +17,7 @@ interface CProps extends IProps {
 }
 
 interface LoadingProps extends CProps {
-    refInstance: React.ForwardedRef<any>,
+    refInstance: React.ForwardedRef<LoadingHandleRef>,
 }
 
 const LoadingView: FC<LoadingProps> = (props) => {
@@ -78,7 +78,7 @@ const LoadingView: FC<LoadingProps> = (props) => {
 
 const Component = LoadingView
 // 注意：这里不要在Component上使用ref;换个属性名字比如refInstance；不然会导致覆盖
-export default forwardRef((props: Partial<IProps>, ref) => {
+export default forwardRef<LoadingHandleRef, Partial<IProps>>((props, ref) => {
   const initProps = {
     ...initViewProps,
     zIndex: 9999,

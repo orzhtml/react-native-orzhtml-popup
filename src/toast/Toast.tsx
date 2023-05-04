@@ -1,4 +1,4 @@
-import React, { FC, forwardRef } from 'react'
+import React, { FC } from 'react'
 import { View, Text, Image, StyleProp, ViewStyle, StyleSheet, ImageSourcePropType } from 'react-native'
 
 import { initViewProps, IProps } from '../common/Common'
@@ -20,11 +20,7 @@ interface CProps extends IProps {
     icon?: 'success' | 'fail' | 'smile' | 'sad' | 'info' | 'stop' | React.ReactNode,
 }
 
-interface ToastProps extends CProps {
-    refInstance: React.ForwardedRef<any>,
-}
-
-const ToastView: FC<ToastProps> = props => {
+const ToastView: FC<CProps> = props => {
   const renderIcon = () => {
     let { icon } = props
     if (!icon) return null
@@ -126,9 +122,7 @@ const ToastView: FC<ToastProps> = props => {
   )
 }
 
-const Component = ToastView
-// 注意：这里不要在Component上使用ref;换个属性名字比如refInstance；不然会导致覆盖
-export default forwardRef((props: Partial<CProps>, ref) => {
+function Toast (props: Partial<CProps>) {
   const initProps: CProps = {
     ...initViewProps,
     position: 'center',
@@ -136,6 +130,8 @@ export default forwardRef((props: Partial<CProps>, ref) => {
   }
 
   return (
-    <Component {...initProps} refInstance={ref} />
+    <ToastView {...initProps} />
   )
-})
+}
+
+export default Toast

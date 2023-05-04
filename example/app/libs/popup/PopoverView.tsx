@@ -1,31 +1,31 @@
 import React, { forwardRef, useState, useRef, useEffect, useImperativeHandle, FC, useCallback } from 'react'
 import { Platform, Dimensions, StyleProp, ViewStyle, LayoutChangeEvent, StyleSheet } from 'react-native'
 
-import { disappearCompleted, fromBoundsType, initViewProps, IProps, popoverArrow, popRefType } from './common/Common'
+import { disappearCompleted, fromBoundsType, initViewProps, IProps, popoverArrow, PopoverHandleRef } from './common/Common'
 import PView from './PView'
 import Popover from './popover'
 
 interface CProps extends IProps {
-    children?: React.ReactNode,
-    content?: React.ReactNode,
-    style?: StyleProp<ViewStyle>,
-    onDisappearCompleted?: () => void,
-    onAppearCompleted?: () => void,
-    onCloseRequest?: () => void,
-    direction: 'down' | 'up' | 'right' | 'left',
-    align: 'end' | 'start' | 'center' | 'right' | 'left',
-    arrow: popoverArrow,
-    autoDirection: boolean,
-    showArrow: boolean,
-    paddingCorner?: number,
-    directionInsets?: number,
-    defaultDirectionInsets: number,
-    alignInsets?: number,
-    fromBounds?: fromBoundsType,
+  children?: React.ReactNode,
+  content?: React.ReactNode,
+  style?: StyleProp<ViewStyle>,
+  onDisappearCompleted?: () => void,
+  onAppearCompleted?: () => void,
+  onCloseRequest?: () => void,
+  direction: 'down' | 'up' | 'right' | 'left',
+  align: 'end' | 'start' | 'center' | 'right' | 'left',
+  arrow: popoverArrow,
+  autoDirection: boolean,
+  showArrow: boolean,
+  paddingCorner?: number,
+  directionInsets?: number,
+  defaultDirectionInsets: number,
+  alignInsets?: number,
+  fromBounds?: fromBoundsType,
 }
 
 interface PopoverProps extends CProps {
-    refInstance: React.ForwardedRef<any>;
+  refInstance: React.ForwardedRef<PopoverHandleRef>,
 }
 
 const PopoverView: FC<PopoverProps> = props => {
@@ -33,7 +33,7 @@ const PopoverView: FC<PopoverProps> = props => {
   const [popoverWidth, setPopoverWidth] = useState(0)
   const [popoverHeight, setPopoverHeight] = useState(0)
   const [defaultDirectionInsets] = useState(props.defaultDirectionInsets)
-  const popRef = useRef<popRefType>(null)
+  const PVRef = useRef<PopoverHandleRef>(null)
   const closed = useRef(false)
 
   useEffect(() => {
@@ -43,10 +43,10 @@ const PopoverView: FC<PopoverProps> = props => {
   }, [props.fromBounds, fromBounds])
 
   useImperativeHandle(props.refInstance, () => ({
-    updateFromBounds: (bounds: any) => {
+    updateFromBounds: (bounds: fromBoundsType) => {
       setFromBounds(bounds)
     },
-    close: (onCloseCallback: () => void) => {
+    close: (animated?: boolean | (() => void), onCloseCallback?: () => void) => {
       hide(onCloseCallback)
     },
   }))
@@ -54,7 +54,7 @@ const PopoverView: FC<PopoverProps> = props => {
   const hide = (onCloseCallback?: () => void) => {
     if (closed.current) return true
     closed.current = true
-    popRef.current?.close(() => {
+    PVRef.current?.close(() => {
       disappearCompleted(onCloseCallback, props.onDisappearCompleted)
     })
     return true
@@ -212,7 +212,7 @@ const PopoverView: FC<PopoverProps> = props => {
 
   return (
     <PView
-      ref={popRef}
+      ref={PVRef}
       animated={false}
       overlayOpacity={0}
       isBackPress={false}
@@ -241,7 +241,7 @@ const PopoverView: FC<PopoverProps> = props => {
 
 const Component = PopoverView
 // 注意：这里不要在Component上使用ref;换个属性名字比如refInstance；不然会导致覆盖
-export default forwardRef((props: Partial<CProps>, ref) => {
+export default forwardRef<PopoverHandleRef, Partial<CProps>>((props, ref) => {
   const initProps: CProps = {
     ...initViewProps,
     overlayOpacity: 0,

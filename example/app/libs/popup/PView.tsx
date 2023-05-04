@@ -2,7 +2,7 @@ import React, { FC, forwardRef, useCallback, useEffect, useImperativeHandle, use
 import { Animated, BackHandler, PanResponder, Platform, StatusBar, StyleProp, StyleSheet, useColorScheme, View, ViewStyle } from 'react-native'
 
 import { fadeStart, fadeStop } from './common/Animated'
-import { disappearCompleted, initViewProps, IProps } from './common/Common'
+import { disappearCompleted, initViewProps, IProps, PVHandleRef } from './common/Common'
 import dynamicStyles from './style'
 
 interface CProps extends IProps {
@@ -16,7 +16,7 @@ interface CProps extends IProps {
 }
 
 interface PViewProps extends CProps {
-    refInstance: React.ForwardedRef<any>,
+    refInstance: React.ForwardedRef<PVHandleRef>,
 }
 
 const PView: FC<PViewProps> = props => {
@@ -168,7 +168,7 @@ const lineStyles = StyleSheet.create({
 
 const Component = PView
 // 注意：这里不要在Component上使用ref;换个属性名字比如refInstance；不然会导致覆盖
-export default forwardRef((props: Partial<CProps>, ref) => {
+export default forwardRef<PVHandleRef, Partial<CProps>>((props: Partial<CProps>, ref) => {
   const initProps = {
     ...initViewProps,
     ...props,

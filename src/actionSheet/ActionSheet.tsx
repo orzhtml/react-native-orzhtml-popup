@@ -2,7 +2,7 @@ import React, { useRef, useCallback, useState, useEffect } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView } from 'react-native'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 
-import { disappearCompleted, initViewProps, IProps, popRefType } from '../common/Common'
+import { disappearCompleted, initViewProps, IProps, PullVHandleRef } from '../common/Common'
 import { scaleSize } from '../common/SetSize'
 import PullView from '../PullView'
 
@@ -20,7 +20,7 @@ interface CProps<T> extends IProps {
 function ActionSheetView<T> (props: CProps<T>) {
   let { cancel, confirm, onDisappearCompleted } = props
   const [maxHeight, setMaxHeight] = useState(500)
-  let popRef = useRef<popRefType>(null)
+  let PullVRef = useRef<PullVHandleRef>(null)
   const _insets = useSafeAreaInsets()
 
   useEffect(() => {
@@ -31,19 +31,19 @@ function ActionSheetView<T> (props: CProps<T>) {
     if (props.modal) {
       return null
     }
-    popRef.current?.close(() => {
+    PullVRef.current?.close(() => {
       disappearCompleted(onDisappearCompleted)
     })
   }, [onDisappearCompleted, props.modal])
 
   const onCancel = useCallback(() => {
-    popRef.current?.close(() => {
+    PullVRef.current?.close(() => {
       disappearCompleted(cancel, onDisappearCompleted)
     })
   }, [onDisappearCompleted, cancel])
 
   const onConfirm = useCallback((item: T, index: React.Key) => {
-    popRef.current?.close(() => {
+    PullVRef.current?.close(() => {
       disappearCompleted(() => {
         confirm && confirm(item, index)
       }, onDisappearCompleted)
@@ -52,7 +52,7 @@ function ActionSheetView<T> (props: CProps<T>) {
 
   return (
     <PullView
-      ref={popRef}
+      ref={PullVRef}
       containerStyle={{ backgroundColor: 'rgba(0,0,0,0)' }}
       onCloseRequest={hide}
       side="bottom"

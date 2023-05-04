@@ -2,7 +2,7 @@ import React, { FC, forwardRef, useImperativeHandle, useRef, useState, useCallba
 import { Animated, LayoutChangeEvent, StyleProp, StyleSheet, ViewStyle } from 'react-native'
 
 import { fadeStart, fadeStop, zoomStart, zoomStop } from './common/Animated'
-import { disappearCompleted, initViewProps, IProps, popRefType } from './common/Common'
+import { disappearCompleted, initViewProps, IProps, PopHandleRef, PVHandleRef } from './common/Common'
 import PView from './PView'
 
 interface CProps extends IProps {
@@ -24,12 +24,12 @@ interface CProps extends IProps {
 }
 
 interface PopViewProps extends CProps {
-    refInstance: React.ForwardedRef<any>,
+    refInstance: React.ForwardedRef<PopHandleRef>,
 }
 
 const PopView: FC<PopViewProps> = (props) => {
   const viewLayout = useRef({ x: 0, y: 0, width: 0, height: 0 })
-  const popRef = useRef<popRefType>(null)
+  const PVRef = useRef<PVHandleRef>(null)
   const closed = useRef(false)
   const opacityAnim = useRef(new Animated.Value(0))
   const translateX = useRef(new Animated.Value(0))
@@ -53,14 +53,14 @@ const PopView: FC<PopViewProps> = (props) => {
       scaleY: scaleY.current,
       viewLayout: viewLayout.current,
     })
-    popRef.current?.close(() => {
+    PVRef.current?.close(() => {
       disappearCompleted(onCloseCallback, props.onDisappearCompleted)
     })
     return true
   }
 
   useImperativeHandle(props.refInstance, () => ({
-    close: (onCloseCallback: () => void) => {
+    close: (onCloseCallback?: () => void) => {
       hide({ onCloseCallback })
     },
   }))
@@ -101,7 +101,7 @@ const PopView: FC<PopViewProps> = (props) => {
 
   return (
     <PView
-      ref={popRef}
+      ref={PVRef}
       style={[{
         justifyContent: 'center',
         alignItems: 'center',
@@ -280,7 +280,7 @@ function fromBounds (type: 'zoomIn' | 'zoomOut' | 'fade' | 'custom' | 'none' | u
 
 const Component = PopView
 // 注意：这里不要在Component上使用ref;换个属性名字比如refInstance；不然会导致覆盖
-export default forwardRef((props: Partial<CProps>, ref) => {
+export default forwardRef<PopHandleRef, Partial<CProps>>((props: Partial<CProps>, ref) => {
   const initProps: CProps = {
     ...initViewProps,
     type: 'zoomIn',

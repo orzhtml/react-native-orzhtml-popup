@@ -1,11 +1,12 @@
 import React from 'react'
 import { ImageSourcePropType, ImageStyle, StyleProp, TextStyle } from 'react-native'
 
+import { LoadingHandleRef } from '../common/Common'
 import Overlay from '../Overlay'
 import LoadingView from './Loading'
 
 class Loading {
-  static loadingRef: { updateTitle: (title: string) => void } = {
+  static loadingRef = {
     updateTitle: (title: string) => {},
   }
 
@@ -30,7 +31,7 @@ class Loading {
       overlayOpacity: 0,
       ...options,
     }
-    this.LoadingKey = Overlay.show(<LoadingView ref={(ref: any) => this.loadingRef = ref} {...props} />)
+    this.LoadingKey = Overlay.show(<LoadingView ref={(ref: LoadingHandleRef) => this.loadingRef = ref} {...props} />)
     return this.LoadingKey
   }
 

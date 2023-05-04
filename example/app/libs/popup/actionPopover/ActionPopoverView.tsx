@@ -1,7 +1,7 @@
 import React, { FC, useRef, useState } from 'react'
 import { StyleProp, StyleSheet, ViewStyle } from 'react-native'
 
-import { disappearCompleted, fromBoundsType, initViewProps, IProps, popRefType } from '../common/Common'
+import { disappearCompleted, fromBoundsType, initViewProps, IProps, PopoverHandleRef } from '../common/Common'
 import PopoverView from '../PopoverView'
 import Item from './ActionPopoverItem'
 
@@ -21,7 +21,7 @@ interface CProps extends IProps {
 
 const ActionPopoverView: FC<CProps> = (props) => {
   const [defaultDirectionInsets] = useState(4)
-  const popoverRef = useRef<popRefType>(null)
+  const PopoverRef = useRef<PopoverHandleRef>(null)
 
   const onItemPress = (item: {
     type?: string;
@@ -33,7 +33,7 @@ const ActionPopoverView: FC<CProps> = (props) => {
         type: item.type || '',
         title: item.title,
       })
-    popoverRef.current?.close(() => {
+    PopoverRef.current?.close(() => {
       disappearCompleted(props.onDisappearCompleted)
     })
   }
@@ -72,7 +72,7 @@ const ActionPopoverView: FC<CProps> = (props) => {
     <PopoverView
       {...props}
       style={buildPopoverStyle()}
-      ref={popoverRef}
+      ref={PopoverRef}
       defaultDirectionInsets={defaultDirectionInsets}
     >
       {renderContent()}

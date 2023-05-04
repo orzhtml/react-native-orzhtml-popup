@@ -1,7 +1,7 @@
 import React, { FC, useRef } from 'react'
 import { ScrollView, StyleProp, StyleSheet, Text, TextStyle, TouchableOpacity, useColorScheme, View } from 'react-native'
 
-import { AlertButtonType, btnColor, disappearCompleted, initViewProps, IProps, popRefType } from '../common/Common'
+import { AlertButtonType, btnColor, disappearCompleted, initViewProps, IProps, PopHandleRef } from '../common/Common'
 import { scaleSize } from '../common/SetSize'
 import PopView from '../PopView'
 import dynamicStyles from '../style'
@@ -21,20 +21,20 @@ const AlertView: FC<CProps> = (props) => {
   const currentMode = useColorScheme()
   const styles = props.useDark && currentMode ? dynamicStyles[currentMode] : dynamicStyles.light
   const { title, message, buttons, titleStyle, messageStyle } = props
-  let popRef = useRef<popRefType>(null)
+  let PopRef = useRef<PopHandleRef>(null)
 
   const hide = () => {
     if (props.modal) {
       return null
     }
-    popRef.current?.close(() => {
+    PopRef.current?.close(() => {
       props.onClose && props.onClose()
       disappearCompleted(props.onDisappearCompleted)
     })
   }
 
   const close = (fn: (() => void) | undefined) => {
-    popRef.current?.close(() => {
+    PopRef.current?.close(() => {
       props.onClose && props.onClose()
       disappearCompleted(fn, props.onDisappearCompleted)
     })
@@ -42,7 +42,7 @@ const AlertView: FC<CProps> = (props) => {
 
   return (
     <PopView
-      ref={popRef}
+      ref={PopRef}
       type={props.type}
       animated={props.animated}
       onCloseRequest={hide}

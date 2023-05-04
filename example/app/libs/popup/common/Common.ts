@@ -54,7 +54,22 @@ export type headerLayoutsType = {
 }
 
 export type popRefType = { close:(animated?: boolean | (() => void), onCloseCallback?: () => void) => void }
-
+export interface PopoverHandleRef {
+  updateFromBounds: (bounds: fromBoundsType) => void,
+  close: (animated?: boolean | (() => void), onCloseCallback?: () => void) => void,
+}
+export interface PVHandleRef {
+  close: (animated?: boolean | (() => void), onCloseCallback?: () => void) => void,
+}
+export interface PopHandleRef {
+  close: (onCloseCallback?: () => void) => void,
+}
+export interface PullVHandleRef {
+  close: (onCloseCallback?: () => void) => void,
+}
+export interface LoadingHandleRef {
+  updateTitle: (title: string) => void,
+}
 export const arrowLayouts: headerLayoutsType = {
   none: {},
   topLeft: { transform: [{ rotate: '45deg' }] },
