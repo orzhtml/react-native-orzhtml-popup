@@ -1,12 +1,12 @@
 import React from 'react'
 import { Keyboard } from 'react-native'
 
-import { IPullPickerProps } from '../common/Common'
+import { IDatePickerProps } from '../common/Common'
 import Overlay from '../Overlay'
 import DatePickerView from './DatePickerView'
 
-class PullPicker {
-  static show ({ value, confirm, options = {} }: IPullPickerProps) {
+class DatePicker {
+  static show ({ value, confirm, options = {} }: IDatePickerProps) {
     Keyboard.dismiss()
 
     let key = Overlay.show(
@@ -21,4 +21,4 @@ class PullPicker {
   }
 }
 
-export default PullPicker
+export default DatePicker

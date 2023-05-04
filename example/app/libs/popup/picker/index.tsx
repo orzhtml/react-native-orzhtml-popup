@@ -8,16 +8,21 @@ import { useSingleInstanceVar } from 'react-native-orzhtml-usecom'
 
 import { scaleSize } from '../common/SetSize'
 
-interface IProps {
+interface Items {
+  label: string,
+  value: string | number,
+}
+
+interface IProps<T> {
     itemHeight: number,
     selectedValue: string | number,
-    items: { label: string, value: string | number }[],
+    items: T[],
     onValueChange?: (value: string | number, index: React.Key) => void,
     style?: StyleProp<ViewStyle>,
     itemStyle?: StyleProp<TextStyle>,
 }
 
-const CrossPickerView: FC<IProps> = (props) => {
+function CrossPickerView<T extends Items> (props: IProps<T>) {
   const _listRef = useRef<FlatList>(null)
   const inst = useSingleInstanceVar<{
     init: boolean,
@@ -183,7 +188,7 @@ const lineStyles = StyleSheet.create({
   },
 })
 
-function CrossPicker (props: Partial<IProps>) {
+function CrossPicker<T extends Items> (props: Partial<IProps<T>>) {
   const initProps = {
     itemHeight: scaleSize(50),
     items: [],

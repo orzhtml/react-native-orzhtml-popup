@@ -1,45 +1,33 @@
-import React, { FC, forwardRef, useCallback, useEffect, useRef } from 'react'
-import { StyleProp, Text, TextStyle, TouchableOpacity, View } from 'react-native'
+import React, { useCallback, useEffect, useRef } from 'react'
+import { Text, TouchableOpacity, View } from 'react-native'
 import { useSingleState } from 'react-native-orzhtml-usecom'
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context'
 
-import { disappearCompleted, initViewProps, IProps, isEmpty, popRefType } from '../common/Common'
+import { disappearCompleted, initViewProps, IProps, IPullPickerOptions, isEmpty, popRefType, PullPickerInit } from '../common/Common'
 import { scaleSize } from '../common/SetSize'
 import PullView from '../PullView'
 import Picker from '../picker'
 
-interface CProps extends IProps {
+interface Items {
+  label: string,
+  value: string | number,
+}
+
+interface CProps<T> extends IProps, IPullPickerOptions {
     cancel?: () => void,
-    confirm?: (val: string | undefined, index: React.Key | undefined) => void,
+    confirm?: (val: string | number, index: React.Key) => void,
     onDisappearCompleted?: () => void,
-    label: string,
-    labelVal: string,
-    wheelHeight: number,
-    value: string,
-    items: any[],
-    all?: boolean,
-    allText: string,
-    allVal: string,
-    cancelText?: string,
-    completeText?: string,
-    itemStyle?: StyleProp<TextStyle>,
+    value: string | number,
+    items: T[],
 }
 
-interface PullPickerProps extends CProps {
-    refInstance: React.ForwardedRef<any>,
-}
-
-const PullPickerView: FC<PullPickerProps> = props => {
+function PullPickerView<T> (props: CProps<T>) {
   const { cancel, confirm, onDisappearCompleted, wheelHeight } = props
   let popRef = useRef<popRefType>(null)
-  const [state, setState] = useSingleState<{
-    items: any[],
-    pickerValue?: string,
-    pickerIndex?: React.Key | string,
-  }>({
-    items: [],
+  const [state, setState] = useSingleState({
+    items: [] as Items[],
     pickerValue: props.value,
-    pickerIndex: 0,
+    pickerIndex: 0 as React.Key,
   })
 
   useEffect(() => {
@@ -50,17 +38,17 @@ const PullPickerView: FC<PullPickerProps> = props => {
     let index = 0
     let label = props.label
     let labelVal = props.labelVal
-    let _items_ = []
+    let _items_: Items[] = []
 
     if (props.all) {
       // all 是否有 请选择 选项，可修改内容文案
       _items_.push({
         label: props.allText,
         value: props.allVal,
-      })
+      } as unknown as Items)
     }
 
-    props.items.map((item: { [x: string]: any }, i: number) => {
+    props.items.map((item: T, i: number) => {
       if (typeof item === 'string' || typeof item === 'number') {
         if (item === state.pickerValue) {
           index = i
@@ -68,7 +56,7 @@ const PullPickerView: FC<PullPickerProps> = props => {
         _items_.push({
           label: item,
           value: item,
-        })
+        } as unknown as Items)
       } else {
         if (item[labelVal] === state.pickerValue) {
           index = i
@@ -76,7 +64,7 @@ const PullPickerView: FC<PullPickerProps> = props => {
         _items_.push({
           label: item[label],
           value: item[labelVal],
-        })
+        } as unknown as Items)
       }
     })
 
@@ -103,7 +91,7 @@ const PullPickerView: FC<PullPickerProps> = props => {
     let _selectedIndex = state.pickerIndex
 
     if (isEmpty(_selectedValue) || _selectedValue === '') {
-      _selectedValue = state.items[0].value
+      _selectedValue = state.items[0][props.labelVal]
     }
     if (isEmpty(_selectedIndex) || _selectedIndex === '') {
       _selectedIndex = 0
@@ -116,7 +104,7 @@ const PullPickerView: FC<PullPickerProps> = props => {
     })
   }
 
-  const onValueChange = (itemValue: any, itemIndex: any) => {
+  const onValueChange = (itemValue: string | number, itemIndex: React.Key) => {
     setState({
       items: state.items,
       pickerValue: itemValue,
@@ -171,24 +159,16 @@ const PullPickerView: FC<PullPickerProps> = props => {
   )
 }
 
-const Component = PullPickerView
-// 注意：这里不要在Component上使用ref;换个属性名字比如refInstance；不然会导致覆盖
-export default forwardRef((props: Partial<CProps>, ref) => {
-  const initProps: CProps = {
+function PullPicker<T> (props: Partial<CProps<T>>) {
+  const initProps: CProps<T> = {
     ...initViewProps,
-    label: 'label',
-    labelVal: 'value',
-    wheelHeight: scaleSize(250),
-    value: '',
-    items: [],
-    allText: '请选择',
-    allVal: '',
-    cancelText: '取消',
-    completeText: '确定',
+    ...PullPickerInit,
     ...props,
   }
 
   return (
-    <Component {...initProps} refInstance={ref} />
+    <PullPickerView {...initProps} />
   )
-})
+}
+
+export default PullPicker

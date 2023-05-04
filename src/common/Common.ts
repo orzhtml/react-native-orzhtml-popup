@@ -1,6 +1,8 @@
 import React from 'react'
-import { PixelRatio, ViewStyle } from 'react-native'
+import { PixelRatio, StyleProp, TextStyle, ViewStyle } from 'react-native'
 import dayjs from 'dayjs'
+
+import { scaleSize } from './SetSize'
 
 export type OverlayPointerEvents = 'none' | 'box-only' | 'auto' | undefined;
 
@@ -17,6 +19,20 @@ export type AlertButtonType = {
   onPress?: (() => void) | undefined,
   style?: 'default' | 'cancel' | 'warning',
   text: string,
+}
+
+export interface AlertOptions {
+  message?: string | React.ReactNode,
+  onOk?: () => void,
+  okText?: string,
+  onCancel?: () => void,
+  cancelText?: string,
+  buttons?: AlertButtonType[],
+  alertOptions?: {
+    only?: boolean,
+    modal?: boolean,
+    type?: 'zoomIn' | 'zoomOut' | 'fade' | 'custom' | 'none',
+  },
 }
 
 export type fromBoundsType = { x: number, y: number, width: number, height: number }
@@ -157,10 +173,14 @@ export interface ActionSheetProps<T> {
   items: T[];
   confirm: (item: T, index: React.Key) => void;
   cancel?: () => void;
-  options?: { [x: string]: any }
+  options?: {
+    label?: string;
+    labelVal?: string;
+    cancelText?: string,
+   }
 }
 
-export interface IPullPickerOptions {
+export interface IDatePickerOptions {
   max: string,
   min: string,
   showYear: boolean,
@@ -173,10 +193,10 @@ export interface IPullPickerOptions {
   dayText: string,
 }
 
-export interface IPullPickerProps {
+export interface IDatePickerProps {
   value: string;
   confirm: (date: string) => void;
-  options?: Partial<IPullPickerOptions>
+  options?: Partial<IDatePickerOptions>
 }
 
 export function maxOrMinDate (date: string) {
@@ -237,4 +257,35 @@ export const getMonths = (year: number, minYear: number, minMonth: number, maxYe
   }
 
   return months
+}
+
+export const PullPickerInit = {
+  label: 'label',
+  labelVal: 'value',
+  wheelHeight: scaleSize(250),
+  value: '',
+  items: [],
+  allText: '请选择',
+  allVal: '',
+  cancelText: '取消',
+  completeText: '确定',
+}
+
+export interface IPullPickerProps<T> {
+  items: T[],
+  value: string | number,
+  confirm: (val: string | number, index: React.Key) => void,
+  options?: Partial<IPullPickerOptions>,
+}
+
+export interface IPullPickerOptions {
+  label: string,
+  labelVal: string,
+  wheelHeight: number,
+  all?: boolean,
+  allText: string,
+  allVal: string | number,
+  cancelText?: string,
+  completeText?: string,
+  itemStyle?: StyleProp<TextStyle>,
 }

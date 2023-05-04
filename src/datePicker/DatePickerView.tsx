@@ -4,12 +4,12 @@ import { SafeAreaInsetsContext } from 'react-native-safe-area-context'
 import { useSingleState } from 'react-native-orzhtml-usecom'
 import dayjs from 'dayjs'
 
-import { DatePickerInit, disappearCompleted, getMonths, initViewProps, IProps, IPullPickerOptions, isLeapYear, maxOrMinDate, popRefType } from '../common/Common'
+import { DatePickerInit, disappearCompleted, getMonths, initViewProps, IProps, IDatePickerOptions, isLeapYear, maxOrMinDate, popRefType } from '../common/Common'
 import { scaleSize } from '../common/SetSize'
 import PullView from '../PullView'
 import Picker from '../picker'
 
-interface CProps extends IProps, IPullPickerOptions {
+interface CProps extends IProps, IDatePickerOptions {
     onDisappearCompleted?: () => void,
     onCloseRequest?: () => void,
     cancel?: () => void,
