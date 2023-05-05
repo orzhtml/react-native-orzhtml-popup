@@ -76,7 +76,7 @@ function ActionSheetView<T> (props: CProps<T>) {
                     borderBottomWidth: index !== (props.items?.length || 0) - 1 ? StyleSheet.hairlineWidth : 0,
                     borderBottomColor: '#ccc',
                   }}
-                  onPress={() => onConfirm(text, index)}
+                  onPress={() => onConfirm(item, index)}
                 >
                   <View style={{
                     height: scaleSize(50),
