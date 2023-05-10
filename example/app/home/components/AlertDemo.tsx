@@ -42,7 +42,7 @@ const AlertDemo = () => {
     name: '非模态弹窗',
     onPress: () => {
       Alert('提示非模态弹窗点背景关闭', {
-        message: '简化按钮调用方式',
+        message: '按钮文字默认',
         onCancel: () => {
           console.log('取消')
         },
@@ -51,6 +51,17 @@ const AlertDemo = () => {
         },
         alertOptions: {
           modal: false,
+        },
+      })
+    },
+  }, {
+    id: 5,
+    name: '简化入参',
+    onPress: () => {
+      Alert('简化按钮调用方式', {
+        message: '简化按钮调用方式',
+        onCancel: () => {
+          console.log('确定')
         },
       })
     },

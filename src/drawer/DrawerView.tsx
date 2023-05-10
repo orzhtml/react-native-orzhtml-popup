@@ -1,7 +1,8 @@
 import React, { useRef, useCallback, forwardRef, FC } from 'react'
 import { View, StyleProp, ViewStyle } from 'react-native'
 
-import { initViewProps, disappearCompleted, IProps, popRefType } from '../common/Common'
+import { initViewProps, disappearCompleted } from '../common/Common'
+import { IProps, PullVHandleRef } from '../common/Type'
 import PullView from '../PullView'
 
 interface CProps extends IProps {
@@ -19,7 +20,7 @@ interface DrawerProps extends CProps {
 }
 
 const DrawerView: FC<DrawerProps> = (props) => {
-  const popRef = useRef<popRefType>(null)
+  const popRef = useRef<PullVHandleRef>(null)
 
   const hide = useCallback(() => {
     if (props.modal) {

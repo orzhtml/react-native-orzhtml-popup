@@ -9,7 +9,8 @@ import ActionSheet from './src/actionSheet'
 import Popover from './src/popover'
 import ActionPopover from './src/actionPopover'
 import Drawer from './src/drawer'
-export * from './src/common/Common'
+import { setPopupDefaultLabels } from './src/common/CmFunction'
+export * from './src/common/Type'
 
 export {
   Popup,
@@ -23,4 +24,5 @@ export {
   Popover,
   ActionPopover,
   Drawer,
+  setPopupDefaultLabels,
 }

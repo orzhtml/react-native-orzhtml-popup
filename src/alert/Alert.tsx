@@ -1,8 +1,9 @@
 import React, { FC, useRef } from 'react'
 import { ScrollView, StyleProp, StyleSheet, Text, TextStyle, TouchableOpacity, useColorScheme, View } from 'react-native'
 
-import { AlertButtonType, btnColor, disappearCompleted, initViewProps, IProps, PopHandleRef } from '../common/Common'
+import { btnColor, disappearCompleted, initViewProps } from '../common/Common'
 import { scaleSize } from '../common/SetSize'
+import type { AlertButtonType, IProps, PopHandleRef } from '../common/Type'
 import PopView from '../PopView'
 import dynamicStyles from '../style'
 

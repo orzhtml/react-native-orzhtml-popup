@@ -1,7 +1,7 @@
 import React from 'react'
 
+import type { fromBoundsType } from '../common/Type'
 import Overlay from '../Overlay'
-import { fromBoundsType } from '../common/Common'
 
 import ActionPopoverView from './ActionPopoverView'
 

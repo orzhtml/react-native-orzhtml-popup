@@ -3,10 +3,11 @@ import { View, TouchableOpacity, Text } from 'react-native'
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context'
 import dayjs from 'dayjs'
 
-import { DatePickerInit, disappearCompleted, getMonths, initViewProps, IProps, IDatePickerOptions, isLeapYear, maxOrMinDate, PullVHandleRef, daysInMonth } from '../common/Common'
+import { DatePickerInit, disappearCompleted, getMonths, initViewProps, isLeapYear, maxOrMinDate, daysInMonth } from '../common/Common'
 import { scaleSize } from '../common/SetSize'
 import PullView from '../PullView'
 import Picker from '../picker'
+import type { IDatePickerOptions, IProps, PullVHandleRef } from '../common/Type'
 
 interface CProps extends IProps, IDatePickerOptions {
     onDisappearCompleted?: () => void,

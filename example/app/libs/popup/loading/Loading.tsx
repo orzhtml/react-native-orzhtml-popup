@@ -1,8 +1,9 @@
 import React, { forwardRef, useImperativeHandle, useState, FC } from 'react'
 import { Text, Image, ActivityIndicator, ImageStyle, StyleProp, TextStyle, ImageSourcePropType, useColorScheme, StyleSheet } from 'react-native'
 
-import { initViewProps, IProps, LoadingHandleRef } from '../common/Common'
+import { initViewProps } from '../common/Common'
 import { scaleSize } from '../common/SetSize'
+import type { IProps, LoadingHandleRef } from '../common/Type'
 import PView from '../PView'
 
 const darkColor = '#191D26'

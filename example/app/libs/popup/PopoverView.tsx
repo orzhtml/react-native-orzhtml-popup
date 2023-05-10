@@ -1,9 +1,10 @@
 import React, { forwardRef, useState, useRef, useEffect, useImperativeHandle, FC, useCallback } from 'react'
 import { Platform, Dimensions, StyleProp, ViewStyle, LayoutChangeEvent, StyleSheet } from 'react-native'
 
-import { disappearCompleted, fromBoundsType, initViewProps, IProps, popoverArrow, PopoverHandleRef } from './common/Common'
+import { disappearCompleted, initViewProps } from './common/Common'
 import PView from './PView'
 import Popover from './popover'
+import type { fromBoundsType, IProps, popoverArrow, PopoverHandleRef } from './common/Type'
 
 interface CProps extends IProps {
   children?: React.ReactNode,

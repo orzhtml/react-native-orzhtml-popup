@@ -1,8 +1,9 @@
 import React, { FC } from 'react'
 import { View, Text, Image, StyleProp, ViewStyle, StyleSheet, ImageSourcePropType } from 'react-native'
 
-import { initViewProps, IProps } from '../common/Common'
+import { initViewProps } from '../common/Common'
 import { scaleSize } from '../common/SetSize'
+import type { IProps } from '../common/Type'
 import PView from '../PView'
 
 const imagesIcons: {

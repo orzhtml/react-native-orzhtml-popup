@@ -2,7 +2,8 @@ import React, { FC, forwardRef, useCallback, useImperativeHandle, useRef, useSta
 import { Animated, LayoutChangeEvent, LayoutRectangle, StyleProp, StyleSheet, ViewStyle } from 'react-native'
 
 import { marginStart, marginStop } from './common/Animated'
-import { disappearCompleted, initViewProps, IProps, PullVHandleRef, PVHandleRef } from './common/Common'
+import { disappearCompleted, initViewProps } from './common/Common'
+import type { IProps, PullVHandleRef, PVHandleRef } from './common/Type'
 import PView from './PView'
 
 interface CProps extends IProps {

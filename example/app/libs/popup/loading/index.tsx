@@ -1,7 +1,7 @@
 import React from 'react'
 import { ImageSourcePropType, ImageStyle, StyleProp, TextStyle } from 'react-native'
 
-import { LoadingHandleRef } from '../common/Common'
+import type { LoadingHandleRef } from '../common/Type'
 import Overlay from '../Overlay'
 import LoadingView from './Loading'
 

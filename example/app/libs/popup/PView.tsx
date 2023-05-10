@@ -2,7 +2,8 @@ import React, { FC, forwardRef, useCallback, useEffect, useImperativeHandle, use
 import { Animated, BackHandler, PanResponder, Platform, StatusBar, StyleProp, StyleSheet, useColorScheme, View, ViewStyle } from 'react-native'
 
 import { fadeStart, fadeStop } from './common/Animated'
-import { disappearCompleted, initViewProps, IProps, PVHandleRef } from './common/Common'
+import { disappearCompleted, initViewProps } from './common/Common'
+import type { IProps, PVHandleRef } from './common/Type'
 import dynamicStyles from './style'
 
 interface CProps extends IProps {

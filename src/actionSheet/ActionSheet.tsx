@@ -2,8 +2,9 @@ import React, { useRef, useCallback, useState, useEffect } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView } from 'react-native'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 
-import { disappearCompleted, initViewProps, IProps, PullVHandleRef } from '../common/Common'
+import { disappearCompleted, initViewProps } from '../common/Common'
 import { scaleSize } from '../common/SetSize'
+import type { IProps, PullVHandleRef } from '../common/Type'
 import PullView from '../PullView'
 
 interface CProps<T> extends IProps {
@@ -122,7 +123,6 @@ function ActionSheet<T> (props: Partial<CProps<T>>) {
     ...initViewProps,
     label: 'label',
     labelVal: 'value',
-    cancelText: '取消',
     ...props,
   }
 

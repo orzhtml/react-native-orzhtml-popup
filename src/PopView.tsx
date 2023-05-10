@@ -2,7 +2,8 @@ import React, { FC, forwardRef, useImperativeHandle, useRef, useState, useCallba
 import { Animated, LayoutChangeEvent, StyleProp, StyleSheet, ViewStyle } from 'react-native'
 
 import { fadeStart, fadeStop, zoomStart, zoomStop } from './common/Animated'
-import { disappearCompleted, initViewProps, IProps, PopHandleRef, PVHandleRef } from './common/Common'
+import { disappearCompleted, initViewProps } from './common/Common'
+import type { IProps, PopHandleRef, PVHandleRef } from './common/Type'
 import PView from './PView'
 
 interface CProps extends IProps {

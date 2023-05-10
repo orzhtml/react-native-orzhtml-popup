@@ -1,8 +1,7 @@
 import React from 'react'
 import { StyleProp, ViewStyle } from 'react-native'
 
-import { durationType, OverlayPointerEvents, ToastPosition } from '../common/Common'
-
+import type { durationType, OverlayPointerEvents, ToastPosition } from '../common/Type'
 import Overlay from '../Overlay'
 import ToastView from './Toast'
 

@@ -1,7 +1,8 @@
 import React, { FC, useCallback, useState } from 'react'
 import { LayoutChangeEvent, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 
-import { arrowLayouts, filterContentStyle, filterPopoverStyle, pixelSize, popoverArrow } from '../common/Common'
+import { arrowLayouts, filterContentStyle, filterPopoverStyle, pixelSize } from '../common/Common'
+import type { popoverArrow } from '../common/Type'
 
 interface CProps {
     children?: React.ReactNode;

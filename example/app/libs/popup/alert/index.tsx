@@ -1,8 +1,7 @@
 import React from 'react'
 import { Keyboard } from 'react-native'
 
-import { AlertOptions } from '../common/Common'
-
+import type { AlertOptions } from '../common/Type'
 import Overlay from '../Overlay'
 import AlertView from './Alert'
 
@@ -14,17 +13,27 @@ function Alert (title: string | React.ReactNode, options?: AlertOptions) {
     return null
   }
 
-  const { message, buttons, onOk, onCancel, okText = '确认', cancelText = '取消', alertOptions = {} } = options || {}
-  let _buttons = buttons || []
-
-  if (_buttons.length === 0) {
-    if (onOk || onCancel) {
-      _buttons.push({
-        text: cancelText, style: 'cancel', onPress: onCancel,
-      }, { text: okText, style: 'default', onPress: onOk })
-    } else {
-      _buttons.push({ text: okText, style: 'default' })
-    }
+  const {
+    message, buttons, onOk, onCancel,
+    okText = Alert.defaultProps.okText, cancelText = Alert.defaultProps.cancelText,
+    alertOptions = {},
+  } = options || {}
+  const _buttons = buttons || [
+    (onCancel || onOk) ? {
+      text: onOk ? okText : cancelText,
+      style: onOk ? 'default' : 'cancel',
+      onPress: onOk || onCancel,
+    } : {
+      text: okText,
+      style: 'default',
+    },
+  ]
+  if (onCancel && onOk) {
+    _buttons.unshift({
+      text: cancelText,
+      style: 'cancel',
+      onPress: onCancel,
+    })
   }
 
   const { only = true, modal = true, type = 'zoomIn' } = alertOptions
@@ -57,6 +66,10 @@ function Alert (title: string | React.ReactNode, options?: AlertOptions) {
 }
 
 Alert.AlertKey = [0]
+Alert.defaultProps = {
+  okText: '确认',
+  cancelText: '取消',
+}
 
 function remove (key: number) {
   for (let i = Alert.AlertKey.length - 1; i >= 0; --i) {
@@ -65,6 +78,11 @@ function remove (key: number) {
       break
     }
   }
+}
+
+export const setAlertPopupDefaultLabels = (options: { okText: string, cancelText: string }) => {
+  Alert.defaultProps.okText = options.okText
+  Alert.defaultProps.cancelText = options.cancelText
 }
 
 export default Alert

@@ -1,7 +1,8 @@
 import React, { FC, useRef, useState } from 'react'
 import { StyleProp, StyleSheet, ViewStyle } from 'react-native'
 
-import { disappearCompleted, fromBoundsType, initViewProps, IProps, PopoverHandleRef } from '../common/Common'
+import { disappearCompleted, initViewProps } from '../common/Common'
+import type { fromBoundsType, IProps, PopoverHandleRef } from '../common/Type'
 import PopoverView from '../PopoverView'
 import Item from './ActionPopoverItem'
 

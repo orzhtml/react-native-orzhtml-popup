@@ -3,10 +3,11 @@ import { Text, TouchableOpacity, View } from 'react-native'
 import { useSingleState } from 'react-native-orzhtml-usecom'
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context'
 
-import { disappearCompleted, initViewProps, IProps, IPullPickerOptions, isEmpty, PullVHandleRef, PullPickerInit } from '../common/Common'
+import { disappearCompleted, initViewProps, isEmpty, PullPickerInit } from '../common/Common'
 import { scaleSize } from '../common/SetSize'
 import PullView from '../PullView'
 import Picker from '../picker'
+import type { IProps, IPullPickerOptions, PullVHandleRef } from '../common/Type'
 
 interface Items {
   label: string,
