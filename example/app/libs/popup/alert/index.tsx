@@ -50,7 +50,7 @@ function Alert (title: string | React.ReactNode, options?: AlertOptions) {
     modal,
     type,
     onClose: () => {
-      remove(key)
+      Alert.remove(key)
     },
   }
 
@@ -71,7 +71,7 @@ Alert.defaultProps = {
   cancelText: '取消',
 }
 
-function remove (key: number) {
+Alert.remove = function (key: number) {
   for (let i = Alert.AlertKey.length - 1; i >= 0; --i) {
     if (Alert.AlertKey[i] === key) {
       Alert.AlertKey.splice(i, 1)
