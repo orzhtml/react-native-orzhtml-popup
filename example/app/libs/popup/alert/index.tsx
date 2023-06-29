@@ -50,7 +50,7 @@ function Alert (title: string | React.ReactNode, options?: AlertOptions) {
     modal,
     type,
     onClose: () => {
-      Alert.remove(key)
+      remove(key)
     },
   }
 
@@ -63,6 +63,8 @@ function Alert (title: string | React.ReactNode, options?: AlertOptions) {
   } else {
     Alert.AlertKey.push(key)
   }
+
+  return Alert.AlertKey
 }
 
 Alert.AlertKey = [0]
@@ -72,6 +74,17 @@ Alert.defaultProps = {
 }
 
 Alert.remove = function (key: number) {
+  Overlay.hide(key)
+  remove(key)
+}
+
+Alert.removeAll = function () {
+  Alert.AlertKey.map(key => {
+    Alert.remove(key)
+  })
+}
+
+function remove (key: number) {
   for (let i = Alert.AlertKey.length - 1; i >= 0; --i) {
     if (Alert.AlertKey[i] === key) {
       Alert.AlertKey.splice(i, 1)
