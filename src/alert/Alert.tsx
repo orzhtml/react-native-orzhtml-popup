@@ -1,27 +1,39 @@
 import React, { FC, useRef } from 'react'
 import { ScrollView, StyleProp, StyleSheet, Text, TextStyle, TouchableOpacity, useColorScheme, View } from 'react-native'
 
-import { btnColor, disappearCompleted, initViewProps } from '../common/Common'
+import { disappearCompleted, initViewProps } from '../common/Common'
 import { scaleSize } from '../common/SetSize'
 import type { AlertButtonType, IProps, PopHandleRef } from '../common/Type'
 import PopView from '../PopView'
 import dynamicStyles from '../style'
 
 interface CProps extends IProps {
-    type: 'zoomIn' | 'zoomOut' | 'fade' | 'custom' | 'none',
-    onDisappearCompleted?: () => void,
-    title?: string | React.ReactNode,
-    message?: string | React.ReactNode,
-    titleStyle?: StyleProp<TextStyle>,
-    messageStyle?: StyleProp<TextStyle>,
-    onClose?: () => void,
-    buttons?: AlertButtonType[],
+  type: 'zoomIn' | 'zoomOut' | 'fade' | 'custom' | 'none',
+  onDisappearCompleted?: () => void,
+  title?: string | React.ReactNode,
+  message?: string | React.ReactNode,
+  titleStyle?: StyleProp<TextStyle>,
+  messageStyle?: StyleProp<TextStyle>,
+  onClose?: () => void,
+  buttons?: AlertButtonType[],
+  btnColor?: {
+    default: string,
+    cancel: string,
+    warning: string,
+  },
 }
 
 const AlertView: FC<CProps> = (props) => {
   const currentMode = useColorScheme()
   const styles = props.useDark && currentMode ? dynamicStyles[currentMode] : dynamicStyles.light
-  const { title, message, buttons, titleStyle, messageStyle } = props
+  const {
+    title, message, buttons, titleStyle, messageStyle,
+    btnColor = {
+      default: '#1ACB79',
+      cancel: '#3E3E3E',
+      warning: '#FF5363',
+    },
+  } = props
   let PopRef = useRef<PopHandleRef>(null)
 
   const hide = () => {
@@ -51,7 +63,7 @@ const AlertView: FC<CProps> = (props) => {
       <View style={{
         width: '72%',
         backgroundColor: styles.defaultBg,
-        borderRadius: scaleSize(5),
+        borderRadius: scaleSize(10),
       }}>
         <ScrollView style={{ padding: scaleSize(15), marginTop: scaleSize(10) }}>
           {

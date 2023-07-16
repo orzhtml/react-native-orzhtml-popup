@@ -49,6 +49,7 @@ function Alert (title: string | React.ReactNode, options?: AlertOptions) {
     only,
     modal,
     type,
+    btnColor: Alert.defaultProps.btnColor,
     onClose: () => {
       remove(key)
     },
@@ -71,6 +72,11 @@ Alert.AlertKey = [0]
 Alert.defaultProps = {
   okText: '确认',
   cancelText: '取消',
+  btnColor: {
+    default: '#1ACB79',
+    cancel: '#3E3E3E',
+    warning: '#FF5363',
+  },
 }
 
 Alert.remove = function (key: number) {
@@ -93,9 +99,18 @@ function remove (key: number) {
   }
 }
 
-export const setAlertPopupDefaultLabels = (options: { okText: string, cancelText: string }) => {
-  Alert.defaultProps.okText = options.okText
-  Alert.defaultProps.cancelText = options.cancelText
+export const setAlertPopupDefaultLabels = (options: {
+  okText?: string,
+  cancelText?: string,
+  btnColor?: {
+    default: string,
+    cancel: string,
+    warning: string,
+  }
+}) => {
+  if (options.okText) Alert.defaultProps.okText = options.okText
+  if (options.cancelText) Alert.defaultProps.cancelText = options.cancelText
+  if (options.btnColor) Alert.defaultProps.btnColor = options.btnColor
 }
 
 export default Alert

@@ -129,8 +129,13 @@ export interface IPullPickerOptions {
 
 export interface PopupDefaultLabels {
     alert?: {
-        okText: string,
-        cancelText: string,
+        okText?: string,
+        cancelText?: string,
+        btnColor?: {
+            default: string,
+            cancel: string,
+            warning: string,
+        },
     },
     actionSheet?: {
         cancelText: string,
