@@ -1,5 +1,5 @@
 import React, { FC, useRef } from 'react'
-import { ScrollView, StyleProp, StyleSheet, Text, TextStyle, TouchableOpacity, useColorScheme, View } from 'react-native'
+import { ScrollView, StyleProp, StyleSheet, Text, TextStyle, TouchableOpacity, useColorScheme, View, Dimensions } from 'react-native'
 
 import { disappearCompleted, initViewProps } from '../common/Common'
 import { scaleSize } from '../common/SetSize'
@@ -61,11 +61,16 @@ const AlertView: FC<CProps> = (props) => {
       onCloseRequest={hide}
     >
       <View style={{
-        width: '72%',
+        width: '82%',
         backgroundColor: styles.defaultBg,
         borderRadius: scaleSize(10),
+        minHeight: Dimensions.get('window').height - 300
       }}>
-        <ScrollView style={{ padding: scaleSize(15), marginTop: scaleSize(10) }}>
+        <ScrollView style={{
+          flex: 1,
+          padding: scaleSize(15),
+          marginTop: scaleSize(10),
+        }}>
           {
             typeof title === 'string' ? (
               <View style={{ marginBottom: scaleSize(15), alignItems: 'center' }}>

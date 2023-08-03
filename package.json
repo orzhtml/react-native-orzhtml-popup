@@ -1,6 +1,6 @@
 {
   "name": "react-native-orzhtml-popup",
-  "version": "2.0.10",
+  "version": "2.0.11",
   "description": "react react-native typescript popup",
   "main": "index.ts",
   "scripts": {
