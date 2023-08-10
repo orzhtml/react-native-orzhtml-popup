@@ -1,5 +1,5 @@
 import React, { FC, useRef } from 'react'
-import { Dimensions, ScrollView, StyleProp, StyleSheet, Text, TextStyle, TouchableOpacity, useColorScheme, View } from 'react-native'
+import { ScrollView, StyleProp, StyleSheet, Text, TextStyle, TouchableOpacity, useColorScheme, View, Dimensions } from 'react-native'
 
 import { disappearCompleted, initViewProps } from '../common/Common'
 import { scaleSize } from '../common/SetSize'
@@ -20,7 +20,7 @@ interface CProps extends IProps {
     default: string,
     cancel: string,
     warning: string,
-  }
+  },
 }
 
 const AlertView: FC<CProps> = (props) => {
@@ -64,29 +64,33 @@ const AlertView: FC<CProps> = (props) => {
         width: '82%',
         backgroundColor: styles.defaultBg,
         borderRadius: scaleSize(10),
-        minHeight: Dimensions.get('window').height - 300,
+        minHeight: scaleSize(145),
+        maxHeight: Dimensions.get('window').height - 300,
       }}>
-        <ScrollView style={{
-          flex: 1,
+        {
+          typeof title === 'string' ? (
+            <View style={{
+              marginBottom: scaleSize(15),
+              marginTop: scaleSize(25),
+              alignItems: 'center',
+            }}>
+              <Text style={[
+                {
+                  fontSize: scaleSize(16),
+                  color: styles.alertTitle,
+                  fontWeight: '500',
+                  lineHeight: scaleSize(20),
+                  textAlign: 'center',
+                },
+                StyleSheet.flatten(titleStyle),
+              ]}>{title}</Text>
+            </View>
+          ) : title
+        }
+        <ScrollView contentContainerStyle={{
           padding: scaleSize(15),
-          marginTop: scaleSize(10),
+          paddingTop: 0,
         }}>
-          {
-            typeof title === 'string' ? (
-              <View style={{ marginBottom: scaleSize(15), alignItems: 'center' }}>
-                <Text style={[
-                  {
-                    fontSize: scaleSize(16),
-                    color: styles.alertTitle,
-                    fontWeight: '500',
-                    lineHeight: scaleSize(20),
-                    textAlign: 'center',
-                  },
-                  StyleSheet.flatten(titleStyle),
-                ]}>{title}</Text>
-              </View>
-            ) : title
-          }
           {
             typeof message === 'string' ? (
               <View style={{ alignItems: 'center' }}>
